@@ -5,6 +5,7 @@
 #include "Win32InputHandler.h"
 #include "Keyboard.h"
 #include "../Event/EventStruct.h"
+#include "../Window/Win32Window.h"
 
 namespace BINDU {
 
@@ -26,16 +27,36 @@ namespace BINDU {
     }
 
 
-    bool Win32InputHandler::IsKeyPressed(BND_Keys bnd_key) {
+    bool Win32InputHandler::IsKeyPressed(BND_Key bnd_key)
+    {
+        KeyState state = m_impl->m_keyboard.GetKeyState(bnd_key);
+
+	    if (state.isDown && !state.wasDown)
+	        {
+				m_impl->m_keyboard.SetKeyState(bnd_key, { false,false });
+	            return true;
+	        }
+
         return false;
     }
 
-    bool Win32InputHandler::IsKeyReleased(BND_Keys bnd_key) {
+    bool Win32InputHandler::IsKeyReleased(BND_Key bnd_key)
+	{
+        KeyState state = m_impl->m_keyboard.GetKeyState(bnd_key);
+
+        if (state.wasDown && !state.isDown)
+        {
+            m_impl->m_keyboard.SetKeyState(bnd_key, { false,false });
+            return true;
+        }
+
         return false;
     }
 
-    bool Win32InputHandler::IsKeyHeld(BND_Keys bnd_key) {
-        return false;
+    bool Win32InputHandler::IsKeyHeld(BND_Key bnd_key) {
+        KeyState state = m_impl->m_keyboard.GetKeyState(bnd_key);
+
+        return state.isDown && state.wasDown;
     }
 
     bool Win32InputHandler::IsMouseBtnPressed(BND_Buttons bnd_button) {
@@ -48,7 +69,16 @@ namespace BINDU {
 
     void Win32InputHandler::ProcessEvents(EVENT::BND_Event event)
     {
-
+        switch (event.type)
+        {
+            case EVENT::Type::KEY_DOWN:
+            case EVENT::Type::KEY_UP:
+                //KeyState state = m_impl->m_keyboard.GetKeyState(event.body.Ev_Keyboard.key);
+                m_impl->m_keyboard.SetKeyState(event.body.Ev_Keyboard.key, event.body.Ev_Keyboard.state);
+                break;
+            default:
+                break;
+        }
     }
 
 

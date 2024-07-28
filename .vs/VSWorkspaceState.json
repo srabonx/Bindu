@@ -9,8 +9,11 @@
     "",
     "\\Core",
     "\\Core\\Engine",
-    "\\Logger"
+    "\\Event",
+    "\\Input",
+    "\\Logger",
+    "\\Window"
   ],
-  "SelectedNode": "\\Core\\Engine",
+  "SelectedNode": "\\CMakeLists.txt",
   "PreviewInSolutionExplorer": false
 }

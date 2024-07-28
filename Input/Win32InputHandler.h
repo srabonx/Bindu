@@ -18,11 +18,11 @@ namespace BINDU {
 
         ~Win32InputHandler() override;
 
-        bool IsKeyPressed(BND_Keys bnd_key) override;
+        bool IsKeyPressed(BND_Key bnd_key) override;
 
-        bool IsKeyReleased(BND_Keys bnd_key) override;
+        bool IsKeyReleased(BND_Key bnd_key) override;
 
-        bool IsKeyHeld(BND_Keys bnd_key) override;
+        bool IsKeyHeld(BND_Key bnd_key) override;
 
         bool IsMouseBtnPressed(BND_Buttons bnd_button) override;
 

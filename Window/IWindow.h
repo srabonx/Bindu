@@ -11,7 +11,7 @@ namespace BINDU {
 
     class EventManager;
 
-    // Base class for all type of Window
+    // Base class for all type of Ev_Window
     class IWindow
     {
     public:
@@ -19,7 +19,7 @@ namespace BINDU {
 
         virtual void Create(uint16_t width, uint16_t height, std::string title) = 0;
 
-        //Register the Event for this Window
+        //Register the Event for this Ev_Window
         virtual void RegisterEventManager(EventManager* eventManager) = 0;
     };
 

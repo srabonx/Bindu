@@ -6,6 +6,8 @@
 #define BINDU_INPUTMANAGER_H
 
 #include <memory>
+
+#include "Keyboard.h"
 #include "../Event/IEventListener.h"
 
 namespace BINDU {
@@ -15,15 +17,20 @@ namespace BINDU {
     {
     public:
         InputManager();
-        ~InputManager() = default;
+        ~InputManager() override;
 
+        bool IsKeyPressed(BND_Key key) const;
+
+        bool IsKeyReleased(BND_Key key) const;
+
+        bool IsKeyHeld(BND_Key key) const;
 
 
         void ProcessEvent(EVENT::BND_Event event) override;
 
     private:
         class Impl;
-        std::unique_ptr<Impl> m_impl{nullptr};
+        Impl* m_impl{nullptr};
     };
 
 } // BINDU

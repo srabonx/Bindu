@@ -13,7 +13,7 @@ namespace BINDU {
         struct BND_Event;
     }
 
-    enum class BND_Keys;
+    enum class BND_Key;
     enum class BND_Buttons;
 
     class IInputHandler
@@ -22,13 +22,13 @@ namespace BINDU {
         virtual ~IInputHandler() = default;
 
         // Checks whether the bnd_key Key is pressed or not.
-        virtual bool IsKeyPressed(BND_Keys bnd_key) = 0;
+        virtual bool IsKeyPressed(BND_Key bnd_key) = 0;
 
         // Checks whether the bnd_key is released or not
-        virtual bool IsKeyReleased(BND_Keys bnd_key) = 0;
+        virtual bool IsKeyReleased(BND_Key bnd_key) = 0;
 
         // Checks whether the bnd_key is held or not
-        virtual bool IsKeyHeld(BND_Keys bnd_key) = 0;
+        virtual bool IsKeyHeld(BND_Key bnd_key) = 0;
 
         // Checks whether the bnd_button is pressed or not
         virtual bool IsMouseBtnPressed(BND_Buttons bnd_button) = 0;

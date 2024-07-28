@@ -10,7 +10,7 @@
 
 namespace BINDU {
 
-    enum class BND_Keys
+    enum class BND_Key
     {
         BND_A = 0x41,
         BND_B,
@@ -55,10 +55,10 @@ namespace BINDU {
         ~Keyboard() ;
 
         // Get the current state of the given key
-        KeyState GetKeyState(BND_Keys key);
+        KeyState GetKeyState(BND_Key key);
 
         // Set the state of the given key
-        void SetKeyState(BND_Keys key, const KeyState& state);
+        void SetKeyState(BND_Key key, const KeyState& state);
 
         // Get the current state of the keyboard
         [[nodiscard]] Keys GetKeyboardState() const;

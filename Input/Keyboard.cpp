@@ -11,12 +11,16 @@ namespace BINDU {
     class Keyboard::Impl
     {
     public:
-        Keys m_state;
+        Keys m_keys;
     };
 
     Keyboard::Keyboard() : m_impl(new Impl)
     {
-
+        for(auto& k : m_impl->m_keys)
+        {
+            k.isDown = false;
+            k.wasDown = false;
+        }
     }
 
 
@@ -27,22 +31,22 @@ namespace BINDU {
 
     void Keyboard::SetKeyboardState(const Keys &state)
     {
-        m_impl->m_state = state;
+        m_impl->m_keys = state;
     }
 
     Keys Keyboard::GetKeyboardState() const
     {
-        return m_impl->m_state;
+        return m_impl->m_keys;
     }
 
-    KeyState Keyboard::GetKeyState(BND_Keys key)
+    KeyState Keyboard::GetKeyState(BND_Key key)
     {
-        return m_impl->m_state[(int)key];
+        return m_impl->m_keys[static_cast<int>(key)];
     }
 
-    void Keyboard::SetKeyState(BND_Keys key, const KeyState &state)
+    void Keyboard::SetKeyState(BND_Key key, const KeyState &state)
     {
-        m_impl->m_state[(int)key] = state;
+        m_impl->m_keys[static_cast<int>(key)] = state;
     }
 
 

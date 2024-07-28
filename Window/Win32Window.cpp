@@ -6,6 +6,7 @@
 #include "../Event/EventManager.h"
 #include "../Event/EventStruct.h"
 #include "../Utility/Common/CommonUtility.h"
+#include "../Input/Keyboard.h"
 
 namespace BINDU {
 
@@ -15,14 +16,14 @@ namespace BINDU {
         //Application Instance handle
         HINSTANCE m_hInstance{nullptr};
 
-        //Window Handle
+        //Ev_Window Handle
         HWND m_hWnd{nullptr};
 
-        //Window Width and Height
+        //Ev_Window Width and Height
         uint16_t m_width{200};
         uint16_t m_height{200};
 
-        //Window title
+        //Ev_Window title
         std::string m_title;
 
         // pointer to the Event Manager
@@ -65,7 +66,7 @@ namespace BINDU {
 
      if(!RegisterClassEx(&wndclass))
      {
-         THROW_EXCEPTION(1, "Error registering Window class");
+         THROW_EXCEPTION(1, "Error registering Ev_Window class");
      }
 
      m_impl->m_hWnd = CreateWindowExA(WS_EX_OVERLAPPEDWINDOW, "MAINWINDOW",
@@ -134,8 +135,8 @@ namespace BINDU {
                 break;
             case WM_SIZE:
                 event.type = EVENT::Type::WINDOW_SIZE_CHANGED;
-                event.body.Window.Width = LOWORD(lParam);
-                event.body.Window.Height = HIWORD(lParam);
+                event.body.Ev_Window.Width = LOWORD(lParam);
+                event.body.Ev_Window.Height = HIWORD(lParam);
 
                 if(wParam == SIZE_MAXIMIZED)
                     event.type = EVENT::Type::WINDOW_MAXIMIZED;
@@ -146,13 +147,32 @@ namespace BINDU {
 
                 break;
 
-            case WM_KEYDOWN:
+            case WM_KEYDOWN: {
                 event.type = EVENT::Type::KEY_DOWN;
-                break;
-            case WM_KEYUP:
-                event.type = EVENT::Type::KEY_UP;
-                break;
+                WORD vkCode = LOWORD(wParam);
+                WORD keyFlag = HIWORD(lParam);
+                bool wasDown = (keyFlag & KF_REPEAT) == KF_REPEAT;
+                bool isDown = (keyFlag & KF_UP) != KF_UP;
 
+                event.body.Ev_Keyboard.key = static_cast<BND_Key>(vkCode);
+                event.body.Ev_Keyboard.state.wasDown = wasDown;
+                event.body.Ev_Keyboard.state.isDown = isDown;
+                
+                break;
+            }
+            case WM_KEYUP: {
+                event.type = EVENT::Type::KEY_UP;
+                WORD vkCode = LOWORD(wParam);
+                WORD keyFlag = HIWORD(lParam);
+                bool wasDown = (keyFlag & KF_REPEAT) == KF_REPEAT;
+                bool isDown = (keyFlag & KF_UP) != KF_UP;
+
+                event.body.Ev_Keyboard.key = static_cast<BND_Key>(vkCode);
+                event.body.Ev_Keyboard.state.wasDown = wasDown;
+                event.body.Ev_Keyboard.state.isDown = isDown;
+
+                break;
+            }
             default:
                 event.type = EVENT::Type::NONE;
                 break;

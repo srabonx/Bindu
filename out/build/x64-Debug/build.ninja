@@ -56,24 +56,24 @@ build CMakeFiles\Bindu.dir\ErrorHandler\EngineException.cpp.obj: CXX_COMPILER__B
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
-build CMakeFiles\Bindu.dir\EventManager\EventManager.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\EventManager\EventManager.cpp || cmake_object_order_depends_target_Bindu
+build CMakeFiles\Bindu.dir\Event\EventManager.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Event\EventManager.cpp || cmake_object_order_depends_target_Bindu
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
   OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\EventManager
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Event
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
-build CMakeFiles\Bindu.dir\EventManager\EventStruct.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\EventManager\EventStruct.cpp || cmake_object_order_depends_target_Bindu
+build CMakeFiles\Bindu.dir\Event\EventStruct.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Event\EventStruct.cpp || cmake_object_order_depends_target_Bindu
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
   OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\EventManager
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Event
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
-build CMakeFiles\Bindu.dir\EventManager\EventPool.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\EventManager\EventPool.cpp || cmake_object_order_depends_target_Bindu
+build CMakeFiles\Bindu.dir\Event\EventPool.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Event\EventPool.cpp || cmake_object_order_depends_target_Bindu
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
   OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\EventManager
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Event
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
@@ -98,6 +98,27 @@ build CMakeFiles\Bindu.dir\Logger\ErrorLogManager.cpp.obj: CXX_COMPILER__Bindu_u
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
+build CMakeFiles\Bindu.dir\Input\InputManager.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Input\InputManager.cpp || cmake_object_order_depends_target_Bindu
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Input
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Input\Win32InputHandler.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Input\Win32InputHandler.cpp || cmake_object_order_depends_target_Bindu
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Input
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Input\Keyboard.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Input\Keyboard.cpp || cmake_object_order_depends_target_Bindu
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Input
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
 
 # =============================================================================
 # Link build statements for STATIC_LIBRARY target Bindu
@@ -106,7 +127,7 @@ build CMakeFiles\Bindu.dir\Logger\ErrorLogManager.cpp.obj: CXX_COMPILER__Bindu_u
 #############################################
 # Link the static library Bindu.lib
 
-build Bindu.lib: CXX_STATIC_LIBRARY_LINKER__Bindu_Debug CMakeFiles\Bindu.dir\ErrorHandler\EngineException.cpp.obj CMakeFiles\Bindu.dir\EventManager\EventManager.cpp.obj CMakeFiles\Bindu.dir\EventManager\EventStruct.cpp.obj CMakeFiles\Bindu.dir\EventManager\EventPool.cpp.obj CMakeFiles\Bindu.dir\Window\Win32Window.cpp.obj CMakeFiles\Bindu.dir\Core\Engine\Win32Engine.cpp.obj CMakeFiles\Bindu.dir\Logger\ErrorLogManager.cpp.obj
+build Bindu.lib: CXX_STATIC_LIBRARY_LINKER__Bindu_Debug CMakeFiles\Bindu.dir\ErrorHandler\EngineException.cpp.obj CMakeFiles\Bindu.dir\Event\EventManager.cpp.obj CMakeFiles\Bindu.dir\Event\EventStruct.cpp.obj CMakeFiles\Bindu.dir\Event\EventPool.cpp.obj CMakeFiles\Bindu.dir\Window\Win32Window.cpp.obj CMakeFiles\Bindu.dir\Core\Engine\Win32Engine.cpp.obj CMakeFiles\Bindu.dir\Logger\ErrorLogManager.cpp.obj CMakeFiles\Bindu.dir\Input\InputManager.cpp.obj CMakeFiles\Bindu.dir\Input\Win32InputHandler.cpp.obj CMakeFiles\Bindu.dir\Input\Keyboard.cpp.obj
   LANGUAGE_COMPILE_FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -MDd -Zi
   LINK_FLAGS = /machine:x64
   OBJECT_DIR = CMakeFiles\Bindu.dir

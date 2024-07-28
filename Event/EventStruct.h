@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <string>
+#include "../Input/Keyboard.h"
 
 namespace BINDU::EVENT {
 
@@ -36,10 +37,16 @@ namespace BINDU::EVENT {
 
 
 
-    struct WindowState
+    struct WindowEvent
     {
         std::uint16_t Width{0};
         std::uint16_t Height{0};
+    };
+
+    struct KeyboardEvent
+    {
+        BND_Key key;
+        KeyState state;
     };
 
     /* Custom Event */
@@ -60,8 +67,9 @@ namespace BINDU::EVENT {
     // Can only have one at a time
     union BND_Event_Stats
     {
-        WindowState Window;
-        ICustomEvent* CustomEvent{nullptr};
+        WindowEvent Ev_Window;
+        KeyboardEvent Ev_Keyboard;
+        ICustomEvent* Ev_Custom{nullptr};
     };
 
 
@@ -75,6 +83,7 @@ namespace BINDU::EVENT {
     struct BND_Event
     {
     public:
+        BND_Event() = default;
         Type type = Type::NONE;
         BND_Event_Stats body;
     };
