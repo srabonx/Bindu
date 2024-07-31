@@ -14,6 +14,6 @@
     "\\Logger",
     "\\Window"
   ],
-  "SelectedNode": "\\CMakeLists.txt",
+  "SelectedNode": "\\Event\\EventManager.cpp",
   "PreviewInSolutionExplorer": false
 }

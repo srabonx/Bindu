@@ -10,25 +10,36 @@
 
 namespace BINDU {
 
-    class Win32InputHandler : public IInputHandler
+    class Keyboard;
+    class Mouse;
+
+	class Win32InputHandler : public IInputHandler
     {
     public:
 
-        Win32InputHandler();
+        Win32InputHandler(Keyboard* keyboard, Mouse* mouse);
 
         ~Win32InputHandler() override;
 
-        bool IsKeyPressed(BND_Key bnd_key) override;
+        bool IsKeyPressed(BND_Key key) override;
 
-        bool IsKeyReleased(BND_Key bnd_key) override;
+        bool IsKeyReleased(BND_Key key) override;
 
-        bool IsKeyHeld(BND_Key bnd_key) override;
+        bool IsKeyHeld(BND_Key key) override;
 
-        bool IsMouseBtnPressed(BND_Buttons bnd_button) override;
+        bool IsMouseBtnPressed(BND_Button button) override;
 
-        bool IsMouseBtnReleased(BND_Buttons bnd_button) override;
+        bool IsMouseBtnReleased(BND_Button button) override;
+
+        bool IsMouseBtnHeld(BND_Button button) override;
 
         void ProcessEvents(EVENT::BND_Event event) override ;
+
+        bool IsMouseDragStart(BND_Button button) override;
+
+        MousePos GetMousePosition() override;
+
+        bool IsMouseMoved() override;
 
     private:
         class Impl;

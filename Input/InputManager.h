@@ -8,6 +8,7 @@
 #include <memory>
 
 #include "Keyboard.h"
+#include "Mouse.h"
 #include "../Event/IEventListener.h"
 
 namespace BINDU {
@@ -25,6 +26,15 @@ namespace BINDU {
 
         bool IsKeyHeld(BND_Key key) const;
 
+        bool IsButtonPressed(BND_Button button) const;
+
+        bool IsButtonReleased(BND_Button button) const;
+
+        bool IsButtonHeld(BND_Button button) const;
+
+        bool IsMouseDragged(BND_Button button) const;
+
+        Mouse& GetMouse() const;
 
         void ProcessEvent(EVENT::BND_Event event) override;
 

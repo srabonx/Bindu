@@ -2,6 +2,8 @@
 // Created by letsd on 23-Jul-24.
 //
 
+#include <windowsx.h>
+
 #include "Win32Window.h"
 #include "../Event/EventManager.h"
 #include "../Event/EventStruct.h"
@@ -173,6 +175,72 @@ namespace BINDU {
 
                 break;
             }
+
+	        case WM_LBUTTONDOWN:
+	        case WM_RBUTTONDOWN:
+			case WM_MBUTTONDOWN:
+
+                SetCapture(m_hWnd);
+
+                event.type = EVENT::Type::MOUSE_DOWN;
+
+                event.body.Ev_Mouse.button = BND_Button::BND_NONE;
+
+                if (wParam & MK_LBUTTON)
+                    event.body.Ev_Mouse.button = BND_Button::BND_LEFT;
+                else if(wParam & MK_RBUTTON)
+                    event.body.Ev_Mouse.button = BND_Button::BND_RIGHT;
+                else if(wParam & MK_MBUTTON)
+                    event.body.Ev_Mouse.button = BND_Button::BND_MIDDLE;
+
+
+                event.body.Ev_Mouse.position.x = GET_X_LPARAM(lParam);
+                event.body.Ev_Mouse.position.y = GET_Y_LPARAM(lParam);
+
+                break;
+
+            case WM_LBUTTONUP:
+            case WM_RBUTTONUP:
+            case WM_MBUTTONUP:
+
+                ReleaseCapture();
+				
+                event.type = EVENT::Type::MOUSE_UP;
+
+                event.body.Ev_Mouse.button = BND_Button::BND_NONE;
+
+                if (msg == WM_LBUTTONUP)
+                    event.body.Ev_Mouse.button = BND_Button::BND_LEFT;
+                else if (msg == WM_RBUTTONUP)
+                    event.body.Ev_Mouse.button = BND_Button::BND_RIGHT;
+                else if (msg == WM_MBUTTONUP)
+                    event.body.Ev_Mouse.button = BND_Button::BND_MIDDLE;
+
+
+                event.body.Ev_Mouse.position.x = GET_X_LPARAM(lParam);
+                event.body.Ev_Mouse.position.y = GET_Y_LPARAM(lParam);
+
+                break;
+
+			case WM_MOUSEMOVE:
+
+                event.type = EVENT::Type::MOUSE_MOVE;
+
+                event.body.Ev_Mouse.button = BND_Button::BND_NONE;
+
+                if (wParam & MK_LBUTTON)
+                    event.body.Ev_Mouse.button = BND_Button::BND_LEFT;
+                else if (wParam & MK_RBUTTON)
+                    event.body.Ev_Mouse.button = BND_Button::BND_RIGHT;
+                else if (wParam & MK_MBUTTON)
+                    event.body.Ev_Mouse.button = BND_Button::BND_MIDDLE;
+
+
+                event.body.Ev_Mouse.position.x = GET_X_LPARAM(lParam);
+                event.body.Ev_Mouse.position.y = GET_Y_LPARAM(lParam);
+
+                break;
+
             default:
                 event.type = EVENT::Type::NONE;
                 break;

@@ -33,4 +33,4 @@ add_library(Bindu STATIC
         Input/Win32InputHandler.h
         Input/Keyboard.cpp
         Input/Keyboard.h
-)
+  "Input/Mouse.h" "Input/Mouse.cpp")

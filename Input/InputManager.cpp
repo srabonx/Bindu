@@ -14,12 +14,15 @@ namespace BINDU {
     public:
         ~Impl() = default;
 
+        Keyboard m_keyboard;
+        Mouse m_mouse;
+
         std::unique_ptr<IInputHandler> m_inputHandler{nullptr};
     };
 
     InputManager::InputManager() : m_impl(new Impl)
     {
-        m_impl->m_inputHandler = std::make_unique<Win32InputHandler>();
+        m_impl->m_inputHandler = std::make_unique<Win32InputHandler>(&m_impl->m_keyboard, &m_impl->m_mouse);
     }
 
     InputManager::~InputManager()
@@ -40,6 +43,31 @@ namespace BINDU {
     bool InputManager::IsKeyHeld(BND_Key key) const
     {
         return m_impl->m_inputHandler->IsKeyHeld(key);
+    }
+
+    bool InputManager::IsButtonPressed(BND_Button button) const
+    {
+        return m_impl->m_inputHandler->IsMouseBtnPressed(button);
+    }
+
+    bool InputManager::IsButtonReleased(BND_Button button) const
+    {
+        return m_impl->m_inputHandler->IsMouseBtnReleased(button);
+    }
+
+    bool InputManager::IsButtonHeld(BND_Button button) const
+    {
+        return m_impl->m_inputHandler->IsMouseBtnHeld(button);
+    }
+
+    bool InputManager::IsMouseDragged(BND_Button button) const
+    {
+        return m_impl->m_inputHandler->IsMouseDragStart(button);
+    }
+
+    Mouse& InputManager::GetMouse() const
+    {
+        return m_impl->m_mouse;
     }
 
     void InputManager::ProcessEvent(EVENT::BND_Event event)

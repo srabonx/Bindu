@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <string>
 #include "../Input/Keyboard.h"
+#include "../Input/Mouse.h"
 
 namespace BINDU::EVENT {
 
@@ -29,6 +30,7 @@ namespace BINDU::EVENT {
         KEY_UP,
         MOUSE_DOWN,
         MOUSE_UP,
+        MOUSE_MOVE,
 
     };
 
@@ -49,6 +51,12 @@ namespace BINDU::EVENT {
         KeyState state;
     };
 
+    struct MouseEvent
+    {
+        BND_Button button;
+        MousePos position;
+    };
+
     /* Custom Event */
     /* can be used to push custom event into the event pool
      * your custom event structure must derive from ICustomEvent to be able to get intercepted.
@@ -67,9 +75,10 @@ namespace BINDU::EVENT {
     // Can only have one at a time
     union BND_Event_Stats
     {
-        WindowEvent Ev_Window;
-        KeyboardEvent Ev_Keyboard;
-        ICustomEvent* Ev_Custom{nullptr};
+        WindowEvent      Ev_Window;
+        KeyboardEvent    Ev_Keyboard;
+        MouseEvent       Ev_Mouse;
+        ICustomEvent*    Ev_Custom{nullptr};
     };
 
 

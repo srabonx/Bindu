@@ -8,11 +8,5 @@
 
 
 
-enum class BND_Buttons
-{
-    BND_LEFT,
-    BND_RIGHT,
-    BND_MIDDLE
-};
 
 #endif //BINDU_KEYSANDBUTTONS_H

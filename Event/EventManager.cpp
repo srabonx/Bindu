@@ -34,7 +34,11 @@ namespace BINDU
     void EventManager::PushEvent(EVENT::BND_Event event)
     {
         if(event.type != EVENT::Type::NONE)
+        {
             m_impl->m_eventPool->Push(event);
+            DispatchEvents();
+        }
+            
     }
 
     void EventManager::DispatchEvents()

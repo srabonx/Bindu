@@ -5,7 +5,6 @@
 #ifndef BINDU_KEYBOARD_H
 #define BINDU_KEYBOARD_H
 
-#include <cstdint>
 #include <array>
 
 namespace BINDU {
