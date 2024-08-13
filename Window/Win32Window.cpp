@@ -98,6 +98,10 @@ namespace BINDU {
         m_impl->m_eventManager = eventManager;
     }
 
+    HWND& Win32Window::GetHandle() {
+        return m_impl->m_hWnd;
+    }
+
 
     LRESULT Win32Window::Impl::WindowMessageProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     {

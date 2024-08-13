@@ -36,6 +36,8 @@ namespace BINDU {
 
         Mouse& GetMouse() const;
 
+        Keyboard& GetKeyboard() const;
+
         void ProcessEvent(EVENT::BND_Event event) override;
 
     private:

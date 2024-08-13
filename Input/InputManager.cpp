@@ -70,10 +70,17 @@ namespace BINDU {
         return m_impl->m_mouse;
     }
 
+
+    Keyboard &InputManager::GetKeyboard() const
+    {
+        return m_impl->m_keyboard;
+    }
+
     void InputManager::ProcessEvent(EVENT::BND_Event event)
     {
         m_impl->m_inputHandler->ProcessEvents(event);
     }
+
 
 
 } // BINDU

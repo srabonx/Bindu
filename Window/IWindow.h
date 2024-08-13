@@ -19,6 +19,10 @@ namespace BINDU {
 
         virtual void Create(uint16_t width, uint16_t height, std::string title) = 0;
 
+#if defined(WIN32) || defined(_WIN32)
+        virtual HWND& GetHandle() = 0;
+#endif
+
         //Register the Event for this Ev_Window
         virtual void RegisterEventManager(EventManager* eventManager) = 0;
     };
