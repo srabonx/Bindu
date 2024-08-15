@@ -9,6 +9,13 @@
 
 namespace BINDU
 {
+    enum class LogType
+    {
+        Info,
+	    Warning,
+        Error
+    };
+
     class ILogger
     {
     public:
@@ -21,13 +28,14 @@ namespace BINDU
         virtual std::ostream& Buffer() = 0;
 
         // Commit log to the buffer and flush
-        virtual void Log(const std::string& log) = 0;
+        virtual void Log(LogType type, const std::string& log) = 0;
 
         // Commits logs to the file
         virtual void Flush() = 0;
 
         // Closes the file
         virtual void Close() = 0;
+
     };
 }
 

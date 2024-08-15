@@ -6,7 +6,7 @@
 #define BINDU_DX12RENDERER_H
 
 #include <memory>
-#include "IRenderer.h"
+#include "../IRenderer.h"
 
 namespace BINDU {
 
@@ -15,7 +15,7 @@ namespace BINDU {
     public:
         DX12Renderer();
 
-        ~DX12Renderer()();
+        ~DX12Renderer();
 
         void Initialize() override;
 

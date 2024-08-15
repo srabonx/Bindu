@@ -144,6 +144,10 @@ namespace BINDU {
                 event.body.Ev_Window.Width = LOWORD(lParam);
                 event.body.Ev_Window.Height = HIWORD(lParam);
 
+				// Push the WINDOW_SIZE_CHANGED Event
+                if (m_eventManager)
+                    m_eventManager->PushEvent(event);
+
                 if(wParam == SIZE_MAXIMIZED)
                     event.type = EVENT::Type::WINDOW_MAXIMIZED;
                 else if(wParam == SIZE_MINIMIZED)

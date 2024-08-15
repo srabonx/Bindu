@@ -22,7 +22,7 @@ namespace BINDU {
         // Should be called at application startup
         void Open(const std::string &filename) override;
 
-        void Log(const std::string& log) override;
+        void Log(LogType type, const std::string& log) override;
 
         void Flush() override;
 

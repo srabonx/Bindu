@@ -5,6 +5,10 @@
 #ifndef BINDU_IWINDOW_H
 #define BINDU_IWINDOW_H
 
+#if defined(WIN32) || defined(_WIN32)
+#include <windows.h>
+#endif
+
 #include <string>
 
 namespace BINDU {

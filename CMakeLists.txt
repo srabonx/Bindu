@@ -25,6 +25,8 @@ add_library(Bindu STATIC
         Logger/ILogger.h
         Logger/ErrorLogManager.cpp
         Logger/ErrorLogManager.h
+        Logger/Logger.h
+        Logger/Logger.cpp
         Input/InputManager.cpp
         Input/InputManager.h
         Input/KeysAndButtons.h
@@ -33,7 +35,15 @@ add_library(Bindu STATIC
         Input/Win32InputHandler.h
         Input/Keyboard.cpp
         Input/Keyboard.h
-  "Input/Mouse.h" "Input/Mouse.cpp"
+        Input/Mouse.h
+        Input/Mouse.cpp
         Core/Renderer/IRenderer.h
-        Core/Renderer/DX12Renderer.cpp
-        Core/Renderer/DX12Renderer.h)
+        Core/Renderer/DirectX/DX12Renderer.cpp
+        Core/Renderer/DirectX/DX12Renderer.h
+        Core/Renderer/DirectX/Utility/D3DUtillity.h
+        Core/Renderer/DirectX/Error/ComException.h)
+
+# DX12 Libraries
+target_link_libraries(Bindu PRIVATE 
+                      d3d12.lib
+                      dxgi.lib )

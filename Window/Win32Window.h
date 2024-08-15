@@ -5,7 +5,6 @@
 #ifndef BINDU_WIN32WINDOW_H
 #define BINDU_WIN32WINDOW_H
 
-#include <windows.h>
 #include <memory>
 #include "IWindow.h"
 

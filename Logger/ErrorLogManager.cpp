@@ -60,7 +60,7 @@ namespace BINDU {
         m_impl->m_logFile.close();
     }
 
-    void ErrorLogManager::Log(const std::string &log)
+    void ErrorLogManager::Log(LogType type, const std::string &log)
     {
         m_impl->m_logBuffer << m_impl->getTimeString() << "\n" << log;
         Flush();
