@@ -16,7 +16,7 @@ namespace BINDU {
         virtual ~IRenderer(){}
 
         // Initialize the renderer
-        virtual void Initialize() = 0;
+        virtual void Initialize(IWindow* window) = 0;
 
         // Set the renderer to the passed Window
         virtual void SetTo(IWindow* window) = 0;

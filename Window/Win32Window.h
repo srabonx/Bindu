@@ -23,6 +23,9 @@ namespace BINDU {
 
         void RegisterEventManager(EventManager* eventManager) override;
 
+        UINT GetHeight() const override;
+        UINT GetWidth() const override;
+
     private:
         class Impl;
         std::unique_ptr<Impl> m_impl{nullptr};

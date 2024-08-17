@@ -98,6 +98,16 @@ namespace BINDU {
         m_impl->m_eventManager = eventManager;
     }
 
+    UINT Win32Window::GetHeight() const
+    {
+        return m_impl->m_height;
+    }
+
+    UINT Win32Window::GetWidth() const
+    {
+        return m_impl->m_width;
+    }
+
     HWND& Win32Window::GetHandle() {
         return m_impl->m_hWnd;
     }

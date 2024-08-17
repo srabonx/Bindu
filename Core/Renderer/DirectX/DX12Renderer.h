@@ -17,7 +17,7 @@ namespace BINDU {
 
         ~DX12Renderer();
 
-        void Initialize() override;
+        void Initialize(IWindow* window) override;
 
         void SetTo(IWindow *window) override;
 

@@ -21,6 +21,7 @@ namespace BINDU
 		void Flush() override;
 		void Close() override;
 
+		static bool Exists();
 
 	private:
 		Logger();

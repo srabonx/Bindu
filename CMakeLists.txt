@@ -41,9 +41,9 @@ add_library(Bindu STATIC
         Core/Renderer/DirectX/DX12Renderer.cpp
         Core/Renderer/DirectX/DX12Renderer.h
         Core/Renderer/DirectX/Utility/D3DUtillity.h
-        Core/Renderer/DirectX/Error/ComException.h)
+        Core/Renderer/DirectX/Error/ComException.h
+        Core/Renderer/DirectX/Utility/d3dx12.h
+        Utility/Common/Timer.h
+        Utility/Common/Timer.cpp)
 
-# DX12 Libraries
-target_link_libraries(Bindu PRIVATE 
-                      d3d12.lib
-                      dxgi.lib )
+

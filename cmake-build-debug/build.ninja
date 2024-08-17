@@ -127,6 +127,12 @@ build CMakeFiles/Bindu.dir/Core/Renderer/DirectX/DX12Renderer.cpp.obj: CXX_COMPI
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
 
+build CMakeFiles/Bindu.dir/Utility/Common/Timer.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:/Users/letsd/CLionProjects/Bindu/Utility/Common/Timer.cpp || cmake_object_order_depends_target_Bindu
+  DEP_FILE = CMakeFiles\Bindu.dir\Utility\Common\Timer.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Utility\Common
+
 
 # =============================================================================
 # Link build statements for STATIC_LIBRARY target Bindu
@@ -135,7 +141,7 @@ build CMakeFiles/Bindu.dir/Core/Renderer/DirectX/DX12Renderer.cpp.obj: CXX_COMPI
 #############################################
 # Link the static library libBindu.a
 
-build libBindu.a: CXX_STATIC_LIBRARY_LINKER__Bindu_Debug CMakeFiles/Bindu.dir/ErrorHandler/EngineException.cpp.obj CMakeFiles/Bindu.dir/Event/EventManager.cpp.obj CMakeFiles/Bindu.dir/Event/EventStruct.cpp.obj CMakeFiles/Bindu.dir/Event/EventPool.cpp.obj CMakeFiles/Bindu.dir/Window/Win32Window.cpp.obj CMakeFiles/Bindu.dir/Core/Engine/Win32Engine.cpp.obj CMakeFiles/Bindu.dir/Logger/ErrorLogManager.cpp.obj CMakeFiles/Bindu.dir/Logger/Logger.cpp.obj CMakeFiles/Bindu.dir/Input/InputManager.cpp.obj CMakeFiles/Bindu.dir/Input/Win32InputHandler.cpp.obj CMakeFiles/Bindu.dir/Input/Keyboard.cpp.obj CMakeFiles/Bindu.dir/Input/Mouse.cpp.obj CMakeFiles/Bindu.dir/Core/Renderer/DirectX/DX12Renderer.cpp.obj
+build libBindu.a: CXX_STATIC_LIBRARY_LINKER__Bindu_Debug CMakeFiles/Bindu.dir/ErrorHandler/EngineException.cpp.obj CMakeFiles/Bindu.dir/Event/EventManager.cpp.obj CMakeFiles/Bindu.dir/Event/EventStruct.cpp.obj CMakeFiles/Bindu.dir/Event/EventPool.cpp.obj CMakeFiles/Bindu.dir/Window/Win32Window.cpp.obj CMakeFiles/Bindu.dir/Core/Engine/Win32Engine.cpp.obj CMakeFiles/Bindu.dir/Logger/ErrorLogManager.cpp.obj CMakeFiles/Bindu.dir/Logger/Logger.cpp.obj CMakeFiles/Bindu.dir/Input/InputManager.cpp.obj CMakeFiles/Bindu.dir/Input/Win32InputHandler.cpp.obj CMakeFiles/Bindu.dir/Input/Keyboard.cpp.obj CMakeFiles/Bindu.dir/Input/Mouse.cpp.obj CMakeFiles/Bindu.dir/Core/Renderer/DirectX/DX12Renderer.cpp.obj CMakeFiles/Bindu.dir/Utility/Common/Timer.cpp.obj
   LANGUAGE_COMPILE_FLAGS = -g
   OBJECT_DIR = CMakeFiles\Bindu.dir
   POST_BUILD = cd .

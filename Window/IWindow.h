@@ -29,6 +29,11 @@ namespace BINDU {
 
         //Register the Event for this Ev_Window
         virtual void RegisterEventManager(EventManager* eventManager) = 0;
+
+        // Getters
+        virtual UINT GetHeight() const = 0;
+        virtual UINT GetWidth() const = 0;
+
     };
 
 } // BINDU

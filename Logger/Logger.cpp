@@ -59,7 +59,7 @@ std::ostream& BINDU::Logger::Buffer()
 
 void BINDU::Logger::Log(LogType type,const std::string& log)
 {
-    m_impl->m_logBuffer << m_impl->getTimeString() + " " + m_impl->getLogTypeString(type)  << "\n" << log;
+    m_impl->m_logBuffer << m_impl->getTimeString() + " " + m_impl->getLogTypeString(type)  << "\n" << log << "\n\n";
     Flush();
 }
 
@@ -75,6 +75,12 @@ void BINDU::Logger::Close()
     m_impl->m_logFile.close();
     delete m_logger;
     m_logger = nullptr;
+}
+
+bool BINDU::Logger::Exists()
+{
+    // Check if an instance of it already exists or not
+    return m_logger != nullptr;
 }
 
 

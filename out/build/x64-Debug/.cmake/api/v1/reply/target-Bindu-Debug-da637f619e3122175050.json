@@ -71,7 +71,8 @@
 				26,
 				28,
 				31,
-				33
+				33,
+				39
 			]
 		}
 	],
@@ -112,7 +113,9 @@
 				32,
 				34,
 				35,
-				36
+				36,
+				37,
+				38
 			]
 		},
 		{
@@ -131,7 +134,8 @@
 				26,
 				28,
 				31,
-				33
+				33,
+				39
 			]
 		}
 	],
@@ -334,6 +338,22 @@
 			"backtrace" : 1,
 			"path" : "Core/Renderer/DirectX/Error/ComException.h",
 			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Core/Renderer/DirectX/Utility/d3dx12.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Utility/Common/Timer.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "Utility/Common/Timer.cpp",
+			"sourceGroupIndex" : 1
 		}
 	],
 	"type" : "STATIC_LIBRARY"
