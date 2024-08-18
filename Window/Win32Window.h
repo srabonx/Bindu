@@ -23,6 +23,9 @@ namespace BINDU {
 
         void RegisterEventManager(EventManager* eventManager) override;
 
+        void SetWindowTitle(const std::string& title) override;
+
+        std::string GetWindowTitle() const override;
         UINT GetHeight() const override;
         UINT GetWidth() const override;
 

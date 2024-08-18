@@ -98,6 +98,17 @@ namespace BINDU {
         m_impl->m_eventManager = eventManager;
     }
 
+    void Win32Window::SetWindowTitle(const std::string& title)
+    {
+        m_impl->m_title = title;
+        SetWindowTextA(m_impl->m_hWnd, title.c_str());
+    }
+
+    std::string Win32Window::GetWindowTitle() const
+    {
+        return m_impl->m_title;
+    }
+
     UINT Win32Window::GetHeight() const
     {
         return m_impl->m_height;

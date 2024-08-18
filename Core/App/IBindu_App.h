@@ -12,6 +12,8 @@ namespace BINDU {
         struct BND_Event;
     }
 
+    struct EngineStats;
+
     // Base class of all application
     class IBindu_App
     {
@@ -32,6 +34,9 @@ namespace BINDU {
 
         // Application Closing Routine goes in here
         virtual void Close() = 0;
+
+        // Get the engine stat
+        virtual void GetEngineStat(EngineStats stats) = 0;
     };
 
 } // BINDU

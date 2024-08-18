@@ -22,7 +22,6 @@ namespace BINDU {
 
     using namespace Microsoft::WRL;
 
-
     class DX12Renderer::Impl
     {
     public:
@@ -36,7 +35,7 @@ namespace BINDU {
 
         UINT CheckMSAASupport(ID3D12Device* pd3dDevice, UINT sampleCount, DXGI_FORMAT backBufferFormat);
 
-        void CreateCommandObjects(ID3D12Device* pd3dDevice, ComPtr<ID3D12CommandQueue>& pCmdQueue, ComPtr<ID3D12CommandAllocator> pCmdAllocator, ComPtr<ID3D12GraphicsCommandList> pCmdList);
+        void CreateCommandObjects(ID3D12Device* pd3dDevice, ComPtr<ID3D12CommandQueue>& pCmdQueue, ComPtr<ID3D12CommandAllocator>& pCmdAllocator, ComPtr<ID3D12GraphicsCommandList>& pCmdList);
 
         void CreateSwapChain(IDXGIFactory4* pDXGIFactory, IDXGISwapChain1** pSwapChain, ID3D12CommandQueue* pCommandQueue, DXGI_FORMAT backBufferFormat, UINT bufferCount);
 
@@ -46,20 +45,30 @@ namespace BINDU {
 
         void CreateRTVandDSVHeap();
         void CreateRTVDescriptors();
-        void CreateDSVDescriptor();
+        void CreateDSVDescriptor(DXGI_FORMAT format);
 
         void CreateViewportAndScissorRect();
+
+        // Wait for GPU to finish all the commands prior to this call
+        void FlushCommandQueue();
+
+        // Discard the SwapChain and other client area dependent objects and recreate all with the new client area dimension
+        void OnResize();
 
         // Getters
         bool GetMSAAState() const;
         UINT GetMSAASampleCount() const;
         UINT GetMSAAQuality() const;
 
-        // returns cpu handle to the current Back buffer
-        D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferHandle() const;
+        // returns descriptor cpu handle to the current Back buffer
+        D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferDescriptor() const;
+        // returns current Render target back buffer resource
+        ID3D12Resource* GetCurrentBackBuffer() const;
 
-        // return handle to the Depth Stencil buffer
-        D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilBufferHandle() const;
+        // returns descriptor handle to the Depth Stencil buffer
+        D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilBufferDescriptor() const;
+        // return current DepthStencil buffer resource
+        ID3D12Resource* GetDepthStencilBuffer() const;
 
         // Variables
 
@@ -92,7 +101,7 @@ namespace BINDU {
         ComPtr<ID3D12Debug6>    m_d3dDebug{ nullptr };
 
         // D3D Fence
-        UINT64                  m_currentFence = 0;
+        UINT64                  m_currentFenceValue = 0;
         ComPtr<ID3D12Fence>     m_fence{ nullptr };
 
         // D3D Command Objects
@@ -142,6 +151,8 @@ namespace BINDU {
     };
 
 
+
+
     DX12Renderer* DX12Renderer::Impl::m_dx12Renderer = nullptr;
 
     DX12Renderer::DX12Renderer() : m_impl(std::make_unique<Impl>())
@@ -161,14 +172,18 @@ namespace BINDU {
 
     DX12Renderer::~DX12Renderer()
     {
-
+   
     }
 
     void DX12Renderer::Initialize(IWindow* window)
     {
         SetTo(window);
 
+        // Initialize Direct3D
         m_impl->InitDirect3D();
+
+        // Initial buffer resource creation and resize 
+        m_impl->OnResize();
 
     }
 
@@ -179,8 +194,73 @@ namespace BINDU {
 
     }
 
+    void DX12Renderer::ClearScreen(float r, float g, float b, float a)
+    {
+        FLOAT clearColor[4] = { r,g,b,a };
+
+	    // Reset the command list allocator and reuse the memory associated with it
+        // We can only reset after all the command queue commands has been executed
+        DXThrowIfFailed(m_impl->m_d3dDirectCmdAllocator->Reset());
+
+        // Reset the Command list, we must close command list before resetting.
+        DXThrowIfFailed(m_impl->m_d3dCommandList->Reset(m_impl->m_d3dDirectCmdAllocator.Get(), nullptr));
+
+        // Set the view port, this needs to be reset everytime after the command list is reset
+        m_impl->m_d3dCommandList->RSSetViewports(1, &m_impl->m_viewport);
+        // Set the scissor rect
+        m_impl->m_d3dCommandList->RSSetScissorRects(1, &m_impl->m_scissorRect);
+
+        // Specify a state transition on the Back buffer
+        CD3DX12_RESOURCE_BARRIER backBufferTransition = CD3DX12_RESOURCE_BARRIER::Transition(
+            m_impl->GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+        m_impl->m_d3dCommandList->ResourceBarrier(1, &backBufferTransition);
+
+        D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_impl->GetCurrentBackBufferDescriptor();
+        D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = m_impl->GetDepthStencilBufferDescriptor();
+
+        // Clear the back buffer and depth buffer
+        m_impl->m_d3dCommandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+
+        m_impl->m_d3dCommandList->ClearDepthStencilView(dsvHandle,
+            D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+
+        // Specify the buffers we are going to render to
+        m_impl->m_d3dCommandList->OMSetRenderTargets(1, &rtvHandle,
+            TRUE, &dsvHandle);
+
+
+    }
+
+    void DX12Renderer::Present()
+    {
+	    // Indicate a resource transition on the back buffer
+        CD3DX12_RESOURCE_BARRIER backBufferTransition = CD3DX12_RESOURCE_BARRIER::Transition(
+            m_impl->GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+
+        m_impl->m_d3dCommandList->ResourceBarrier(1, &backBufferTransition);
+
+        // Done recording commands
+        DXThrowIfFailed(m_impl->m_d3dCommandList->Close());
+
+        // add the command list to the queue for execution
+        ID3D12CommandList* commands[] = { m_impl->m_d3dCommandList.Get() };
+        m_impl->m_d3dCommandQueue->ExecuteCommandLists(_countof(commands), commands);
+
+        // Swap the back and front buffer
+        DXThrowIfFailed(m_impl->m_dxgiSwapChain->Present(0, 0));
+        m_impl->m_currentBackBuffer = (m_impl->m_currentBackBuffer + 1) % SwapChainBufferCount;
+
+        // Wait until frame commands are complete
+        m_impl->FlushCommandQueue();
+    }
+
     void DX12Renderer::Close()
     {
+        // Wait for GPU to finish before destroying
+        if (m_impl->m_d3dDevice != nullptr)
+            m_impl->FlushCommandQueue();
 
     }
 
@@ -247,7 +327,7 @@ namespace BINDU {
         DXThrowIfFailed(hr);
 
         Logger::Get()->Log(LogType::Info, "Creating D3D12 Fence object");
-        DXThrowIfFailed(m_d3dDevice->CreateFence(m_currentFence, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(m_fence.ReleaseAndGetAddressOf())));
+        DXThrowIfFailed(m_d3dDevice->CreateFence(m_currentFenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(m_fence.ReleaseAndGetAddressOf())));
 
         Logger::Get()->Log(LogType::Info, "Caching Descriptor Handle Increment Size");
 
@@ -276,6 +356,9 @@ namespace BINDU {
 
         // Enum adapters
         m_dxgiAdapters = EnumAdapters(m_dxgiFactory.Get());
+
+        // Create RTV and DSV heap
+        CreateRTVandDSVHeap();
     }
 
     void DX12Renderer::Impl::InitDXGI()
@@ -308,13 +391,13 @@ namespace BINDU {
         if (qualityLevel < 0)
             THROW_EXCEPTION(3, "Unexpected MSAA quality level");
 
-        Logger::Get()->Buffer() << "Supported MSAA quality level : " + std::to_string(qualityLevel);
+        Logger::Get()->Buffer() << "Supported MSAA quality level : " + std::to_string(qualityLevel) + "\n";
         Logger::Get()->Flush();
 
         return qualityLevel;
     }
 
-    void DX12Renderer::Impl::CreateCommandObjects(ID3D12Device* pd3dDevice, ComPtr<ID3D12CommandQueue>& pCmdQueue, ComPtr<ID3D12CommandAllocator> pCmdAllocator, ComPtr<ID3D12GraphicsCommandList> pCmdList)
+    void DX12Renderer::Impl::CreateCommandObjects(ID3D12Device* pd3dDevice, ComPtr<ID3D12CommandQueue>& pCmdQueue, ComPtr<ID3D12CommandAllocator>& pCmdAllocator, ComPtr<ID3D12GraphicsCommandList>& pCmdList)
     {
         Logger::Get()->Log(LogType::Info, "Creating Command Objects");
 
@@ -513,7 +596,8 @@ namespace BINDU {
 
     void DX12Renderer::Impl::CreateRTVDescriptors()
     {
-        
+        Logger::Get()->Log(LogType::Info, "Creating RTV buffer and descriptor");
+
         CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_rtvHeap->GetCPUDescriptorHandleForHeapStart());
 
         for(UINT i = 0 ; i<SwapChainBufferCount; i++)
@@ -529,13 +613,13 @@ namespace BINDU {
         }
     }
 
-    void DX12Renderer::Impl::CreateDSVDescriptor()
+    void DX12Renderer::Impl::CreateDSVDescriptor(DXGI_FORMAT format)
     {
         Logger::Get()->Log(LogType::Info, "Creating depth stencil buffer and descriptor");
 
         // Depth stencil buffer is a Texture2D. so, create a resource description for it
         D3D12_RESOURCE_DESC rsd = {};
-        rsd.Format = m_depthStencilFormat;
+        rsd.Format = DXGI_FORMAT_R24G8_TYPELESS;
         rsd.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
         rsd.Height = m_window->GetHeight();
         rsd.Width = m_window->GetWidth();
@@ -559,8 +643,14 @@ namespace BINDU {
         DXThrowIfFailed(m_d3dDevice->CreateCommittedResource(&heapProp, D3D12_HEAP_FLAG_NONE, &rsd, D3D12_RESOURCE_STATE_COMMON, &optClear,
             IID_PPV_ARGS(m_depthStencilBuffer.ReleaseAndGetAddressOf())));
 
+        D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+        dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
+        dsvDesc.Format = format;
+        dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+        dsvDesc.Texture2D.MipSlice = 0;
+
         // Creating the descriptor (i.e: View)
-        m_d3dDevice->CreateDepthStencilView(m_depthStencilBuffer.Get(), nullptr, GetDepthStencilBufferHandle());
+        m_d3dDevice->CreateDepthStencilView(m_depthStencilBuffer.Get(), &dsvDesc, GetDepthStencilBufferDescriptor());
 
         // Transition the resource from it's initial state to be used as depth stencil buffer
         CD3DX12_RESOURCE_BARRIER transitionedDepthStencilBuffer = CD3DX12_RESOURCE_BARRIER::Transition(m_depthStencilBuffer.Get(),
@@ -588,6 +678,73 @@ namespace BINDU {
         m_scissorRect.bottom = static_cast<LONG>(m_window->GetHeight());
     }
 
+    void DX12Renderer::Impl::FlushCommandQueue()
+    {
+        // Increase the current fence value by 1
+        m_currentFenceValue++;
+
+        // Add instruction to command queue to set a new fence point
+        DXThrowIfFailed(m_d3dCommandQueue->Signal(m_fence.Get(), m_currentFenceValue));
+
+        // Check to see if the Fence has reached the current Fence value
+        if(m_fence->GetCompletedValue() < m_currentFenceValue)
+        {
+           HANDLE eventHandle =  CreateEventEx(nullptr, false, false, EVENT_ALL_ACCESS);
+
+            // Fire event when GPU hits current fence
+           DXThrowIfFailed(m_fence->SetEventOnCompletion(m_currentFenceValue, eventHandle));
+
+            // Wait until GPU hits current fence point
+           WaitForSingleObject(eventHandle, INFINITE);
+
+           CloseHandle(eventHandle);
+        }
+
+    }
+
+    void DX12Renderer::Impl::OnResize()
+    {
+        Logger::Get()->Log(LogType::Info, "Buffers Resizing");
+
+        assert(m_d3dDevice);
+        assert(m_dxgiSwapChain);
+        assert(m_d3dDirectCmdAllocator);
+
+        // Wait for GPU before changing any resources
+        FlushCommandQueue();
+
+        DXThrowIfFailed(m_d3dCommandList->Reset(m_d3dDirectCmdAllocator.Get(), nullptr));
+
+        // Release the resources we'll be recreating
+        for (int i = 0; i < SwapChainBufferCount; i++)
+            m_swapChainBuffers[i].Reset();
+        m_depthStencilBuffer.Reset();
+
+        // Resize the SwapChain
+        DXThrowIfFailed(m_dxgiSwapChain->ResizeBuffers(SwapChainBufferCount, m_window->GetWidth(), m_window->GetHeight(),
+            m_backBufferFormat, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH));
+
+        m_currentBackBuffer = 0;
+
+        // Get the Render target buffer form SwapChain and create Descriptor
+        CreateRTVDescriptors();
+
+        // Create the depth stencil buffer and Descriptor
+        CreateDSVDescriptor(m_depthStencilFormat);
+
+        // Execute the resize commands
+        DXThrowIfFailed(m_d3dCommandList->Close());
+        ID3D12CommandList* commands[] = { m_d3dCommandList.Get() };
+        m_d3dCommandQueue->ExecuteCommandLists(_countof(commands), commands);
+
+        // Wait until resize is complete
+        FlushCommandQueue();
+
+        // Update the viewport and scissor rect
+        CreateViewportAndScissorRect();
+
+    }
+
     bool DX12Renderer::Impl::GetMSAAState() const
     {
         return m_isMSAAEnabled;
@@ -603,14 +760,24 @@ namespace BINDU {
         return m_MSAAQuality;
     }
 
-    D3D12_CPU_DESCRIPTOR_HANDLE DX12Renderer::Impl::GetCurrentBackBufferHandle() const
+    D3D12_CPU_DESCRIPTOR_HANDLE DX12Renderer::Impl::GetCurrentBackBufferDescriptor() const
     {
         return CD3DX12_CPU_DESCRIPTOR_HANDLE(m_rtvHeap->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(m_currentBackBuffer), m_RtvDHandleIncrementSize);
     }
 
-    D3D12_CPU_DESCRIPTOR_HANDLE DX12Renderer::Impl::GetDepthStencilBufferHandle() const
+    D3D12_CPU_DESCRIPTOR_HANDLE DX12Renderer::Impl::GetDepthStencilBufferDescriptor() const
     {
         return m_dsvHeap->GetCPUDescriptorHandleForHeapStart();
+    }
+
+    ID3D12Resource* DX12Renderer::Impl::GetCurrentBackBuffer() const
+    {
+        return m_swapChainBuffers[m_currentBackBuffer].Get();
+    }
+
+    ID3D12Resource* DX12Renderer::Impl::GetDepthStencilBuffer() const
+    {
+        return m_depthStencilBuffer.Get();
     }
 
 } // BINDU

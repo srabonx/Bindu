@@ -17,6 +17,10 @@ namespace BINDU {
     {
     public:
         IBindu_App* m_app{nullptr};
+
+        EngineCFG   m_engineCfg;
+
+        EngineStats m_engineStats;
     };
 
     Win32Engine::Win32Engine(IBindu_App *app) : m_impl(std::make_unique<Impl>())
@@ -28,8 +32,9 @@ namespace BINDU {
         m_impl->m_app = app;
     }
 
-    void Win32Engine::Initialize()
+    void Win32Engine::Initialize(const EngineCFG& engineCfg)
     {
+        m_impl->m_engineCfg = engineCfg;
         m_impl->m_app->Initialize();
     }
 
@@ -99,16 +104,16 @@ namespace BINDU {
         long tickCount = 0;
         long fpsElapsedTime = 0;
 
-        const int fps = 60;
-        constexpr  long lengthOfFrame = std::chrono::steady_clock::period::den / fps;
-        const int tps = 60;
-        constexpr long lengthOfTick = std::chrono::steady_clock::period::den / tps;
+        const uint16_t fps = m_impl->m_engineCfg.TargetFPS;
+        const  long lengthOfFrame = static_cast<long>(std::chrono::steady_clock::period::den) / fps;
+        const uint16_t tps = m_impl->m_engineCfg.TargetTPS;
+        const long lengthOfTick = static_cast<long>(std::chrono::steady_clock::period::den) / tps;
 
         long longestTime = std::max(lengthOfFrame, lengthOfTick);
 
 
         // Tick delta in seconds
-        constexpr double tickDelta = 1.0 / tps;
+        const double tickDelta = 1.0 / tps;
 
 
         MSG msg{ 0 };
@@ -174,12 +179,12 @@ namespace BINDU {
 
             if(fpsElapsedTime >= std::chrono::steady_clock::period::den)
             {
-                std::stringstream sstr;
 
-                sstr << frameCount << ", " << tickCount;
+                m_impl->m_engineStats.UpTime++;
+                m_impl->m_engineStats.FPS = frameCount;
+                m_impl->m_engineStats.TPS = tickCount;
 
-                OutputDebugStringA(sstr.str().c_str());
-                OutputDebugStringA("\n");
+                m_impl->m_app->GetEngineStat(m_impl->m_engineStats);
 
                 fpsElapsedTime = 0;
                 frameCount = 0;
@@ -201,6 +206,5 @@ namespace BINDU {
         Logger::Get()->Close();
        // m_impl->m_app->Close();
     }
-
 
 } // BINDU

@@ -7,6 +7,34 @@
 
 namespace BINDU {
 
+    using uint16_t = unsigned short;
+    using uint32_t = unsigned int;
+    using uint64_t = unsigned long long;
+
+    struct EngineCFG
+    {
+        // Target Frames per second the engine should try to render
+        uint16_t    TargetFPS = 60;
+        // Target Ticks per second the engine should try to update
+        uint16_t    TargetTPS = 60;
+
+    };
+
+    struct EngineStats
+    {
+	    // The values of EngineStats will be updates each second
+
+        // Total time in seconds since initialization
+        uint64_t    UpTime = 0;
+
+        // Frames per second count
+        uint32_t    FPS = 0;
+
+        // Ticks per second count
+        uint32_t    TPS = 0;
+
+    };
+
     class IEngine
     {
     public:
@@ -14,13 +42,14 @@ namespace BINDU {
         virtual ~IEngine() = default;
 
         // Initialize Routine goes in here
-        virtual void Initialize() = 0;
+        virtual void Initialize(const EngineCFG& engineCfg) = 0;
 
         // Run the Main Loop
         virtual void Run() = 0;
 
         // Closing Routine goes in here
         virtual void Close() = 0;
+
     };
 
 } // BINDU

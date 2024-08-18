@@ -19,7 +19,7 @@ namespace BINDU {
 
         ~Win32Engine() override = default;
 
-        void Initialize() override;
+        void Initialize(const EngineCFG& engineCfg) override;
 
         void Run() override;
 
@@ -29,6 +29,7 @@ namespace BINDU {
         class Impl;
         std::unique_ptr<Impl> m_impl{nullptr};
     };
+
 
 } // BINDU
 

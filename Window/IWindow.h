@@ -30,7 +30,11 @@ namespace BINDU {
         //Register the Event for this Ev_Window
         virtual void RegisterEventManager(EventManager* eventManager) = 0;
 
+        // Setters
+        virtual void SetWindowTitle(const std::string& title) = 0;
+
         // Getters
+        virtual std::string GetWindowTitle() const = 0;
         virtual UINT GetHeight() const = 0;
         virtual UINT GetWidth() const = 0;
 
