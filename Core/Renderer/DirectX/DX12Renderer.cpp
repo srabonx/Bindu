@@ -5,8 +5,12 @@
 #include "DX12Renderer.h"
 
 #include <assert.h>
-#include <d3d12.h>
 #include <dxgi1_6.h>
+
+#if defined(DEBUG) || defined(_DEBUG)
+#include <DXGIDebug.h>
+#endif
+
 #include <vector>
 #include <wrl.h>
 #include <sstream>
@@ -82,7 +86,7 @@ namespace BINDU {
         ComPtr<IDXGIFactory4>    m_dxgiFactory{ nullptr };
 
         // DXGI SwapChain
-        ComPtr<IDXGISwapChain1>  m_dxgiSwapChain{ nullptr };
+        ComPtr<IDXGISwapChain3>  m_dxgiSwapChain{ nullptr };
 
         // SwapChain Buffers
         UINT m_swapChainBufferCount = SwapChainBufferCount;
@@ -167,7 +171,7 @@ namespace BINDU {
         {
             THROW_EXCEPTION(3, "DX12Renderer is a singleton class, more than one instance of this class cannot be created")
         }
-
+        
     }
 
     DX12Renderer::~DX12Renderer()
@@ -228,7 +232,7 @@ namespace BINDU {
 
         // Specify the buffers we are going to render to
         m_impl->m_d3dCommandList->OMSetRenderTargets(1, &rtvHandle,
-            TRUE, &dsvHandle);
+            FALSE, &dsvHandle);
 
 
     }
@@ -258,12 +262,41 @@ namespace BINDU {
 
     void DX12Renderer::Close()
     {
+        Logger::Get()->Log(LogType::Info, "Closing DirectX12 Renderer");
+
         // Wait for GPU to finish before destroying
         if (m_impl->m_d3dDevice != nullptr)
             m_impl->FlushCommandQueue();
 
+#if defined(DEBUG) || defined(_DEBUG)
+        Logger::Get()->Log(LogType::Info, "Creating DXGI debug object and reporting live objects");
+
+        ComPtr<IDXGIDebug1> pdxgiDebug{ nullptr };
+        DXThrowIfFailed(DXGIGetDebugInterface1(0, IID_PPV_ARGS(pdxgiDebug.ReleaseAndGetAddressOf())));
+        DXThrowIfFailed(pdxgiDebug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL));
+#endif
+
     }
 
+    void DX12Renderer::Resize()
+    {
+        m_impl->OnResize();
+    }
+
+    ID3D12Device* DX12Renderer::GetD3DDevice() const
+    {
+        return m_impl->m_d3dDevice.Get();
+    }
+
+    DXGI_FORMAT DX12Renderer::GetRTVFormat() const
+    {
+        return m_impl->m_backBufferFormat;
+    }
+
+    ID3D12GraphicsCommandList* DX12Renderer::GetCommandList() const
+    {
+        return m_impl->m_d3dCommandList.Get();
+    }
 
 
     void DX12Renderer::Impl::InitDirect3D()
@@ -352,8 +385,11 @@ namespace BINDU {
 
 
         // Create Swapchain
-        CreateSwapChain(m_dxgiFactory.Get(), m_dxgiSwapChain.ReleaseAndGetAddressOf(), m_d3dCommandQueue.Get(), m_backBufferFormat, m_swapChainBufferCount);
+        ComPtr<IDXGISwapChain1> pdxgiSwapChain1{ nullptr };
+        CreateSwapChain(m_dxgiFactory.Get(), pdxgiSwapChain1.ReleaseAndGetAddressOf(), m_d3dCommandQueue.Get(), m_backBufferFormat, m_swapChainBufferCount);
+        pdxgiSwapChain1.As(&m_dxgiSwapChain);
 
+        
         // Enum adapters
         m_dxgiAdapters = EnumAdapters(m_dxgiFactory.Get());
 

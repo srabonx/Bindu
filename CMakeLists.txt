@@ -3,6 +3,7 @@ project(Bindu)
 
 set(CMAKE_CXX_STANDARD 17)
 
+include_directories("C:/ImGuiDocking")
 
 add_library(Bindu STATIC
         ErrorHandler/EngineException.h
@@ -44,6 +45,9 @@ add_library(Bindu STATIC
         Core/Renderer/DirectX/Error/ComException.h
         Core/Renderer/DirectX/Utility/d3dx12.h
         Utility/Common/Timer.h
-        Utility/Common/Timer.cpp)
+        Utility/Common/Timer.cpp 
+        Gui/IGui.h
+        Gui/DX12Imgui.h
+        Gui/DX12Imgui.cpp)
 
 

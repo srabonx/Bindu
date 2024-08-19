@@ -24,6 +24,9 @@ namespace BINDU {
         // Present the render to the display
         virtual void Present() = 0;
 
+        // Resize the Renderer whenever window size is changed
+        virtual void Resize() = 0;
+
         // Set the renderer to the passed Window
         virtual void SetTo(IWindow* window) = 0;
 

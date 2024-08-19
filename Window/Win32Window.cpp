@@ -5,10 +5,15 @@
 #include <windowsx.h>
 
 #include "Win32Window.h"
+
+#include <Common/imgui.h>
+
 #include "../Event/EventManager.h"
 #include "../Event/EventStruct.h"
 #include "../Utility/Common/CommonUtility.h"
 #include "../Input/Keyboard.h"
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 namespace BINDU {
 
@@ -34,7 +39,7 @@ namespace BINDU {
     public:
         static LRESULT CALLBACK WindowMessageProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-        LRESULT MessageProc(HWND& hWnd, UINT& msg, WPARAM& wParam, LPARAM& lParam) const;
+        LRESULT MessageProc(HWND& hWnd, UINT& msg, WPARAM& wParam, LPARAM& lParam);
     };
 
     Win32Window::Win32Window(HINSTANCE hInstance) : m_impl(std::make_unique<Impl>())
@@ -128,13 +133,19 @@ namespace BINDU {
     {
         Win32Window* window = reinterpret_cast<Win32Window*>(GetWindowLongPtr(hWnd,GWLP_USERDATA));
 
-        if(window)
-            window->m_impl->MessageProc(hWnd,msg,wParam,lParam);
+        if (window)
+        {
+            ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
+
+            window->m_impl->MessageProc( hWnd, msg, wParam, lParam);
+        }
+
+        
 
         return DefWindowProcA(hWnd,msg,wParam,lParam);
     }
 
-    LRESULT Win32Window::Impl::MessageProc(HWND& hWnd, UINT& msg, WPARAM& wParam, LPARAM& lParam) const
+    LRESULT Win32Window::Impl::MessageProc(HWND& hWnd, UINT& msg, WPARAM& wParam, LPARAM& lParam)
     {
 
         EVENT::BND_Event event;
@@ -161,23 +172,27 @@ namespace BINDU {
                 event.type = EVENT::Type::WINDOW_EXIT_RESIZING;
                 break;
             case WM_SIZE:
+            {
                 event.type = EVENT::Type::WINDOW_SIZE_CHANGED;
                 event.body.Ev_Window.Width = LOWORD(lParam);
                 event.body.Ev_Window.Height = HIWORD(lParam);
 
-				// Push the WINDOW_SIZE_CHANGED Event
+                m_width = LOWORD(lParam);
+                m_height = HIWORD(lParam);
+
+                // Push the WINDOW_SIZE_CHANGED Event
                 if (m_eventManager)
                     m_eventManager->PushEvent(event);
 
-                if(wParam == SIZE_MAXIMIZED)
+                if (wParam == SIZE_MAXIMIZED)
                     event.type = EVENT::Type::WINDOW_MAXIMIZED;
-                else if(wParam == SIZE_MINIMIZED)
+                else if (wParam == SIZE_MINIMIZED)
                     event.type = EVENT::Type::WINDOW_MINIMIZED;
-                else if(wParam == SIZE_RESTORED)
+                else if (wParam == SIZE_RESTORED)
                     event.type = EVENT::Type::WINDOW_RESTORED;
 
                 break;
-
+            }
             case WM_KEYDOWN: {
                 event.type = EVENT::Type::KEY_DOWN;
                 WORD vkCode = LOWORD(wParam);

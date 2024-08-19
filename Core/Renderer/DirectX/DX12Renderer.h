@@ -5,6 +5,7 @@
 #ifndef BINDU_DX12RENDERER_H
 #define BINDU_DX12RENDERER_H
 
+#include <d3d12.h>
 #include <memory>
 #include "../IRenderer.h"
 
@@ -31,6 +32,14 @@ namespace BINDU {
         void Present() override;
 
         void Close() override;
+
+        void Resize();
+
+
+        // Getters
+        ID3D12Device*               GetD3DDevice() const;
+        DXGI_FORMAT                 GetRTVFormat() const;
+        ID3D12GraphicsCommandList*  GetCommandList() const;
         
 
     private:
