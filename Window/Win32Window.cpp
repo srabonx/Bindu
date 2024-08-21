@@ -6,7 +6,7 @@
 
 #include "Win32Window.h"
 
-#include <Common/imgui.h>
+#include "../Gui/Common/imgui.h"
 
 #include "../Event/EventManager.h"
 #include "../Event/EventStruct.h"
@@ -136,7 +136,6 @@ namespace BINDU {
         if (window)
         {
             ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
-
             window->m_impl->MessageProc( hWnd, msg, wParam, lParam);
         }
 

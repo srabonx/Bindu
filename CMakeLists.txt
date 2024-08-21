@@ -3,7 +3,6 @@ project(Bindu)
 
 set(CMAKE_CXX_STANDARD 17)
 
-include_directories("C:/ImGuiDocking")
 
 add_library(Bindu STATIC
         ErrorHandler/EngineException.h
@@ -46,8 +45,27 @@ add_library(Bindu STATIC
         Core/Renderer/DirectX/Utility/d3dx12.h
         Utility/Common/Timer.h
         Utility/Common/Timer.cpp 
+        Gui/Common/imconfig.h
+        Gui/Common/imgui.h
+        Gui/Common/imgui.cpp
+        Gui/Common/imgui_internal.h
+        Gui/Common/imstb_rectpack.h
+        Gui/Common/imstb_textedit.h
+        Gui/Common/imstb_truetype.h
+        Gui/Common/imgui_demo.cpp
+        Gui/Common/imgui_draw.cpp
+        Gui/Common/imgui_tables.cpp
+        Gui/Common/imgui_widgets.cpp
         Gui/IGui.h
-        Gui/DX12Imgui.h
-        Gui/DX12Imgui.cpp)
+        Gui/DX12/imgui_impl_win32.h
+        Gui/DX12/imgui_impl_win32.cpp
+        Gui/DX12/imgui_impl_dx12.h
+        Gui/DX12/imgui_impl_dx12.cpp
+        Gui/DX12/DX12Imgui.h
+        Gui/DX12/DX12Imgui.cpp 
+        Core/Renderer/DirectX/RenderTexture.h
+        Core/Renderer/DirectX/RenderTexture.cpp
+        Core/Renderer/DirectX/Utility/DescriptorHeap.h
+        Core/Renderer/DirectX/Utility/DescriptorHeap.cpp)
 
 

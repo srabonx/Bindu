@@ -139,13 +139,14 @@ namespace BINDU {
                 if (msg.message == WM_QUIT)
                 {
                     isDone = true;
-                    break;
                 }
 
                 TranslateMessage(&msg);
                 DispatchMessageA(&msg);
             }
-            
+
+            if (isDone)
+                break;
 
             // Update loop is independent of rendering
             while(tickAccumulator >= lengthOfTick)

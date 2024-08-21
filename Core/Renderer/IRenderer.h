@@ -18,11 +18,13 @@ namespace BINDU {
         // Initialize the renderer
         virtual void Initialize(IWindow* window) = 0;
 
+        virtual void BeginRender() = 0;
+
         // Clear the screen with the specified color
         virtual void ClearScreen(float r, float g, float b, float a) = 0;
 
         // Present the render to the display
-        virtual void Present() = 0;
+        virtual void EndRender() = 0;
 
         // Resize the Renderer whenever window size is changed
         virtual void Resize() = 0;

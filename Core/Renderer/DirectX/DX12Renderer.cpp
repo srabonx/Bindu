@@ -2,6 +2,9 @@
 // Created by letsd on 13-Aug-24.
 //
 
+#define GUI_ENABLE
+
+
 #include "DX12Renderer.h"
 
 #include <assert.h>
@@ -11,24 +14,37 @@
 #include <DXGIDebug.h>
 #endif
 
+#ifdef GUI_ENABLE
+#include "../../../Gui/DX12/DX12Imgui.h"
+#endif
+
+
 #include <vector>
 #include <wrl.h>
 #include <sstream>
 #include <string>
 
+#include "RenderTexture.h"
 #include "../../../Logger/Logger.h"
 #include "../../../Utility/Common/CommonUtility.h"
 #include "Utility/D3DUtillity.h"
 #include "Utility/d3dx12.h"
+#include "Utility/DescriptorHeap.h"
 
 
 namespace BINDU {
 
     using namespace Microsoft::WRL;
 
+
+
+
+
     class DX12Renderer::Impl
     {
     public:
+        ~Impl() {}
+
         // Pointer to the DX12Renderer class
         static DX12Renderer* m_dx12Renderer;
 
@@ -47,9 +63,18 @@ namespace BINDU {
         void EnumAdapterOutputs(IDXGIAdapter* pAdapter);
         void EnumOutputDisplayModes(IDXGIOutput* pOutput, DXGI_FORMAT backBufferFormat);
 
-        void CreateRTVandDSVHeap();
-        void CreateRTVDescriptors();
-        void CreateDSVDescriptor(DXGI_FORMAT format);
+
+        void CreateRtvHeap();
+        void CreateDsvHeap();
+
+        void CreateRtv();
+        void CreateDsv();
+
+#ifdef GUI_ENABLE
+        void CreateSrvHeap();
+        void CreateRenderTexture();
+#endif
+
 
         void CreateViewportAndScissorRect();
 
@@ -65,7 +90,7 @@ namespace BINDU {
         UINT GetMSAAQuality() const;
 
         // returns descriptor cpu handle to the current Back buffer
-        D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferDescriptor() const;
+        D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferCPUDescriptor() const;
         // returns current Render target back buffer resource
         ID3D12Resource* GetCurrentBackBuffer() const;
 
@@ -97,6 +122,7 @@ namespace BINDU {
 
 
         // Direct3D Stuff
+        std::unique_ptr<RenderTexture> m_renderTexture { nullptr };
 
         // Direct3D Device
         ComPtr<ID3D12Device>    m_d3dDevice{ nullptr };
@@ -120,9 +146,14 @@ namespace BINDU {
         // Descriptor heaps
 
     	// RTV heap
-        ComPtr<ID3D12DescriptorHeap>    m_rtvHeap{ nullptr };
+        std::unique_ptr<DescriptorHeap>        m_rtvHeap{ nullptr };
+        //ComPtr<ID3D12DescriptorHeap>    m_rtvHeap{ nullptr };
+        // SRV heap
+        std::unique_ptr<DescriptorHeap>        m_srvHeap{ nullptr };
+        //ComPtr<ID3D12DescriptorHeap>    m_srvHeap{ nullptr };
         // DSV heap
-        ComPtr<ID3D12DescriptorHeap>    m_dsvHeap{ nullptr };
+        std::unique_ptr<DescriptorHeap>        m_dsvHeap{ nullptr };
+        //ComPtr<ID3D12DescriptorHeap>    m_dsvHeap{ nullptr };
 
         // Descriptor sizes
         UINT m_RtvDHandleIncrementSize = 0;
@@ -152,10 +183,115 @@ namespace BINDU {
         // Window
         IWindow* m_window{ nullptr };
 
+
+#ifdef GUI_ENABLE
+        std::unique_ptr<DX12Imgui>             m_gui{ nullptr };
+#endif
     };
 
 
 
+
+    void DX12Renderer::Impl::CreateRtvHeap()
+    {
+        if (!m_rtvHeap)
+            m_rtvHeap = std::make_unique<DescriptorHeap>(m_d3dDevice.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
+                D3D12_DESCRIPTOR_HEAP_FLAG_NONE, RTDescriptors::RTCount);
+    }
+
+    void DX12Renderer::Impl::CreateDsvHeap()
+    {
+        if (!m_dsvHeap)
+            m_dsvHeap = std::make_unique<DescriptorHeap>(m_d3dDevice.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_DSV,
+                D3D12_DESCRIPTOR_HEAP_FLAG_NONE, 1);
+    }
+
+    void DX12Renderer::Impl::CreateRtv()
+    {
+        Logger::Get()->Log(LogType::Info, "Creating RTV buffer and resource");
+
+
+        for (UINT i = 0; i < SwapChainBufferCount; i++)
+        {
+            // Get the ith buffer from the SwapChain
+            m_dxgiSwapChain->GetBuffer(i, IID_PPV_ARGS(m_swapChainBuffers[i].ReleaseAndGetAddressOf()));
+
+            // Create a render target to that buffer
+            m_d3dDevice->CreateRenderTargetView(m_swapChainBuffers[i].Get(), nullptr, m_rtvHeap->GetCPUHandleAt(i));
+        }
+
+    }
+
+    void DX12Renderer::Impl::CreateDsv()
+    {
+        Logger::Get()->Log(LogType::Info, "Creating depth stencil buffer and resource");
+
+        // Depth stencil buffer is a Texture2D. so, create a resource description for it
+        D3D12_RESOURCE_DESC rsd = {};
+        rsd.Format = DXGI_FORMAT_R24G8_TYPELESS;
+        rsd.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+        rsd.Height = m_window->GetHeight();
+        rsd.Width = m_window->GetWidth();
+        rsd.Alignment = 0;
+        rsd.DepthOrArraySize = 1;
+        rsd.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+        rsd.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+        rsd.MipLevels = 1;
+        rsd.SampleDesc.Count = GetMSAAState() ? GetMSAASampleCount() : 1;
+        rsd.SampleDesc.Quality = GetMSAAState() ? (GetMSAAQuality() - 1) : 0;
+
+        // Optimized clear value
+        D3D12_CLEAR_VALUE optClear = {};
+        optClear.Format = m_depthStencilFormat;
+        optClear.DepthStencil.Depth = 1.0f;
+        optClear.DepthStencil.Stencil = 0.f;
+
+        // Property of the heap this depth stencil buffer resource will live in
+        CD3DX12_HEAP_PROPERTIES heapProp(D3D12_HEAP_TYPE_DEFAULT);
+
+        DXThrowIfFailed(m_d3dDevice->CreateCommittedResource(&heapProp, D3D12_HEAP_FLAG_NONE, &rsd, D3D12_RESOURCE_STATE_COMMON, &optClear,
+            IID_PPV_ARGS(m_depthStencilBuffer.ReleaseAndGetAddressOf())));
+
+        D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+        dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
+        dsvDesc.Format = m_depthStencilFormat;
+        dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+        dsvDesc.Texture2D.MipSlice = 0;
+        
+        // Creating the resource (i.e: View)
+        m_d3dDevice->CreateDepthStencilView(m_depthStencilBuffer.Get(), &dsvDesc, GetDepthStencilBufferDescriptor());
+
+        // Transition the resource from it's initial state to be used as depth stencil buffer
+        CD3DX12_RESOURCE_BARRIER transitionedDepthStencilBuffer = CD3DX12_RESOURCE_BARRIER::Transition(m_depthStencilBuffer.Get(),
+            D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_DEPTH_WRITE);
+
+        m_d3dCommandList->ResourceBarrier(1, &transitionedDepthStencilBuffer);
+    }
+
+
+
+#ifdef GUI_ENABLE
+    void DX12Renderer::Impl::CreateSrvHeap()
+    {
+        if (!m_srvHeap)
+            m_srvHeap = std::make_unique<DescriptorHeap>(m_d3dDevice.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+                D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, SRDescriptors::SRCount);
+    }
+
+    void DX12Renderer::Impl::CreateRenderTexture()
+    {
+        if(!m_renderTexture)
+            m_renderTexture = std::make_unique<RenderTexture>(m_backBufferFormat);
+
+        m_renderTexture->SetDevice(m_d3dDevice.Get(), m_srvHeap->GetCPUHandleAt(SRDescriptors::SRRenderTexture),
+            m_rtvHeap->GetCPUHandleAt(RTDescriptors::RTRenderTexture));
+
+        m_renderTexture->SetClearColor({ 1.0f,0.0f,0.0f,1.0f });
+
+        m_renderTexture->SizeResources(m_window->GetWidth(), m_window->GetHeight(), m_d3dCommandList.Get());
+    }
+
+#endif
 
     DX12Renderer* DX12Renderer::Impl::m_dx12Renderer = nullptr;
 
@@ -176,7 +312,7 @@ namespace BINDU {
 
     DX12Renderer::~DX12Renderer()
     {
-   
+        
     }
 
     void DX12Renderer::Initialize(IWindow* window)
@@ -186,8 +322,9 @@ namespace BINDU {
         // Initialize Direct3D
         m_impl->InitDirect3D();
 
-        // Initial buffer resource creation and resize 
-        m_impl->OnResize();
+#ifdef GUI_ENABLE
+        m_impl->m_gui->Initialize(window, this);
+#endif
 
     }
 
@@ -198,52 +335,134 @@ namespace BINDU {
 
     }
 
-    void DX12Renderer::ClearScreen(float r, float g, float b, float a)
+    void DX12Renderer::BeginRender()
     {
-        FLOAT clearColor[4] = { r,g,b,a };
-
-	    // Reset the command list allocator and reuse the memory associated with it
-        // We can only reset after all the command queue commands has been executed
+        // Reset the command list allocator and reuse the memory associated with it
+		// We can only reset after all the command queue commands has been executed
         DXThrowIfFailed(m_impl->m_d3dDirectCmdAllocator->Reset());
 
         // Reset the Command list, we must close command list before resetting.
         DXThrowIfFailed(m_impl->m_d3dCommandList->Reset(m_impl->m_d3dDirectCmdAllocator.Get(), nullptr));
+
+
 
         // Set the view port, this needs to be reset everytime after the command list is reset
         m_impl->m_d3dCommandList->RSSetViewports(1, &m_impl->m_viewport);
         // Set the scissor rect
         m_impl->m_d3dCommandList->RSSetScissorRects(1, &m_impl->m_scissorRect);
 
-        // Specify a state transition on the Back buffer
-        CD3DX12_RESOURCE_BARRIER backBufferTransition = CD3DX12_RESOURCE_BARRIER::Transition(
-            m_impl->GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+    }
 
-        m_impl->m_d3dCommandList->ResourceBarrier(1, &backBufferTransition);
+    void DX12Renderer::ClearScreen(float r, float g, float b, float a)
+    {
+        FLOAT clearColor[4] = { r,g,b,a };
 
-        D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_impl->GetCurrentBackBufferDescriptor();
-        D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = m_impl->GetDepthStencilBufferDescriptor();
+
+        D3D12_CPU_DESCRIPTOR_HANDLE rtvDescriptor = m_impl->m_rtvHeap->GetCPUHandleAt(m_impl->m_currentBackBuffer);
+
+    	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = m_impl->GetDepthStencilBufferDescriptor();
+
+
+        CD3DX12_RESOURCE_BARRIER transition = CD3DX12_RESOURCE_BARRIER::Transition(m_impl->GetCurrentBackBuffer(),
+            D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+        m_impl->m_d3dCommandList->ResourceBarrier(1, &transition);
+
+
+        // Specify the buffers we are going to render to
+        m_impl->m_d3dCommandList->OMSetRenderTargets(1, &rtvDescriptor,
+            TRUE, &dsvHandle);
 
         // Clear the back buffer and depth buffer
-        m_impl->m_d3dCommandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+        m_impl->m_d3dCommandList->ClearRenderTargetView(rtvDescriptor, clearColor, 0, nullptr);
+
 
         m_impl->m_d3dCommandList->ClearDepthStencilView(dsvHandle,
             D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
 
-        // Specify the buffers we are going to render to
-        m_impl->m_d3dCommandList->OMSetRenderTargets(1, &rtvHandle,
-            FALSE, &dsvHandle);
+#ifdef GUI_ENABLE
+
+        m_impl->m_d3dCommandList->SetDescriptorHeaps(1, m_impl->m_srvHeap->Heap().GetAddressOf());
+
+
+        D3D12_CPU_DESCRIPTOR_HANDLE renderTextureRTVHandle = m_impl->m_rtvHeap->GetCPUHandleAt(RTRenderTexture);
+
+        D3D12_CPU_DESCRIPTOR_HANDLE renderTextureDSVHandle = m_impl->m_dsvHeap->GetFirstCPUHandle();
+
+        m_impl->m_gui->BeginDraw();
+
+
+        size_t nodeX = static_cast<size_t>(m_impl->m_gui->GetCentralNodeSize().x);
+        size_t nodeY = static_cast<size_t>(m_impl->m_gui->GetCentralNodeSize().y);
+
+        if (nodeX != m_impl->m_renderTexture->GetWidth() || nodeY != m_impl->m_renderTexture->GetHeight())
+        {
+            m_impl->m_renderTexture->SizeResources(nodeX, nodeY, m_impl->m_d3dCommandList.Get());
+            m_impl->m_gui->WriteToConsole("Resized buffers");
+        }
+
+
+        float* color = m_impl->m_gui->GetClearColor();
+        FLOAT rtClearColor[4] = {color[0],color[1],color[2],color[3]};
+
+        m_impl->m_renderTexture->BeginScene(m_impl->m_d3dCommandList.Get());
+
+
+        m_impl->m_d3dCommandList->OMSetRenderTargets(1, &renderTextureRTVHandle,
+            TRUE, &renderTextureDSVHandle);
+
+        //m_impl->m_d3dCommandList->ClearRenderTargetView(renderTextureRTVHandle, rtClearColor, 0, nullptr);
+        m_impl->m_renderTexture->Clear(m_impl->m_d3dCommandList.Get());
+
+        m_impl->m_d3dCommandList->ClearDepthStencilView(renderTextureDSVHandle,
+            D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+
+#endif 
 
 
     }
 
-    void DX12Renderer::Present()
+    void DX12Renderer::EndRender()
     {
-	    // Indicate a resource transition on the back buffer
-        CD3DX12_RESOURCE_BARRIER backBufferTransition = CD3DX12_RESOURCE_BARRIER::Transition(
-            m_impl->GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 
-        m_impl->m_d3dCommandList->ResourceBarrier(1, &backBufferTransition);
+#ifdef GUI_ENABLE
+
+        m_impl->m_renderTexture->EndScene(m_impl->m_d3dCommandList.Get());
+
+
+        D3D12_CPU_DESCRIPTOR_HANDLE rtvDescriptor = m_impl->m_rtvHeap->GetCPUHandleAt(m_impl->m_currentBackBuffer);
+
+        D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = m_impl->GetDepthStencilBufferDescriptor();
+
+        m_impl->m_d3dCommandList->OMSetRenderTargets(1, &rtvDescriptor,
+            TRUE, &dsvHandle);
+
+
+        ImTextureID texture = reinterpret_cast<ImTextureID>(m_impl->m_srvHeap->GetGPUHandleAt(SRRenderTexture).ptr);
+
+
+        m_impl->m_gui->DrawToCentral(texture);
+
+        std::stringstream ssr;
+
+        ssr << "Window width: " << m_impl->m_window->GetWidth() << ", " << "Window height: " << m_impl->m_window->GetHeight() << "\n"
+            << "Render Texture width: " << m_impl->m_renderTexture->GetWidth() << ", " << "Render Texture height: " << m_impl->m_renderTexture->GetHeight();
+        	
+
+        m_impl->m_gui->WriteToConsole(ssr.str());
+
+        m_impl->m_gui->EndDraw();
+
+#endif
+
+
+        CD3DX12_RESOURCE_BARRIER transition = CD3DX12_RESOURCE_BARRIER::Transition(m_impl->GetCurrentBackBuffer(),
+            D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+
+        m_impl->m_d3dCommandList->ResourceBarrier(1, &transition);
+
 
         // Done recording commands
         DXThrowIfFailed(m_impl->m_d3dCommandList->Close());
@@ -276,6 +495,11 @@ namespace BINDU {
         DXThrowIfFailed(pdxgiDebug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL));
 #endif
 
+#ifdef GUI_ENABLE
+        m_impl->m_gui->Close();
+#endif
+
+
     }
 
     void DX12Renderer::Resize()
@@ -296,6 +520,11 @@ namespace BINDU {
     ID3D12GraphicsCommandList* DX12Renderer::GetCommandList() const
     {
         return m_impl->m_d3dCommandList.Get();
+    }
+
+    DescriptorHeap* DX12Renderer::GetSrvHeap() const
+    {
+        return m_impl->m_srvHeap.get();
     }
 
 
@@ -394,7 +623,17 @@ namespace BINDU {
         m_dxgiAdapters = EnumAdapters(m_dxgiFactory.Get());
 
         // Create RTV and DSV heap
-        CreateRTVandDSVHeap();
+        CreateRtvHeap();
+        CreateDsvHeap();
+
+#ifdef GUI_ENABLE
+        CreateSrvHeap();
+
+        m_gui = std::make_unique<DX12Imgui>();
+
+#endif
+
+        OnResize();
     }
 
     void DX12Renderer::Impl::InitDXGI()
@@ -614,87 +853,6 @@ namespace BINDU {
         }
     }
 
-    void DX12Renderer::Impl::CreateRTVandDSVHeap()
-    {
-
-        Logger::Get()->Log(LogType::Info, "Creating RTV heap");
-
-        // Create the RTV heap
-       DXThrowIfFailed(D3DUtility::CreateDescriptorHeap(m_d3dDevice.Get(), m_swapChainBufferCount,
-           D3D12_DESCRIPTOR_HEAP_TYPE_RTV, m_rtvHeap.ReleaseAndGetAddressOf()));
-
-       Logger::Get()->Log(LogType::Info, "Creating DSV heap");
-
-       // Create the DSV heap
-       DXThrowIfFailed(D3DUtility::CreateDescriptorHeap(m_d3dDevice.Get(), 1,
-           D3D12_DESCRIPTOR_HEAP_TYPE_DSV, m_dsvHeap.ReleaseAndGetAddressOf()));
-    }
-
-    void DX12Renderer::Impl::CreateRTVDescriptors()
-    {
-        Logger::Get()->Log(LogType::Info, "Creating RTV buffer and descriptor");
-
-        CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_rtvHeap->GetCPUDescriptorHandleForHeapStart());
-
-        for(UINT i = 0 ; i<SwapChainBufferCount; i++)
-        {
-            // Get the ith buffer from the SwapChain
-            m_dxgiSwapChain->GetBuffer(i, IID_PPV_ARGS(m_swapChainBuffers[i].ReleaseAndGetAddressOf()));
-
-            // Create a render target to that buffer
-            m_d3dDevice->CreateRenderTargetView(m_swapChainBuffers[i].Get(), nullptr, rtvHandle);
-
-            // Offset the handle by 1 to get to the next rtv handle
-            rtvHandle.Offset(1, m_RtvDHandleIncrementSize);
-        }
-    }
-
-    void DX12Renderer::Impl::CreateDSVDescriptor(DXGI_FORMAT format)
-    {
-        Logger::Get()->Log(LogType::Info, "Creating depth stencil buffer and descriptor");
-
-        // Depth stencil buffer is a Texture2D. so, create a resource description for it
-        D3D12_RESOURCE_DESC rsd = {};
-        rsd.Format = DXGI_FORMAT_R24G8_TYPELESS;
-        rsd.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-        rsd.Height = m_window->GetHeight();
-        rsd.Width = m_window->GetWidth();
-        rsd.Alignment = 0;
-        rsd.DepthOrArraySize = 1;
-        rsd.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-        rsd.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-        rsd.MipLevels = 1;
-        rsd.SampleDesc.Count = GetMSAAState() ? GetMSAASampleCount() : 1;
-        rsd.SampleDesc.Quality = GetMSAAState() ? (GetMSAAQuality() - 1) : 0;
-
-        // Optimized clear value
-        D3D12_CLEAR_VALUE optClear = {};
-        optClear.Format = m_depthStencilFormat;
-        optClear.DepthStencil.Depth = 1.0f;
-        optClear.DepthStencil.Stencil = 0.f;
-
-        // Property of the heap this depth stencil buffer resource will live in
-        CD3DX12_HEAP_PROPERTIES heapProp(D3D12_HEAP_TYPE_DEFAULT);
-
-        DXThrowIfFailed(m_d3dDevice->CreateCommittedResource(&heapProp, D3D12_HEAP_FLAG_NONE, &rsd, D3D12_RESOURCE_STATE_COMMON, &optClear,
-            IID_PPV_ARGS(m_depthStencilBuffer.ReleaseAndGetAddressOf())));
-
-        D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-        dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
-        dsvDesc.Format = format;
-        dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-        dsvDesc.Texture2D.MipSlice = 0;
-
-        // Creating the descriptor (i.e: View)
-        m_d3dDevice->CreateDepthStencilView(m_depthStencilBuffer.Get(), &dsvDesc, GetDepthStencilBufferDescriptor());
-
-        // Transition the resource from it's initial state to be used as depth stencil buffer
-        CD3DX12_RESOURCE_BARRIER transitionedDepthStencilBuffer = CD3DX12_RESOURCE_BARRIER::Transition(m_depthStencilBuffer.Get(),
-            D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_DEPTH_WRITE);
-
-        m_d3dCommandList->ResourceBarrier(1, &transitionedDepthStencilBuffer);
-
-    }
 
     void DX12Renderer::Impl::CreateViewportAndScissorRect()
     {
@@ -753,7 +911,9 @@ namespace BINDU {
 
         // Release the resources we'll be recreating
         for (int i = 0; i < SwapChainBufferCount; i++)
+        {
             m_swapChainBuffers[i].Reset();
+        }
         m_depthStencilBuffer.Reset();
 
         // Resize the SwapChain
@@ -763,10 +923,17 @@ namespace BINDU {
         m_currentBackBuffer = 0;
 
         // Get the Render target buffer form SwapChain and create Descriptor
-        CreateRTVDescriptors();
+        CreateRtv();
+        
+
+#ifdef  GUI_ENABLE
+        if (m_renderTexture)
+            m_renderTexture->ReleaseDevice();
+        CreateRenderTexture();
+#endif
 
         // Create the depth stencil buffer and Descriptor
-        CreateDSVDescriptor(m_depthStencilFormat);
+        CreateDsv();
 
         // Execute the resize commands
         DXThrowIfFailed(m_d3dCommandList->Close());
@@ -796,14 +963,14 @@ namespace BINDU {
         return m_MSAAQuality;
     }
 
-    D3D12_CPU_DESCRIPTOR_HANDLE DX12Renderer::Impl::GetCurrentBackBufferDescriptor() const
+    D3D12_CPU_DESCRIPTOR_HANDLE DX12Renderer::Impl::GetCurrentBackBufferCPUDescriptor() const
     {
-        return CD3DX12_CPU_DESCRIPTOR_HANDLE(m_rtvHeap->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(m_currentBackBuffer), m_RtvDHandleIncrementSize);
+        return CD3DX12_CPU_DESCRIPTOR_HANDLE(m_rtvHeap->GetFirstCPUHandle(), static_cast<INT>(m_currentBackBuffer), m_RtvDHandleIncrementSize);
     }
 
     D3D12_CPU_DESCRIPTOR_HANDLE DX12Renderer::Impl::GetDepthStencilBufferDescriptor() const
     {
-        return m_dsvHeap->GetCPUDescriptorHandleForHeapStart();
+        return m_dsvHeap->GetFirstCPUHandle();
     }
 
     ID3D12Resource* DX12Renderer::Impl::GetCurrentBackBuffer() const

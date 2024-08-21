@@ -11,6 +11,29 @@
 
 namespace BINDU {
 
+
+    enum RTDescriptors
+    {
+        RTBackBuffer1,
+        RTBackBuffer2,
+#ifdef GUI_ENABLE
+        RTRenderTexture,
+#endif
+        RTCount
+    };
+
+    enum SRDescriptors
+    {
+        SRRenderTexture,
+        SRGui,
+        SRCount
+    };
+
+
+
+
+    class DescriptorHeap;
+
     class DX12Renderer : public IRenderer
     {
     public:
@@ -27,20 +50,24 @@ namespace BINDU {
 
         void SetTo(IWindow *window) override;
 
+        void BeginRender() override;
+
         void ClearScreen(float r, float g, float b, float a) override;
 
-        void Present() override;
+        void EndRender() override;
 
         void Close() override;
 
-        void Resize();
+        void Resize() override;
 
 
         // Getters
-        ID3D12Device*               GetD3DDevice() const;
-        DXGI_FORMAT                 GetRTVFormat() const;
-        ID3D12GraphicsCommandList*  GetCommandList() const;
-        
+        ID3D12Device*                   GetD3DDevice() const;
+        DXGI_FORMAT                     GetRTVFormat() const;
+        ID3D12GraphicsCommandList*      GetCommandList() const;
+
+        DescriptorHeap*                 GetSrvHeap() const;
+
 
     private:
 
