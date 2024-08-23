@@ -30,14 +30,18 @@
 #include "Utility/D3DUtillity.h"
 #include "Utility/d3dx12.h"
 #include "Utility/DescriptorHeap.h"
+#include "Utility/UploadBuffer.h"
 
 
 namespace BINDU {
 
     using namespace Microsoft::WRL;
+    using namespace DirectX;
 
-
-
+    struct ObjectConstants
+    {
+        XMMATRIX    WorldViewProjMat = XMMatrixIdentity();
+    };
 
 
     class DX12Renderer::Impl
@@ -63,9 +67,11 @@ namespace BINDU {
         void EnumAdapterOutputs(IDXGIAdapter* pAdapter);
         void EnumOutputDisplayModes(IDXGIOutput* pOutput, DXGI_FORMAT backBufferFormat);
 
+        void CreateRootSignature();
 
         void CreateRtvHeap();
         void CreateDsvHeap();
+        void CreateCbvHeapAndView();
 
         void CreateRtv();
         void CreateDsv();
@@ -143,17 +149,20 @@ namespace BINDU {
         // D3D Graphics Command List
         ComPtr<ID3D12GraphicsCommandList> m_d3dCommandList{ nullptr };
 
+        // Root signature
+        ComPtr<ID3D12RootSignature>            m_rootSignature{ nullptr };
+
         // Descriptor heaps
 
     	// RTV heap
         std::unique_ptr<DescriptorHeap>        m_rtvHeap{ nullptr };
-        //ComPtr<ID3D12DescriptorHeap>    m_rtvHeap{ nullptr };
         // SRV heap
         std::unique_ptr<DescriptorHeap>        m_srvHeap{ nullptr };
-        //ComPtr<ID3D12DescriptorHeap>    m_srvHeap{ nullptr };
         // DSV heap
         std::unique_ptr<DescriptorHeap>        m_dsvHeap{ nullptr };
-        //ComPtr<ID3D12DescriptorHeap>    m_dsvHeap{ nullptr };
+        // CBV heap
+        std::unique_ptr<DescriptorHeap>        m_cbvHeap{ nullptr };
+
 
         // Descriptor sizes
         UINT m_RtvDHandleIncrementSize = 0;
@@ -168,6 +177,9 @@ namespace BINDU {
 
         // DepthStencil Buffer
         ComPtr<ID3D12Resource> m_depthStencilBuffer;
+
+        // Constant buffer
+        std::unique_ptr<UploadBuffer<ObjectConstants>>  m_cbPerObject{ nullptr };
 
         // Back Buffer and DepthStencil Buffer
         DXGI_FORMAT m_backBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -204,6 +216,21 @@ namespace BINDU {
         if (!m_dsvHeap)
             m_dsvHeap = std::make_unique<DescriptorHeap>(m_d3dDevice.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_DSV,
                 D3D12_DESCRIPTOR_HEAP_FLAG_NONE, 1);
+    }
+
+    void DX12Renderer::Impl::CreateCbvHeapAndView()
+    {
+        m_cbPerObject = std::make_unique<UploadBuffer<ObjectConstants>>(m_d3dDevice.Get(), 1, true);
+
+        if (!m_cbvHeap)
+            m_cbvHeap = std::make_unique<DescriptorHeap>(m_d3dDevice.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+                D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, 1);
+
+        D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
+        cbvDesc.BufferLocation = m_cbPerObject->Resource()->GetGPUVirtualAddress();
+        cbvDesc.SizeInBytes = m_cbPerObject->GetElementByteSize();
+
+        m_d3dDevice->CreateConstantBufferView(&cbvDesc, m_cbvHeap->GetFirstCPUHandle());
     }
 
     void DX12Renderer::Impl::CreateRtv()
@@ -417,8 +444,7 @@ namespace BINDU {
 
         m_impl->m_d3dCommandList->ClearDepthStencilView(renderTextureDSVHandle,
             D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-
-
+        
 #endif 
 
 
@@ -442,7 +468,7 @@ namespace BINDU {
 
         ImTextureID texture = reinterpret_cast<ImTextureID>(m_impl->m_srvHeap->GetGPUHandleAt(SRRenderTexture).ptr);
 
-
+        
         m_impl->m_gui->DrawToCentral(texture);
 
         std::stringstream ssr;
@@ -625,6 +651,12 @@ namespace BINDU {
         // Create RTV and DSV heap
         CreateRtvHeap();
         CreateDsvHeap();
+
+        // Create CBV heap
+        CreateCbvHeapAndView();
+
+        // Create root signature
+        CreateRootSignature();
 
 #ifdef GUI_ENABLE
         CreateSrvHeap();
@@ -851,6 +883,32 @@ namespace BINDU {
            
             ++i;
         }
+    }
+
+    void DX12Renderer::Impl::CreateRootSignature()
+    {
+        
+        CD3DX12_ROOT_PARAMETER    slotRootParameter[1];
+
+        // Root parameters can be Descriptor table, Root constant or Root descriptor
+        CD3DX12_DESCRIPTOR_RANGE    cbvTable(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
+
+        // Setting this root parameter as a descriptor table
+        slotRootParameter[0].InitAsDescriptorTable(1, &cbvTable);
+
+        // Root signature is just an array of root parameters
+        CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(1, slotRootParameter, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+        ComPtr<ID3DBlob>    serializedRootSig{ nullptr };
+        ComPtr<ID3DBlob>    errorBlob{ nullptr };
+
+        DXThrowIfFailed(D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1,
+            serializedRootSig.ReleaseAndGetAddressOf(), errorBlob.ReleaseAndGetAddressOf()));
+
+        DXThrowIfFailed(m_d3dDevice->CreateRootSignature(0,
+            serializedRootSig->GetBufferPointer(), serializedRootSig->GetBufferSize(),
+            IID_PPV_ARGS(m_rootSignature.ReleaseAndGetAddressOf())));
+
     }
 
 

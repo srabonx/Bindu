@@ -1,7 +1,7 @@
 # ninja log v5
 31	2721	7436776096466582	CMakeFiles/Bindu.dir/Core/Engine/Win32Engine.cpp.obj	13a7b9ef4bf6b7a3
 6	1624	7433558948357934	CMakeFiles/Bindu.dir/library.cpp.obj	ddd3e324c807577e
-22	803	7459518222600867	build.ninja	8f19ec4d20cfb650
+22	803	7461391669817125	build.ninja	8f19ec4d20cfb650
 34	3013	7436984274711462	CMakeFiles/Bindu.dir/Window/Win32Window.cpp.obj	e707a0775113f360
 696	1004	7436992059763550	libBindu.a	914c8831196b41a5
 16	426	7434198385819450	CMakeFiles/Bindu.dir/EventManager/EventStruct.cpp.obj	1870c4d03256158a
