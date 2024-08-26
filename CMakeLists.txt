@@ -67,6 +67,6 @@ add_library(Bindu STATIC
         Core/Renderer/DirectX/RenderTexture.cpp
         Core/Renderer/DirectX/Utility/DescriptorHeap.h
         Core/Renderer/DirectX/Utility/DescriptorHeap.cpp 
-        Core/Renderer/DirectX/Utility/UploadBuffer.h "Core/Renderer/DirectX/Utility/MeshGeometry.h")
+        Core/Renderer/DirectX/Utility/UploadBuffer.h "Core/Renderer/DirectX/Utility/MeshGeometry.h" "Utility/Common/CircleBuffer.h")
 
 

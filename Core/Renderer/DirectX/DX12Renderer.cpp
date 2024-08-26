@@ -19,6 +19,7 @@
 #endif
 
 
+#include <array>
 #include <vector>
 #include <wrl.h>
 #include <sstream>
@@ -31,6 +32,7 @@
 #include "Utility/d3dx12.h"
 #include "Utility/DescriptorHeap.h"
 #include "Utility/UploadBuffer.h"
+#include "Utility/MeshGeometry.h"
 
 
 namespace BINDU {
@@ -40,9 +42,14 @@ namespace BINDU {
 
     struct ObjectConstants
     {
-        XMMATRIX    WorldViewProjMat = XMMatrixIdentity();
+        XMFLOAT4X4    WorldViewProjMat;
     };
 
+    struct Vertex
+    {
+        XMFLOAT3   Position;
+        XMFLOAT4   Color;
+    };
 
     class DX12Renderer::Impl
     {
@@ -68,13 +75,17 @@ namespace BINDU {
         void EnumOutputDisplayModes(IDXGIOutput* pOutput, DXGI_FORMAT backBufferFormat);
 
         void CreateRootSignature();
+        void CreateInputLayout();
+        void CreateVertexAndIndexBuffers();
+        void CompileShaders();
+        void CreatePSO();
 
         void CreateRtvHeap();
         void CreateDsvHeap();
         void CreateCbvHeapAndView();
 
         void CreateRtv();
-        void CreateDsv();
+        void CreateDsv(UINT height, UINT width);
 
 #ifdef GUI_ENABLE
         void CreateSrvHeap();
@@ -163,6 +174,27 @@ namespace BINDU {
         // CBV heap
         std::unique_ptr<DescriptorHeap>        m_cbvHeap{ nullptr };
 
+        // Input layout
+        std::vector<D3D12_INPUT_ELEMENT_DESC>  m_inputElements;
+
+        // Geometry
+        std::unique_ptr<MeshGeometry>          m_geometry;
+
+        // Shader bytecodes
+        ComPtr<ID3DBlob>                       m_vertexShader;
+        ComPtr<ID3DBlob>                       m_pixelShader;
+
+        // Pipeline State
+        ComPtr<ID3D12PipelineState>            m_pso{ nullptr };
+
+        // World stuff
+        XMFLOAT4X4                             m_worldMat;
+        XMFLOAT4X4                             m_viewMat;
+        XMFLOAT4X4                             m_projMat;
+
+        float m_theta = 1.5f * XM_PI;
+        float m_phi = XM_PIDIV4;
+        float m_radius = 5.0f;
 
         // Descriptor sizes
         UINT m_RtvDHandleIncrementSize = 0;
@@ -202,7 +234,129 @@ namespace BINDU {
     };
 
 
+    void DX12Renderer::Impl::CreateVertexAndIndexBuffers()
+    {
 
+        std::array<Vertex,8>  vertices =
+        {
+            Vertex({XMFLOAT3(-1.f,-1.f,-1.f), XMFLOAT4(1.f,0.f,0.f,1.f) }),
+            Vertex({XMFLOAT3(-1.f,+1.f,-1.f), XMFLOAT4(0.f,1.f,0.f,1.f) }),
+            Vertex({XMFLOAT3(+1.f,+1.f,-1.f), XMFLOAT4(0.f,0.f,1.f,1.f) }),
+            Vertex({XMFLOAT3(+1.f,-1.f,-1.f), XMFLOAT4(1.f,1.f,0.f,1.f) }),
+            Vertex({XMFLOAT3(-1.f,-1.f,+1.f), XMFLOAT4(1.f,1.f,0.f,1.f) }),
+            Vertex({XMFLOAT3(-1.f,+1.f,+1.f), XMFLOAT4(0.f,1.f,1.f,1.f) }),
+            Vertex({XMFLOAT3(+1.f,+1.f,+1.f), XMFLOAT4(1.f,0.f,1.f,1.f) }),
+            Vertex({XMFLOAT3(+1.f,-1.f,+1.f), XMFLOAT4(1.f,1.f,0.f,1.f) })
+        };
+
+        std::array<std::uint16_t,36>   indices =
+        {
+            // front face
+            0,1,2,
+            0,2,3,
+
+            // back face
+            4,6,5,
+            4,7,6,
+
+            // left face
+            4,5,1,
+            4,1,0,
+
+            // right face
+            3,2,6,
+            3,6,7,
+
+            // top face
+            1,5,6,
+            1,6,2,
+
+            // bottom face
+            4,0,3,
+            4,3,7
+        };
+
+
+        UINT vbByteSize = vertices.size() * sizeof(Vertex);
+
+        UINT ibByteSize = indices.size() * sizeof(std::uint16_t);
+                
+
+        m_geometry = std::make_unique<MeshGeometry>();
+        // Geometry to hold the vertices and indices
+        m_geometry->Name = "Geometry";
+        m_geometry->VertexBufferByteSize = vbByteSize;
+        m_geometry->VertexByteStride = sizeof(Vertex);
+        
+        m_geometry->IndexBufferByteSize = ibByteSize;
+        m_geometry->IndexBufferFormat = DXGI_FORMAT_R16_UINT;
+        
+
+        // Create the vertex buffer CPU
+        DXThrowIfFailed(D3DCreateBlob(vbByteSize, m_geometry->VertexBufferCPU.GetAddressOf()));
+        CopyMemory(m_geometry->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
+
+        // Create the index buffer CPU
+        DXThrowIfFailed(D3DCreateBlob(ibByteSize, m_geometry->IndexBufferCPU.GetAddressOf()));
+        CopyMemory(m_geometry->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+
+        // Create the GPU size of vertex and index buffer
+        m_geometry->VertexBufferGPU = D3DUtility::CreateDefaultBuffer(m_d3dDevice.Get(),
+            m_d3dCommandList.Get(), vertices.data(), vbByteSize, m_geometry->VertexBufferUploader);
+
+        m_geometry->IndexBufferGPU = D3DUtility::CreateDefaultBuffer(m_d3dDevice.Get(),
+            m_d3dCommandList.Get(), indices.data(), ibByteSize, m_geometry->IndexBufferUploader);
+
+        SubMeshGeometry boxSubMesh;
+        boxSubMesh.IndexCount = indices.size();
+        boxSubMesh.BaseVertexLocation = 0;
+        boxSubMesh.StartIndexLocation = 0;
+
+        m_geometry->SubMeshMap["Box"] = boxSubMesh;
+    }
+
+    void DX12Renderer::Impl::CompileShaders()
+    {
+        m_vertexShader = D3DUtility::CompileShader("C:\\Users\\letsd\\CLionProjects\\Bindu\\Shaders\\Default\\Default.hlsl", nullptr,
+            "VS", "vs_5_0");
+        m_pixelShader = D3DUtility::CompileShader("C:\\Users\\letsd\\CLionProjects\\Bindu\\Shaders\\Default\\Default.hlsl", nullptr,
+            "PS", "ps_5_0");
+    }
+
+    void DX12Renderer::Impl::CreatePSO()
+    {
+        D3D12_GRAPHICS_PIPELINE_STATE_DESC  psoDesc;
+        ZeroMemory(&psoDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
+
+        psoDesc.InputLayout.pInputElementDescs = m_inputElements.data();
+        psoDesc.InputLayout.NumElements = m_inputElements.size();
+        psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+        psoDesc.VS =
+        {
+            reinterpret_cast<BYTE*>(m_vertexShader->GetBufferPointer()),
+            m_vertexShader->GetBufferSize()
+        };
+        psoDesc.PS =
+        {
+        reinterpret_cast<BYTE*>(m_pixelShader->GetBufferPointer()),
+        m_pixelShader->GetBufferSize()
+        };
+        psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+        psoDesc.DSVFormat = m_depthStencilFormat;
+        psoDesc.NumRenderTargets = 1;
+        psoDesc.RTVFormats[0] = m_backBufferFormat;
+        psoDesc.pRootSignature = m_rootSignature.Get();
+        psoDesc.SampleDesc.Count = GetMSAAState() ? GetMSAASampleCount() : 1;
+        psoDesc.SampleDesc.Quality = GetMSAAState() ? GetMSAAQuality() : 0;
+        psoDesc.SampleMask = UINT_MAX;
+        psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+        psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+
+        assert(m_d3dDevice != nullptr);
+
+        DXThrowIfFailed(m_d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pso)));
+    }
 
     void DX12Renderer::Impl::CreateRtvHeap()
     {
@@ -230,7 +384,7 @@ namespace BINDU {
         cbvDesc.BufferLocation = m_cbPerObject->Resource()->GetGPUVirtualAddress();
         cbvDesc.SizeInBytes = m_cbPerObject->GetElementByteSize();
 
-        m_d3dDevice->CreateConstantBufferView(&cbvDesc, m_cbvHeap->GetFirstCPUHandle());
+        m_d3dDevice->CreateConstantBufferView(&cbvDesc, m_srvHeap->GetCPUHandleAt(2));
     }
 
     void DX12Renderer::Impl::CreateRtv()
@@ -249,7 +403,7 @@ namespace BINDU {
 
     }
 
-    void DX12Renderer::Impl::CreateDsv()
+    void DX12Renderer::Impl::CreateDsv(UINT height, UINT width)
     {
         Logger::Get()->Log(LogType::Info, "Creating depth stencil buffer and resource");
 
@@ -257,8 +411,8 @@ namespace BINDU {
         D3D12_RESOURCE_DESC rsd = {};
         rsd.Format = DXGI_FORMAT_R24G8_TYPELESS;
         rsd.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-        rsd.Height = m_window->GetHeight();
-        rsd.Width = m_window->GetWidth();
+        rsd.Height = height;
+        rsd.Width = width;
         rsd.Alignment = 0;
         rsd.DepthOrArraySize = 1;
         rsd.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
@@ -302,7 +456,7 @@ namespace BINDU {
     {
         if (!m_srvHeap)
             m_srvHeap = std::make_unique<DescriptorHeap>(m_d3dDevice.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-                D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, SRDescriptors::SRCount);
+                D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, SRDescriptors::SRCount + 1);
     }
 
     void DX12Renderer::Impl::CreateRenderTexture()
@@ -353,6 +507,29 @@ namespace BINDU {
         m_impl->m_gui->Initialize(window, this);
 #endif
 
+        DXThrowIfFailed(m_impl->m_d3dCommandList->Reset(m_impl->m_d3dDirectCmdAllocator.Get(), nullptr));
+
+        // Create CBV heap
+        m_impl->CreateCbvHeapAndView();
+
+        // Create root signature
+        m_impl->CreateRootSignature();
+
+        m_impl->CreateInputLayout();
+        m_impl->CompileShaders();
+        m_impl->CreateVertexAndIndexBuffers();
+
+        m_impl->CreatePSO();
+
+
+        // Execute the resize commands
+        DXThrowIfFailed(m_impl->m_d3dCommandList->Close());
+        ID3D12CommandList* commands[] = { m_impl->m_d3dCommandList.Get() };
+        m_impl->m_d3dCommandQueue->ExecuteCommandLists(_countof(commands), commands);
+
+        // Wait until resize is complete
+        m_impl->FlushCommandQueue();
+
     }
 
     void DX12Renderer::SetTo(IWindow *window)
@@ -369,7 +546,7 @@ namespace BINDU {
         DXThrowIfFailed(m_impl->m_d3dDirectCmdAllocator->Reset());
 
         // Reset the Command list, we must close command list before resetting.
-        DXThrowIfFailed(m_impl->m_d3dCommandList->Reset(m_impl->m_d3dDirectCmdAllocator.Get(), nullptr));
+        DXThrowIfFailed(m_impl->m_d3dCommandList->Reset(m_impl->m_d3dDirectCmdAllocator.Get(), m_impl->m_pso.Get()));
 
 
 
@@ -396,10 +573,6 @@ namespace BINDU {
         m_impl->m_d3dCommandList->ResourceBarrier(1, &transition);
 
 
-        // Specify the buffers we are going to render to
-        m_impl->m_d3dCommandList->OMSetRenderTargets(1, &rtvDescriptor,
-            TRUE, &dsvHandle);
-
         // Clear the back buffer and depth buffer
         m_impl->m_d3dCommandList->ClearRenderTargetView(rtvDescriptor, clearColor, 0, nullptr);
 
@@ -407,27 +580,23 @@ namespace BINDU {
         m_impl->m_d3dCommandList->ClearDepthStencilView(dsvHandle,
             D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
+        // Specify the buffers we are going to render to
+        m_impl->m_d3dCommandList->OMSetRenderTargets(1, &rtvDescriptor,
+            TRUE, &dsvHandle);
+
+
 
 #ifdef GUI_ENABLE
 
-        m_impl->m_d3dCommandList->SetDescriptorHeaps(1, m_impl->m_srvHeap->Heap().GetAddressOf());
+        ID3D12DescriptorHeap* descriptorHeaps[] = { m_impl->m_srvHeap->Heap().Get() };
 
+        m_impl->m_d3dCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
         D3D12_CPU_DESCRIPTOR_HANDLE renderTextureRTVHandle = m_impl->m_rtvHeap->GetCPUHandleAt(RTRenderTexture);
 
         D3D12_CPU_DESCRIPTOR_HANDLE renderTextureDSVHandle = m_impl->m_dsvHeap->GetFirstCPUHandle();
 
         m_impl->m_gui->BeginDraw();
-
-
-        size_t nodeX = static_cast<size_t>(m_impl->m_gui->GetCentralNodeSize().x);
-        size_t nodeY = static_cast<size_t>(m_impl->m_gui->GetCentralNodeSize().y);
-
-        if (nodeX != m_impl->m_renderTexture->GetWidth() || nodeY != m_impl->m_renderTexture->GetHeight())
-        {
-            m_impl->m_renderTexture->SizeResources(nodeX, nodeY, m_impl->m_d3dCommandList.Get());
-            m_impl->m_gui->WriteToConsole("Resized buffers");
-        }
 
 
         float* color = m_impl->m_gui->GetClearColor();
@@ -444,10 +613,52 @@ namespace BINDU {
 
         m_impl->m_d3dCommandList->ClearDepthStencilView(renderTextureDSVHandle,
             D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-        
+
+
+        m_impl->m_d3dCommandList->SetGraphicsRootSignature(m_impl->m_rootSignature.Get());
+
+        m_impl->m_d3dCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+        D3D12_INDEX_BUFFER_VIEW ibView = m_impl->m_geometry->IndexBufferView();
+        D3D12_VERTEX_BUFFER_VIEW vbView = m_impl->m_geometry->VertexBufferView();
+
+        m_impl->m_d3dCommandList->IASetIndexBuffer(&ibView);
+        m_impl->m_d3dCommandList->IASetVertexBuffers(0, 1, &vbView);
+
+        m_impl->m_d3dCommandList->SetGraphicsRootDescriptorTable(0, m_impl->m_srvHeap->GetGPUHandleAt(2));
+
+        m_impl->m_d3dCommandList->DrawIndexedInstanced(m_impl->m_geometry->SubMeshMap["Box"].IndexCount,
+            1, 0, 0, 0);
+
+
 #endif 
 
 
+    }
+
+    void DX12Renderer::Update()
+    {
+        float x = m_impl->m_radius * sinf(m_impl->m_phi) * cosf(m_impl->m_theta);
+        float y = m_impl->m_radius * cosf(m_impl->m_phi);
+        float z = m_impl->m_radius * sinf(m_impl->m_phi) * sinf(m_impl->m_theta);
+
+        XMMATRIX view = XMMatrixLookAtLH({ x,y,z,1.0f },
+            XMVectorZero(), { 0.f,1.0f,0.0f,1.0f });
+
+        XMStoreFloat4x4(&m_impl->m_viewMat, view);
+
+        XMStoreFloat4x4(&m_impl->m_worldMat, XMMatrixIdentity());
+
+        XMMATRIX world = XMLoadFloat4x4(&m_impl->m_worldMat);
+        XMMATRIX proj = XMLoadFloat4x4(&m_impl->m_projMat);
+        XMMATRIX worldViewProj = world * view * proj;
+
+        ObjectConstants objConstants;
+
+
+        XMStoreFloat4x4(&objConstants.WorldViewProjMat, XMMatrixTranspose(worldViewProj));
+        m_impl->m_cbPerObject->CopyData(0, objConstants);
+        m_impl->m_theta += 0.01f;
     }
 
     void DX12Renderer::EndRender()
@@ -531,6 +742,11 @@ namespace BINDU {
     void DX12Renderer::Resize()
     {
         m_impl->OnResize();
+
+        float aspectRatio = m_impl->m_gui->GetCentralNodeSize().x / m_impl->m_gui->GetCentralNodeSize().y;//static_cast<float>(m_impl->m_window->GetWidth()) / m_impl->m_window->GetHeight();
+
+        XMMATRIX p = XMMatrixPerspectiveFovLH(0.25f * XM_PI, aspectRatio , 1.0f, 1000.f);
+        XMStoreFloat4x4(&m_impl->m_projMat, p);
     }
 
     ID3D12Device* DX12Renderer::GetD3DDevice() const
@@ -652,11 +868,6 @@ namespace BINDU {
         CreateRtvHeap();
         CreateDsvHeap();
 
-        // Create CBV heap
-        CreateCbvHeapAndView();
-
-        // Create root signature
-        CreateRootSignature();
 
 #ifdef GUI_ENABLE
         CreateSrvHeap();
@@ -888,10 +1099,12 @@ namespace BINDU {
     void DX12Renderer::Impl::CreateRootSignature()
     {
         
-        CD3DX12_ROOT_PARAMETER    slotRootParameter[1];
+        CD3DX12_ROOT_PARAMETER    slotRootParameter[2];
 
         // Root parameters can be Descriptor table, Root constant or Root descriptor
-        CD3DX12_DESCRIPTOR_RANGE    cbvTable(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
+        CD3DX12_DESCRIPTOR_RANGE    cbvTable;
+    	cbvTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
+
 
         // Setting this root parameter as a descriptor table
         slotRootParameter[0].InitAsDescriptorTable(1, &cbvTable);
@@ -903,11 +1116,53 @@ namespace BINDU {
         ComPtr<ID3DBlob>    errorBlob{ nullptr };
 
         DXThrowIfFailed(D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1,
-            serializedRootSig.ReleaseAndGetAddressOf(), errorBlob.ReleaseAndGetAddressOf()));
+            serializedRootSig.GetAddressOf(), errorBlob.GetAddressOf()));
+
+        assert(errorBlob == nullptr);
 
         DXThrowIfFailed(m_d3dDevice->CreateRootSignature(0,
             serializedRootSig->GetBufferPointer(), serializedRootSig->GetBufferSize(),
-            IID_PPV_ARGS(m_rootSignature.ReleaseAndGetAddressOf())));
+            IID_PPV_ARGS(&m_rootSignature)));
+
+    }
+
+    void DX12Renderer::Impl::CreateInputLayout()
+    {
+
+        D3D12_INPUT_ELEMENT_DESC    inputElements[2];
+
+        D3D12_INPUT_ELEMENT_DESC    posElementDesc = {};
+        posElementDesc.SemanticName = "POSITION";
+        posElementDesc.SemanticIndex = 0;
+        posElementDesc.AlignedByteOffset = 0;
+        posElementDesc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+        posElementDesc.InputSlot = 0;
+        posElementDesc.InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+        posElementDesc.InstanceDataStepRate = 0;
+
+        D3D12_INPUT_ELEMENT_DESC    colorElementDesc = {};
+        colorElementDesc.SemanticName = "COLOR";
+        colorElementDesc.SemanticIndex = 0;
+        colorElementDesc.AlignedByteOffset = 12;
+        colorElementDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+        colorElementDesc.InputSlot = 0;
+        colorElementDesc.InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+
+        inputElements[0] = posElementDesc;
+        inputElements[1] = colorElementDesc;
+
+        m_inputElements =
+        {
+            {
+                "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,
+                D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+            },
+
+            {
+                "COLOR",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,12,
+                D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+            }
+        };
 
     }
 
@@ -980,18 +1235,20 @@ namespace BINDU {
 
         m_currentBackBuffer = 0;
 
-        // Get the Render target buffer form SwapChain and create Descriptor
+        // Get the Render target buffer from SwapChain and create Descriptor
         CreateRtv();
-        
+
 
 #ifdef  GUI_ENABLE
         if (m_renderTexture)
             m_renderTexture->ReleaseDevice();
         CreateRenderTexture();
-#endif
 
+
+#endif
         // Create the depth stencil buffer and Descriptor
-        CreateDsv();
+        CreateDsv(m_window->GetHeight(), m_window->GetWidth());
+       
 
         // Execute the resize commands
         DXThrowIfFailed(m_d3dCommandList->Close());

@@ -18,8 +18,14 @@ namespace BINDU
 		// No copy constructor
 		DescriptorHeap(const DescriptorHeap& rhs) = delete;
 
-		// No move assignment
+		// No copy assignment
 		DescriptorHeap& operator = (const DescriptorHeap& rhs) = delete;
+
+		// No move constructor
+		DescriptorHeap(const DescriptorHeap&& rhs) = delete;
+
+		// No move assignment
+		DescriptorHeap& operator = (const DescriptorHeap&& rhs) = delete;
 
 		~DescriptorHeap();
 
@@ -42,7 +48,7 @@ namespace BINDU
 		// Return the type of the descriptor heap
 		D3D12_DESCRIPTOR_HEAP_TYPE		GetType() const;
 
-		// Returns the descriptor handle increament size for this descriptor heap
+		// Returns the descriptor handle increment size for this descriptor heap
 		std::uint32_t					IncrementSize() const;
 
 		// Returns the underlying heap

@@ -141,7 +141,7 @@ namespace BINDU::D3DUtility
 		);
 
 		// Output error if any
-		if (!error)
+		if (error)
 			THROW_EXCEPTION(3, (char*)error->GetBufferPointer());
 
 		DXThrowIfFailed(hr);

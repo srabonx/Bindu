@@ -150,8 +150,8 @@ namespace BINDU
 		ImGui::PopStyleVar();
 
 		ImGui::Image(texture,
-		             ImVec2(m_impl->m_centralDockNode->Pos.x + m_impl->m_centralDockNode->Size.x,
-		                    m_impl->m_centralDockNode->Pos.y + m_impl->m_centralDockNode->Size.y));
+		             ImVec2(m_impl->m_centralDockNode->Size.x,
+		                     m_impl->m_centralDockNode->Size.y));
 
 		ImGui::End();
 	}
@@ -230,7 +230,10 @@ namespace BINDU
 
 	ImVec2 DX12Imgui::GetCentralNodeSize() const
 	{
-		return m_impl->m_centralDockNode->Size;
+		if (m_impl->m_centralDockNode)
+			return m_impl->m_centralDockNode->Size;
+		else
+			return ImVec2(200, 200);
 	}
 
 	ImGuiIO* DX12Imgui::GetIo()

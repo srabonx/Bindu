@@ -54,6 +54,8 @@ namespace BINDU {
 
         void ClearScreen(float r, float g, float b, float a) override;
 
+        void Update();
+
         void EndRender() override;
 
         void Close() override;

@@ -60,6 +60,18 @@ namespace BINDU
 			return m_resource.Get();
 		}
 
+		// Returns the GPU virtual address of the buffer
+		D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const
+		{
+			return m_resource->GetGPUVirtualAddress();
+		}
+
+		// Returns the GPU virtual address at offset index
+		D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddressAt(UINT index) const
+		{
+			return m_resource->GetGPUVirtualAddress() + (index * m_elementByteSize);
+		}
+
 		void CopyData(UINT elementIndex, const T& data)
 		{
 			// copy the data to the memory location of element at elementIndex

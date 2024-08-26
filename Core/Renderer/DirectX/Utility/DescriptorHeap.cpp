@@ -39,7 +39,7 @@ namespace BINDU
 	{
 		if (!pDevice)
 			THROW_EXCEPTION(3, "Invalid Device");
-
+		
 		D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
 		heapDesc.Type = heapType;
 		heapDesc.NodeMask = 0;
