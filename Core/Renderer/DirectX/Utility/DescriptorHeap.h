@@ -45,8 +45,11 @@ namespace BINDU
 		// Returns the count of the descriptors in the heap
 		std::uint32_t					Count() const;
 
-		// Return the type of the descriptor heap
-		D3D12_DESCRIPTOR_HEAP_TYPE		GetType() const;
+		// Returns the type of the descriptor heap
+		D3D12_DESCRIPTOR_HEAP_TYPE		Type() const;
+
+		// Returns the flags this descriptor heap was created with
+		D3D12_DESCRIPTOR_HEAP_FLAGS		Flags() const;
 
 		// Returns the descriptor handle increment size for this descriptor heap
 		std::uint32_t					IncrementSize() const;

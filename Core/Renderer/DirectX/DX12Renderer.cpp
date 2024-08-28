@@ -31,6 +31,7 @@
 #include "Utility/D3DUtillity.h"
 #include "Utility/d3dx12.h"
 #include "Utility/DescriptorHeap.h"
+#include "Utility/GPUDescriptorHeapManager.h"
 #include "Utility/UploadBuffer.h"
 #include "Utility/MeshGeometry.h"
 
@@ -173,6 +174,10 @@ namespace BINDU {
         std::unique_ptr<DescriptorHeap>        m_dsvHeap{ nullptr };
         // CBV heap
         std::unique_ptr<DescriptorHeap>        m_cbvHeap{ nullptr };
+
+        // CBV, SRV, UAV GPU descriptor heap
+        std::unique_ptr<DescriptorHeap>        m_cbvSrvUavGpuHeap{ nullptr };
+        std::unique_ptr<GPUDescriptorHeapManager> m_gpuDescriptorHeapManager{ nullptr };
 
         // Input layout
         std::vector<D3D12_INPUT_ELEMENT_DESC>  m_inputElements;
@@ -378,13 +383,15 @@ namespace BINDU {
 
         if (!m_cbvHeap)
             m_cbvHeap = std::make_unique<DescriptorHeap>(m_d3dDevice.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-                D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, 1);
+                D3D12_DESCRIPTOR_HEAP_FLAG_NONE, 1);
 
         D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
         cbvDesc.BufferLocation = m_cbPerObject->Resource()->GetGPUVirtualAddress();
         cbvDesc.SizeInBytes = m_cbPerObject->GetElementByteSize();
 
-        m_d3dDevice->CreateConstantBufferView(&cbvDesc, m_srvHeap->GetCPUHandleAt(2));
+        m_d3dDevice->CreateConstantBufferView(&cbvDesc, m_cbvHeap->GetFirstCPUHandle());
+
+
     }
 
     void DX12Renderer::Impl::CreateRtv()
@@ -456,7 +463,7 @@ namespace BINDU {
     {
         if (!m_srvHeap)
             m_srvHeap = std::make_unique<DescriptorHeap>(m_d3dDevice.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-                D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, SRDescriptors::SRCount + 1);
+                D3D12_DESCRIPTOR_HEAP_FLAG_NONE, SRDescriptors::SRCount);
     }
 
     void DX12Renderer::Impl::CreateRenderTexture()
@@ -470,6 +477,9 @@ namespace BINDU {
         m_renderTexture->SetClearColor({ 1.0f,0.0f,0.0f,1.0f });
 
         m_renderTexture->SizeResources(m_window->GetWidth(), m_window->GetHeight(), m_d3dCommandList.Get());
+
+        m_gpuDescriptorHeapManager->CopyDescriptor(m_d3dDevice.Get(), 0, m_srvHeap.get(),
+            1);
     }
 
 #endif
@@ -503,9 +513,6 @@ namespace BINDU {
         // Initialize Direct3D
         m_impl->InitDirect3D();
 
-#ifdef GUI_ENABLE
-        m_impl->m_gui->Initialize(window, this);
-#endif
 
         DXThrowIfFailed(m_impl->m_d3dCommandList->Reset(m_impl->m_d3dDirectCmdAllocator.Get(), nullptr));
 
@@ -529,6 +536,10 @@ namespace BINDU {
 
         // Wait until resize is complete
         m_impl->FlushCommandQueue();
+
+#ifdef GUI_ENABLE
+        m_impl->m_gui->Initialize(window, this);
+#endif
 
     }
 
@@ -588,15 +599,18 @@ namespace BINDU {
 
 #ifdef GUI_ENABLE
 
-        ID3D12DescriptorHeap* descriptorHeaps[] = { m_impl->m_srvHeap->Heap().Get() };
+
+        m_impl->m_gpuDescriptorHeapManager->CopyDescriptor(m_impl->m_d3dDevice.Get(), 2, m_impl->m_cbvHeap.get(),
+            m_impl->m_cbvHeap->Count());
+
+
+        ID3D12DescriptorHeap* descriptorHeaps[] = { m_impl->m_cbvSrvUavGpuHeap->Heap().Get() };
 
         m_impl->m_d3dCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
         D3D12_CPU_DESCRIPTOR_HANDLE renderTextureRTVHandle = m_impl->m_rtvHeap->GetCPUHandleAt(RTRenderTexture);
 
         D3D12_CPU_DESCRIPTOR_HANDLE renderTextureDSVHandle = m_impl->m_dsvHeap->GetFirstCPUHandle();
-
-        m_impl->m_gui->BeginDraw();
 
 
         float* color = m_impl->m_gui->GetClearColor();
@@ -625,7 +639,7 @@ namespace BINDU {
         m_impl->m_d3dCommandList->IASetIndexBuffer(&ibView);
         m_impl->m_d3dCommandList->IASetVertexBuffers(0, 1, &vbView);
 
-        m_impl->m_d3dCommandList->SetGraphicsRootDescriptorTable(0, m_impl->m_srvHeap->GetGPUHandleAt(2));
+        m_impl->m_d3dCommandList->SetGraphicsRootDescriptorTable(0, m_impl->m_cbvSrvUavGpuHeap->GetGPUHandleAt(2));
 
         m_impl->m_d3dCommandList->DrawIndexedInstanced(m_impl->m_geometry->SubMeshMap["Box"].IndexCount,
             1, 0, 0, 0);
@@ -677,7 +691,9 @@ namespace BINDU {
             TRUE, &dsvHandle);
 
 
-        ImTextureID texture = reinterpret_cast<ImTextureID>(m_impl->m_srvHeap->GetGPUHandleAt(SRRenderTexture).ptr);
+        ImTextureID texture = reinterpret_cast<ImTextureID>(m_impl->m_cbvSrvUavGpuHeap->GetGPUHandleAt(SRRenderTexture).ptr);
+
+        m_impl->m_gui->BeginDraw();
 
         
         m_impl->m_gui->DrawToCentral(texture);
@@ -714,6 +730,9 @@ namespace BINDU {
 
         // Wait until frame commands are complete
         m_impl->FlushCommandQueue();
+
+      //  m_impl->m_gpuDescriptorHeapManager->Reset();
+
     }
 
     void DX12Renderer::Close()
@@ -766,7 +785,7 @@ namespace BINDU {
 
     DescriptorHeap* DX12Renderer::GetSrvHeap() const
     {
-        return m_impl->m_srvHeap.get();
+        return m_impl->m_cbvSrvUavGpuHeap.get();
     }
 
 
@@ -779,7 +798,6 @@ namespace BINDU {
         DXThrowIfFailed(D3D12GetDebugInterface(IID_PPV_ARGS(pD3DDebug.ReleaseAndGetAddressOf())));
         pD3DDebug.As(&m_d3dDebug);
         m_d3dDebug->EnableDebugLayer();
-        
         
         Logger::Get()->Log(LogType::Info, "Enabled D3D Debug Layer");
 
@@ -867,6 +885,14 @@ namespace BINDU {
         // Create RTV and DSV heap
         CreateRtvHeap();
         CreateDsvHeap();
+
+        if (!m_cbvSrvUavGpuHeap)
+        {
+            m_cbvSrvUavGpuHeap = std::make_unique<DescriptorHeap>(m_d3dDevice.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+                D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, 128);
+
+            m_gpuDescriptorHeapManager = std::make_unique<GPUDescriptorHeapManager>(m_cbvSrvUavGpuHeap.get());
+        }
 
 
 #ifdef GUI_ENABLE
@@ -1243,7 +1269,6 @@ namespace BINDU {
         if (m_renderTexture)
             m_renderTexture->ReleaseDevice();
         CreateRenderTexture();
-
 
 #endif
         // Create the depth stencil buffer and Descriptor

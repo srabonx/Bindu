@@ -7,15 +7,15 @@
 
 
 template<typename T>
-class CircularBuffer
+class CircleBuffer
 {
 public:
-    CircularBuffer()
+    CircleBuffer()
     {
         m_buffer.resize(m_capacity + 1);
     }
 
-    explicit CircularBuffer(size_t capacity) : m_capacity(capacity + 1)
+    explicit CircleBuffer(size_t capacity) : m_capacity(capacity + 1)
     {
         m_buffer.resize(capacity + 1);
     }

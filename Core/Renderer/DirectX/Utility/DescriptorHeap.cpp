@@ -1,5 +1,6 @@
 #include "DescriptorHeap.h"
 
+#include <map>
 #include <wrl/client.h>
 
 #include "d3dx12.h"
@@ -8,6 +9,9 @@
 namespace BINDU
 {
 	using namespace Microsoft::WRL;
+
+	using offset = std::uint32_t;
+	using size = std::uint32_t;
 
 	class DescriptorHeap::Impl
 	{
@@ -31,6 +35,10 @@ namespace BINDU
 
 		// Handle increment size
 		std::uint32_t						m_incrementSize{ 0 };
+
+		//
+		std::map<offset, size>				m_freeMap;
+
 	};
 
 
@@ -84,9 +92,14 @@ namespace BINDU
 		return m_impl->m_count;
 	}
 
-	D3D12_DESCRIPTOR_HEAP_TYPE DescriptorHeap::GetType() const
+	D3D12_DESCRIPTOR_HEAP_TYPE DescriptorHeap::Type() const
 	{
 		return m_impl->m_type;
+	}
+
+	D3D12_DESCRIPTOR_HEAP_FLAGS DescriptorHeap::Flags() const
+	{
+		return m_impl->m_flags;
 	}
 
 	std::uint32_t DescriptorHeap::IncrementSize() const
