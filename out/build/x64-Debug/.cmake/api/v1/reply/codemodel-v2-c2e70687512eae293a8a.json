@@ -39,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "Bindu::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-Bindu-Debug-3ceba794911a307cf119.json",
+					"jsonFile" : "target-Bindu-Debug-f161d9a8c69410391ba7.json",
 					"name" : "Bindu",
 					"projectIndex" : 0
 				}
@@ -49,7 +49,7 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/letsd/CLionProjects/Bindu/cmake-build-debug",
+		"build" : "C:/Users/letsd/CLionProjects/Bindu/out/build/x64-Debug",
 		"source" : "C:/Users/letsd/CLionProjects/Bindu"
 	},
 	"version" : 

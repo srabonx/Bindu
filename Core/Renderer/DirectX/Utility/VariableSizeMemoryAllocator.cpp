@@ -2,7 +2,7 @@
 
 namespace BINDU
 {
-	VariableSizeMemoryAllocator::VariableSizeMemoryAllocator(size_t size) : m_freeSize(size)
+	VariableSizeMemoryAllocator::VariableSizeMemoryAllocator(size_t maxSize) : m_freeSize(maxSize)
 	{
 		
 	}

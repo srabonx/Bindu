@@ -12,12 +12,11 @@ namespace BINDU
 	class VariableSizeMemoryAllocator
 	{
 	public:
-		VariableSizeMemoryAllocator() = default;
 
 		~VariableSizeMemoryAllocator() = default;
 
 		// size = The memory size this allocator will handle
-		explicit VariableSizeMemoryAllocator(size_t size);
+		explicit VariableSizeMemoryAllocator(size_t maxSize);
 
 		// No copy constructor
 		VariableSizeMemoryAllocator(const VariableSizeMemoryAllocator& rhs) = delete;
