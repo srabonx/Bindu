@@ -70,6 +70,7 @@ namespace BINDU {
 
         DescriptorHeap*                 GetSrvHeap() const;
 
+        void                            CheckCPUDescMan();
 
     private:
 

@@ -35,6 +35,8 @@
 #include "Utility/UploadBuffer.h"
 #include "Utility/MeshGeometry.h"
 
+#include "Utility/DescriptorHeapManager.h"
+
 
 namespace BINDU {
 
@@ -365,6 +367,7 @@ namespace BINDU {
 
     void DX12Renderer::Impl::CreateRtvHeap()
     {
+
         if (!m_rtvHeap)
             m_rtvHeap = std::make_unique<DescriptorHeap>(m_d3dDevice.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
                 D3D12_DESCRIPTOR_HEAP_FLAG_NONE, RTDescriptors::RTCount);
@@ -786,6 +789,35 @@ namespace BINDU {
     DescriptorHeap* DX12Renderer::GetSrvHeap() const
     {
         return m_impl->m_cbvSrvUavGpuHeap.get();
+    }
+
+    void DX12Renderer::CheckCPUDescMan()
+    {
+        D3D12_DESCRIPTOR_HEAP_DESC dhDesc;
+        dhDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+        dhDesc.NodeMask = 0;
+        dhDesc.NumDescriptors = 30;
+        dhDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+
+        DescriptorHeapManager descMan(m_impl->m_d3dDevice.Get(), dhDesc, 0);
+
+        auto allocation = descMan.Allocate(10);
+        auto allocation2 = descMan.Allocate(8);
+        descMan.Free(allocation);
+
+        descMan.ReleaseStaleAllocations(2);
+
+        auto allocation3 = descMan.Allocate(3);
+        auto allocation4 = descMan.Allocate(4);
+        allocation = descMan.Allocate(5);
+
+        descMan.Free(allocation);
+        descMan.Free(allocation2);
+        descMan.Free(allocation3);
+        descMan.Free(allocation4);
+
+        descMan.ReleaseStaleAllocations(2);
+
     }
 
 

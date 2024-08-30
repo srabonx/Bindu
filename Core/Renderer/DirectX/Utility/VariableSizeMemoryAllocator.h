@@ -15,8 +15,8 @@ namespace BINDU
 
 		~VariableSizeMemoryAllocator() = default;
 
-		// size = The memory size this allocator will handle
-		explicit VariableSizeMemoryAllocator(size_t maxSize);
+		// initialSize = The memory size this allocator will handle initially
+		explicit VariableSizeMemoryAllocator(size_t initialSize);
 
 		// No copy constructor
 		VariableSizeMemoryAllocator(const VariableSizeMemoryAllocator& rhs) = delete;
@@ -35,7 +35,6 @@ namespace BINDU
 
 		// Frees the size amount of memory at the given offset
 		void				Free(std::uint32_t offset, size_t size);
-
 
 	private:
 

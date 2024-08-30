@@ -36,8 +36,6 @@ namespace BINDU
 		// Handle increment size
 		std::uint32_t						m_incrementSize{ 0 };
 
-		//
-		std::map<offset, size>				m_freeMap;
 
 	};
 

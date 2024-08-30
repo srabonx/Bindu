@@ -71,6 +71,11 @@ add_library(Bindu STATIC
         Core/Renderer/DirectX/Utility/MeshGeometry.h
         Utility/Common/CircleBuffer.h
         Core/Renderer/DirectX/Utility/GPUDescriptorHeapManager.h
-        Core/Renderer/DirectX/Utility/GPUDescriptorHeapManager.cpp "Core/Renderer/DirectX/Utility/VariableSizeMemoryAllocator.h" "Core/Renderer/DirectX/Utility/VariableSizeMemoryAllocator.cpp" "Core/Renderer/DirectX/Utility/VariableSizeGpuMemoryAllocator.h" "Core/Renderer/DirectX/Utility/VariableSizeGpuMemoryAllocator.cpp")
+        Core/Renderer/DirectX/Utility/GPUDescriptorHeapManager.cpp
+        Core/Renderer/DirectX/Utility/VariableSizeMemoryAllocator.h
+        Core/Renderer/DirectX/Utility/VariableSizeMemoryAllocator.cpp
+        Core/Renderer/DirectX/Utility/VariableSizeGpuMemoryAllocator.h
+        Core/Renderer/DirectX/Utility/VariableSizeGpuMemoryAllocator.cpp
+         "Core/Renderer/DirectX/Utility/DescriptorHeapManager.h" "Core/Renderer/DirectX/Utility/DescriptorHeapManager.cpp")
 
 

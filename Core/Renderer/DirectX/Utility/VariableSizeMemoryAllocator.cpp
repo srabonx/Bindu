@@ -2,9 +2,10 @@
 
 namespace BINDU
 {
-	VariableSizeMemoryAllocator::VariableSizeMemoryAllocator(size_t maxSize) : m_freeSize(maxSize)
+	VariableSizeMemoryAllocator::VariableSizeMemoryAllocator(size_t initialSize) : m_freeSize(initialSize)
 	{
-		
+		auto offsetItr = m_offsetMap.emplace(0, m_freeSize);
+		m_sizeMap.emplace(m_freeSize, offsetItr.first);
 	}
 
 	std::uint32_t VariableSizeMemoryAllocator::Allocate(size_t size)
@@ -87,8 +88,8 @@ namespace BINDU
 			newSize = size + nextBlock->second.Size;
 			newOffset = offset;
 
-			m_offsetMap.erase(nextBlock);
 			m_sizeMap.erase(nextBlock->second.SizeMapIt);
+			m_offsetMap.erase(nextBlock);
 		}
 		else
 		{

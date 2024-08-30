@@ -8,12 +8,15 @@
   "ExpandedNodes": [
     "",
     "\\Core",
-    "\\Core\\Engine",
-    "\\Event",
-    "\\Input",
-    "\\Logger",
+    "\\Core\\Renderer",
+    "\\Core\\Renderer\\DirectX",
+    "\\Core\\Renderer\\DirectX\\Utility",
+    "\\Shaders",
+    "\\Shaders\\Default",
+    "\\Utility",
+    "\\Utility\\Common",
     "\\Window"
   ],
-  "SelectedNode": "\\Event\\EventManager.cpp",
+  "SelectedNode": "\\Core\\Renderer\\DirectX\\Utility\\VariableSizeMemoryAllocator.cpp",
   "PreviewInSolutionExplorer": false
 }
