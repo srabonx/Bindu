@@ -17,6 +17,6 @@
     "\\Utility\\Common",
     "\\Window"
   ],
-  "SelectedNode": "\\Core\\Renderer\\DirectX\\Utility\\VariableSizeMemoryAllocator.cpp",
+  "SelectedNode": "\\Core\\Renderer\\DirectX\\DX12Renderer.cpp",
   "PreviewInSolutionExplorer": false
 }

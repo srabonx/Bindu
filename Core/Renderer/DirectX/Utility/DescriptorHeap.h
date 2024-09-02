@@ -15,6 +15,8 @@ namespace BINDU
 	public:
 		DescriptorHeap(ID3D12Device* pDevice, D3D12_DESCRIPTOR_HEAP_TYPE heapType, D3D12_DESCRIPTOR_HEAP_FLAGS heapFlags, std::uint32_t count);
 
+		DescriptorHeap(ID3D12Device* pDevice, D3D12_DESCRIPTOR_HEAP_DESC heapDesc);
+
 		// No copy constructor
 		DescriptorHeap(const DescriptorHeap& rhs) = delete;
 

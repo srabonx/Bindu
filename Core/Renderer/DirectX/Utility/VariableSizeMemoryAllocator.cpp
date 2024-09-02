@@ -8,6 +8,22 @@ namespace BINDU
 		m_sizeMap.emplace(m_freeSize, offsetItr.first);
 	}
 
+	VariableSizeMemoryAllocator::VariableSizeMemoryAllocator(VariableSizeMemoryAllocator&& rhs) noexcept
+	{
+		std::swap(this->m_freeSize, rhs.m_freeSize);
+		std::swap(this->m_offsetMap, rhs.m_offsetMap);
+		std::swap(this->m_sizeMap, rhs.m_sizeMap);
+	}
+
+	VariableSizeMemoryAllocator& VariableSizeMemoryAllocator::operator=(VariableSizeMemoryAllocator&& rhs) noexcept
+	{
+		std::swap(this->m_freeSize, rhs.m_freeSize);
+		std::swap(this->m_offsetMap, rhs.m_offsetMap);
+		std::swap(this->m_sizeMap, rhs.m_sizeMap);
+
+		return *this;
+	}
+
 	std::uint32_t VariableSizeMemoryAllocator::Allocate(size_t size)
 	{
 

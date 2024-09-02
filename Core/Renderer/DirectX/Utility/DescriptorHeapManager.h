@@ -2,6 +2,7 @@
 #define DESCRIPTORHEAPMANAGER_H
 
 
+#include "IDescriptorHeapAllocator.h"
 #include "VariableSizeGpuMemoryAllocator.h"
 #include "DescriptorHeap.h"
 
@@ -12,16 +13,23 @@ namespace BINDU
 	{
 	public:
 
-		DescriptorHeapAllocation() = default;
+		DescriptorHeapAllocation();
 
-		DescriptorHeapAllocation(const std::shared_ptr<DescriptorHeap>& pDescriptorHeap,D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle,
-			size_t numOfHandles, std::uint32_t managerId);
+		DescriptorHeapAllocation(IDescriptorHeapAllocator* parentAllocator, const std::shared_ptr<DescriptorHeap>& pDescriptorHeap,
+			D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle, size_t numOfHandles, std::uint32_t managerId);
+
+		DescriptorHeapAllocation(DescriptorHeapAllocation&& rhs) noexcept;
+
+		DescriptorHeapAllocation& operator = (DescriptorHeapAllocation&& rhs) noexcept;
 
 		~DescriptorHeapAllocation();
 
 		D3D12_CPU_DESCRIPTOR_HANDLE	GetCpuHandle(std::uint32_t offset = 0) const;
 
 		D3D12_GPU_DESCRIPTOR_HANDLE	GetGpuHandle(std::uint32_t offset = 0) const;
+
+		// Returns the DescriptorHeap of this allocation
+		std::weak_ptr<DescriptorHeap>& GetDescriptorHeap();
 
 		// Returns the number of handles this allocation has
 		size_t						GetNumOfHandles() const;
@@ -39,7 +47,16 @@ namespace BINDU
 		std::uint32_t				GetDescriptorIncrementSize() const;
 
 	private:
+
+		DescriptorHeapAllocation(const DescriptorHeapAllocation& rhs) = delete;
+
+		DescriptorHeapAllocation& operator = (const DescriptorHeapAllocation& rhs) = delete;
+
+		// Weak pointer to the DescriptorHeap where this allocation is from
 		std::weak_ptr<DescriptorHeap>		m_descriptorHeap;
+
+		// Pointer to the parent allocation manager that created this allocation
+		IDescriptorHeapAllocator *			m_parentAllocator{ nullptr };
 
 		// first cpu handle in the allocation
 		D3D12_CPU_DESCRIPTOR_HANDLE			m_firstCpuHandle{ 0 };
@@ -62,21 +79,34 @@ namespace BINDU
 	class DescriptorHeapManager
 	{
 	public:
-		DescriptorHeapManager(ID3D12Device* pDevice,const D3D12_DESCRIPTOR_HEAP_DESC& heapDesc, std::uint32_t managerId);
+		DescriptorHeapManager(IDescriptorHeapAllocator* parentAllocator, ID3D12Device* pDevice, D3D12_DESCRIPTOR_HEAP_DESC& heapDesc,
+			std::uint32_t managerId);
 
 		// To manage a sub-range of descriptors from a DescriptorHeap
-		DescriptorHeapManager(ID3D12Device* pDevice, DescriptorHeap* pDescriptorHeap, std::uint32_t managerId,
-			std::uint32_t offset, size_t numOfDescriptors);
+		DescriptorHeapManager(IDescriptorHeapAllocator* parentAllocator, ID3D12Device* pDevice, const std::shared_ptr<DescriptorHeap>& pDescriptorHeap,
+			std::uint32_t managerId, std::uint32_t offset, size_t numOfDescriptors);
 
 		~DescriptorHeapManager();
+
+		// Move constructor
+		DescriptorHeapManager(DescriptorHeapManager&& rhs) noexcept;
+
+		// Move assignment
+		DescriptorHeapManager& operator = (DescriptorHeapManager&& rhs) noexcept;
+
+		// No copy constructor
+		DescriptorHeapManager(DescriptorHeapManager& rhs) = delete;
+
+		// No copy assignment
+		DescriptorHeapManager& operator = (DescriptorHeapManager& rhs) = delete;
 
 		// Allocate count amount of descriptors
 		DescriptorHeapAllocation	Allocate(size_t count);
 
 		// Releases the descriptor heap allocation
-		// Note: This doesnt releases the allocation immediately. The allocation gets added to the Release queue and will be
+		// Note: This doesn't release the allocation immediately. The allocation gets added to the Release queue and will be
 		// released once ReleaseStaleAllocations gets called
-		void						Free(DescriptorHeapAllocation& allocation);
+		void						Free(DescriptorHeapAllocation&& allocation);
 
 		// Releases all stale allocations 
 		void						ReleaseStaleAllocations(std::uint64_t numOfCompletedFrames);
@@ -93,6 +123,9 @@ namespace BINDU
 		// Pointer to the descriptor this manager will manage
 		std::shared_ptr<DescriptorHeap>		m_descriptorHeap{ nullptr };
 
+		// Pointer to the parent allocator
+		IDescriptorHeapAllocator*			m_parentAllocator{ nullptr };
+
 		// Memory allocator to help manage the allocation and deallocation
 		VariableSizeGpuMemoryAllocator		m_freeMemAllocator;
 
@@ -107,6 +140,7 @@ namespace BINDU
 
 		// Id of this manager
 		std::uint32_t						m_managerId{ 0 };
+
 	};
 }
 

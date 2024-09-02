@@ -8,6 +8,19 @@ namespace BINDU
 
 	}
 
+	VariableSizeGpuMemoryAllocator::VariableSizeGpuMemoryAllocator(VariableSizeGpuMemoryAllocator&& rhs) noexcept :
+		VariableSizeMemoryAllocator(std::move(rhs))
+	{
+
+	}
+
+	VariableSizeGpuMemoryAllocator& VariableSizeGpuMemoryAllocator::operator=(
+		VariableSizeGpuMemoryAllocator&& rhs) noexcept
+	{
+		std::swap(this->m_staleAllocations, rhs.m_staleAllocations);
+		return *this;
+	}
+
 	VariableSizeGpuMemoryAllocator::~VariableSizeGpuMemoryAllocator()
 	{
 	}

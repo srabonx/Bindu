@@ -11,7 +11,17 @@ namespace BINDU
 
 	public:
 
-		VariableSizeGpuMemoryAllocator(size_t maxSize);
+		explicit VariableSizeGpuMemoryAllocator(size_t maxSize);
+
+		// move constructor
+		VariableSizeGpuMemoryAllocator(VariableSizeGpuMemoryAllocator&& rhs) noexcept;
+
+		// move assignment
+		VariableSizeGpuMemoryAllocator& operator = (VariableSizeGpuMemoryAllocator&& rhs) noexcept;
+
+		VariableSizeGpuMemoryAllocator(VariableSizeGpuMemoryAllocator& rhs) = delete;
+
+		VariableSizeGpuMemoryAllocator& operator = (VariableSizeGpuMemoryAllocator& rhs) = delete;
 
 		~VariableSizeGpuMemoryAllocator();
 

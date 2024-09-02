@@ -58,6 +58,17 @@ namespace BINDU
 
 	}
 
+	DescriptorHeap::DescriptorHeap(ID3D12Device* pDevice, D3D12_DESCRIPTOR_HEAP_DESC heapDesc) :
+		m_impl(std::make_unique<Impl>(heapDesc.Type, heapDesc.Flags, heapDesc.NumDescriptors))
+	{
+		if (!pDevice)
+			THROW_EXCEPTION(3, "Invalid Device");
+
+		m_impl->m_incrementSize = pDevice->GetDescriptorHandleIncrementSize(heapDesc.Type);
+
+		pDevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(m_impl->m_heap.ReleaseAndGetAddressOf()));
+	}
+
 	DescriptorHeap::~DescriptorHeap()
 	{
 
@@ -70,7 +81,10 @@ namespace BINDU
 
 	D3D12_GPU_DESCRIPTOR_HANDLE DescriptorHeap::GetFirstGPUHandle() const
 	{
-		return m_impl->m_heap->GetGPUDescriptorHandleForHeapStart();
+		if (m_impl->m_flags & D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE)
+			return m_impl->m_heap->GetGPUDescriptorHandleForHeapStart();
+
+		return CD3DX12_GPU_DESCRIPTOR_HANDLE();
 	}
 
 	D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeap::GetCPUHandleAt(std::uint32_t index) const

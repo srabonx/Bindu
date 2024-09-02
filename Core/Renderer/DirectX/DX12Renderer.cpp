@@ -28,14 +28,15 @@
 #include "RenderTexture.h"
 #include "../../../Logger/Logger.h"
 #include "../../../Utility/Common/CommonUtility.h"
+#include "Utility/CpuDescriptorHeap.h"
 #include "Utility/D3DUtillity.h"
 #include "Utility/d3dx12.h"
 #include "Utility/DescriptorHeap.h"
+#include "Utility/GpuDescriptorHeap.h"
 #include "Utility/GPUDescriptorHeapManager.h"
 #include "Utility/UploadBuffer.h"
 #include "Utility/MeshGeometry.h"
 
-#include "Utility/DescriptorHeapManager.h"
 
 
 namespace BINDU {
@@ -134,9 +135,9 @@ namespace BINDU {
         ComPtr<IDXGISwapChain3>  m_dxgiSwapChain{ nullptr };
 
         // SwapChain Buffers
-        UINT m_swapChainBufferCount = SwapChainBufferCount;
+        UINT m_swapChainBufferCount = SWAP_CHAIN_BUFFER_COUNT;
 
-        ComPtr<ID3D12Resource> m_swapChainBuffers[SwapChainBufferCount];
+        ComPtr<ID3D12Resource> m_swapChainBuffers[SWAP_CHAIN_BUFFER_COUNT];
 
         UINT m_currentBackBuffer = 0;
 
@@ -402,7 +403,7 @@ namespace BINDU {
         Logger::Get()->Log(LogType::Info, "Creating RTV buffer and resource");
 
 
-        for (UINT i = 0; i < SwapChainBufferCount; i++)
+        for (UINT i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
         {
             // Get the ith buffer from the SwapChain
             m_dxgiSwapChain->GetBuffer(i, IID_PPV_ARGS(m_swapChainBuffers[i].ReleaseAndGetAddressOf()));
@@ -729,7 +730,7 @@ namespace BINDU {
 
         // Swap the back and front buffer
         DXThrowIfFailed(m_impl->m_dxgiSwapChain->Present(0, 0));
-        m_impl->m_currentBackBuffer = (m_impl->m_currentBackBuffer + 1) % SwapChainBufferCount;
+        m_impl->m_currentBackBuffer = (m_impl->m_currentBackBuffer + 1) % SWAP_CHAIN_BUFFER_COUNT;
 
         // Wait until frame commands are complete
         m_impl->FlushCommandQueue();
@@ -793,30 +794,44 @@ namespace BINDU {
 
     void DX12Renderer::CheckCPUDescMan()
     {
-        D3D12_DESCRIPTOR_HEAP_DESC dhDesc;
-        dhDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-        dhDesc.NodeMask = 0;
-        dhDesc.NumDescriptors = 30;
-        dhDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+        CpuDescriptorHeap cpuHeap(m_impl->m_d3dDevice.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-        DescriptorHeapManager descMan(m_impl->m_d3dDevice.Get(), dhDesc, 0);
+        {
+            auto allocation1 = cpuHeap.Allocate(20);
+            //cpuHeap.Free(std::move(allocation1));
+            auto allocation2 = cpuHeap.Allocate(100);
+        }
 
-        auto allocation = descMan.Allocate(10);
-        auto allocation2 = descMan.Allocate(8);
-        descMan.Free(allocation);
+        cpuHeap.ReleaseStaleAllocations(2);
 
-        descMan.ReleaseStaleAllocations(2);
+        GpuDescriptorHeap gpuHeap(m_impl->m_d3dDevice.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+        DynamicSubAllocationManager dynamicGpuHeap(&gpuHeap);
 
-        auto allocation3 = descMan.Allocate(3);
-        auto allocation4 = descMan.Allocate(4);
-        allocation = descMan.Allocate(5);
+        {
+            auto allocation3 = gpuHeap.Allocate(20);
+            auto allocation4 = gpuHeap.Allocate(100);
+        }
+        {
+            auto allocation5 = dynamicGpuHeap.Allocate(20);
+            auto allocation6 = dynamicGpuHeap.Allocate(100);
+            auto allocation7 = dynamicGpuHeap.Allocate(2);
 
-        descMan.Free(allocation);
-        descMan.Free(allocation2);
-        descMan.Free(allocation3);
-        descMan.Free(allocation4);
+            auto allocation8 = gpuHeap.AllocateDynamic(10);
+            auto allocation9 = gpuHeap.AllocateDynamic(5);
+            gpuHeap.Free(std::move(allocation8));
+        }
 
-        descMan.ReleaseStaleAllocations(2);
+        dynamicGpuHeap.DiscardAllocations(2);
+
+        gpuHeap.ReleaseStaleAllocations(2);
+
+        {
+            dynamicGpuHeap.Allocate(20);
+            dynamicGpuHeap.Allocate(100);
+            dynamicGpuHeap.Allocate(2);
+
+            dynamicGpuHeap.DiscardAllocations(2);
+        }
 
     }
 
@@ -1281,14 +1296,14 @@ namespace BINDU {
         DXThrowIfFailed(m_d3dCommandList->Reset(m_d3dDirectCmdAllocator.Get(), nullptr));
 
         // Release the resources we'll be recreating
-        for (int i = 0; i < SwapChainBufferCount; i++)
+        for (int i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
         {
             m_swapChainBuffers[i].Reset();
         }
         m_depthStencilBuffer.Reset();
 
         // Resize the SwapChain
-        DXThrowIfFailed(m_dxgiSwapChain->ResizeBuffers(SwapChainBufferCount, m_window->GetWidth(), m_window->GetHeight(),
+        DXThrowIfFailed(m_dxgiSwapChain->ResizeBuffers(SWAP_CHAIN_BUFFER_COUNT, m_window->GetWidth(), m_window->GetHeight(),
             m_backBufferFormat, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH));
 
         m_currentBackBuffer = 0;

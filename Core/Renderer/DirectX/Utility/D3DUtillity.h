@@ -23,7 +23,9 @@
 #define  DXSafe_Release(p) { if(p) { p->Release(); p = nullptr; } }
 #endif
 
-constexpr UINT SwapChainBufferCount = 2;
+constexpr UINT SWAP_CHAIN_BUFFER_COUNT = 2;
+
+constexpr UINT GPU_DESCRIPTOR_HEAP_DESCRIPTORS_COUNT = 1000;
 
 namespace BINDU::D3DUtility
 {

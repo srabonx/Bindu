@@ -18,17 +18,18 @@ namespace BINDU
 		// initialSize = The memory size this allocator will handle initially
 		explicit VariableSizeMemoryAllocator(size_t initialSize);
 
+		// move constructor
+		VariableSizeMemoryAllocator(VariableSizeMemoryAllocator&& rhs) noexcept;
+
+		// move assignment
+		VariableSizeMemoryAllocator& operator = (VariableSizeMemoryAllocator&& rhs) noexcept;
+
 		// No copy constructor
-		VariableSizeMemoryAllocator(const VariableSizeMemoryAllocator& rhs) = delete;
+		VariableSizeMemoryAllocator(VariableSizeMemoryAllocator& rhs) = delete;
 
 		// No copy assignment
-		VariableSizeMemoryAllocator& operator = (const VariableSizeMemoryAllocator& rhs) = delete;
+		VariableSizeMemoryAllocator& operator = (VariableSizeMemoryAllocator& rhs) = delete;
 
-		// No move constructor
-		VariableSizeMemoryAllocator(const VariableSizeMemoryAllocator&& rhs) = delete;
-
-		// No move assignment
-		VariableSizeMemoryAllocator& operator = (const VariableSizeMemoryAllocator&& rhs) = delete;
 
 		// Returns the offset where size amount of memory is available
 		std::uint32_t		Allocate(size_t size);
@@ -68,9 +69,6 @@ namespace BINDU
 
 		// Orders the free blocks by offset
 		OffsetMap					m_offsetMap;
-
-		// Offset map iterator
-		OffsetMap::iterator			m_offsetMapIt;
 
 		// Orders the free blocks by size
 		SizeMap						m_sizeMap;

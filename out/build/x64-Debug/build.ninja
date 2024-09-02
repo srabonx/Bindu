@@ -245,6 +245,20 @@ build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\Utility\DescriptorHeapManager.c
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
+build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\Utility\CpuDescriptorHeap.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\Utility\CpuDescriptorHeap.cpp || cmake_object_order_depends_target_Bindu
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX\Utility
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\Utility\GpuDescriptorHeap.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\Utility\GpuDescriptorHeap.cpp || cmake_object_order_depends_target_Bindu
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX\Utility
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
 
 # =============================================================================
 # Link build statements for STATIC_LIBRARY target Bindu
@@ -253,7 +267,7 @@ build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\Utility\DescriptorHeapManager.c
 #############################################
 # Link the static library Bindu.lib
 
-build Bindu.lib: CXX_STATIC_LIBRARY_LINKER__Bindu_Debug CMakeFiles\Bindu.dir\ErrorHandler\EngineException.cpp.obj CMakeFiles\Bindu.dir\Event\EventManager.cpp.obj CMakeFiles\Bindu.dir\Event\EventStruct.cpp.obj CMakeFiles\Bindu.dir\Event\EventPool.cpp.obj CMakeFiles\Bindu.dir\Window\Win32Window.cpp.obj CMakeFiles\Bindu.dir\Core\Engine\Win32Engine.cpp.obj CMakeFiles\Bindu.dir\Logger\ErrorLogManager.cpp.obj CMakeFiles\Bindu.dir\Logger\Logger.cpp.obj CMakeFiles\Bindu.dir\Input\InputManager.cpp.obj CMakeFiles\Bindu.dir\Input\Win32InputHandler.cpp.obj CMakeFiles\Bindu.dir\Input\Keyboard.cpp.obj CMakeFiles\Bindu.dir\Input\Mouse.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DX12Renderer.cpp.obj CMakeFiles\Bindu.dir\Utility\Common\Timer.cpp.obj CMakeFiles\Bindu.dir\Gui\Common\imgui.cpp.obj CMakeFiles\Bindu.dir\Gui\Common\imgui_demo.cpp.obj CMakeFiles\Bindu.dir\Gui\Common\imgui_draw.cpp.obj CMakeFiles\Bindu.dir\Gui\Common\imgui_tables.cpp.obj CMakeFiles\Bindu.dir\Gui\Common\imgui_widgets.cpp.obj CMakeFiles\Bindu.dir\Gui\DX12\imgui_impl_win32.cpp.obj CMakeFiles\Bindu.dir\Gui\DX12\imgui_impl_dx12.cpp.obj CMakeFiles\Bindu.dir\Gui\DX12\DX12Imgui.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\RenderTexture.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\Utility\DescriptorHeap.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\Utility\GPUDescriptorHeapManager.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\Utility\VariableSizeMemoryAllocator.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\Utility\VariableSizeGpuMemoryAllocator.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\Utility\DescriptorHeapManager.cpp.obj
+build Bindu.lib: CXX_STATIC_LIBRARY_LINKER__Bindu_Debug CMakeFiles\Bindu.dir\ErrorHandler\EngineException.cpp.obj CMakeFiles\Bindu.dir\Event\EventManager.cpp.obj CMakeFiles\Bindu.dir\Event\EventStruct.cpp.obj CMakeFiles\Bindu.dir\Event\EventPool.cpp.obj CMakeFiles\Bindu.dir\Window\Win32Window.cpp.obj CMakeFiles\Bindu.dir\Core\Engine\Win32Engine.cpp.obj CMakeFiles\Bindu.dir\Logger\ErrorLogManager.cpp.obj CMakeFiles\Bindu.dir\Logger\Logger.cpp.obj CMakeFiles\Bindu.dir\Input\InputManager.cpp.obj CMakeFiles\Bindu.dir\Input\Win32InputHandler.cpp.obj CMakeFiles\Bindu.dir\Input\Keyboard.cpp.obj CMakeFiles\Bindu.dir\Input\Mouse.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DX12Renderer.cpp.obj CMakeFiles\Bindu.dir\Utility\Common\Timer.cpp.obj CMakeFiles\Bindu.dir\Gui\Common\imgui.cpp.obj CMakeFiles\Bindu.dir\Gui\Common\imgui_demo.cpp.obj CMakeFiles\Bindu.dir\Gui\Common\imgui_draw.cpp.obj CMakeFiles\Bindu.dir\Gui\Common\imgui_tables.cpp.obj CMakeFiles\Bindu.dir\Gui\Common\imgui_widgets.cpp.obj CMakeFiles\Bindu.dir\Gui\DX12\imgui_impl_win32.cpp.obj CMakeFiles\Bindu.dir\Gui\DX12\imgui_impl_dx12.cpp.obj CMakeFiles\Bindu.dir\Gui\DX12\DX12Imgui.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\RenderTexture.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\Utility\DescriptorHeap.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\Utility\GPUDescriptorHeapManager.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\Utility\VariableSizeMemoryAllocator.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\Utility\VariableSizeGpuMemoryAllocator.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\Utility\DescriptorHeapManager.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\Utility\CpuDescriptorHeap.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\Utility\GpuDescriptorHeap.cpp.obj
   LANGUAGE_COMPILE_FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -MDd -Zi
   LINK_FLAGS = /machine:x64
   OBJECT_DIR = CMakeFiles\Bindu.dir
