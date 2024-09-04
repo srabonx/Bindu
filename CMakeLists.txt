@@ -63,8 +63,8 @@ add_library(Bindu STATIC
         Gui/DX12/imgui_impl_dx12.cpp
         Gui/DX12/DX12Imgui.h
         Gui/DX12/DX12Imgui.cpp 
-        Core/Renderer/DirectX/RenderTexture.h
-        Core/Renderer/DirectX/RenderTexture.cpp
+        Temp/RenderTexture.h
+        Temp/RenderTexture.cpp
         Core/Renderer/DirectX/Utility/DescriptorHeap.h
         Core/Renderer/DirectX/Utility/DescriptorHeap.cpp 
         Core/Renderer/DirectX/Utility/UploadBuffer.h 
@@ -82,6 +82,9 @@ add_library(Bindu STATIC
         Core/Renderer/DirectX/Utility/CpuDescriptorHeap.cpp
         Core/Renderer/DirectX/Utility/IDescriptorHeapAllocator.h
         Core/Renderer/DirectX/Utility/GpuDescriptorHeap.h
-        Core/Renderer/DirectX/Utility/GpuDescriptorHeap.cpp)
+        Core/Renderer/DirectX/Utility/GpuDescriptorHeap.cpp 
+        Core/Renderer/DirectX/IRenderDevice.h
+        "Core/Renderer/DirectX/D3DRenderDevice.h"
+        "Core/Renderer/DirectX/D3DRenderDevice.cpp" "Core/Renderer/DirectX/Utility/RenderTexture.h" "Core/Renderer/DirectX/Utility/RenderTexture.cpp")
 
 

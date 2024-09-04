@@ -2,6 +2,8 @@
 
 #include "DescriptorHeapManager.h"
 
+#include <string>
+
 #include "../../../../Utility/Common/CommonUtility.h"
 
 namespace BINDU
@@ -41,6 +43,8 @@ namespace BINDU
 		std::swap(this->m_managerId, rhs.m_managerId);
 		std::swap(this->m_numOfHandles, rhs.m_numOfHandles);
 		std::swap(this->m_parentAllocator, rhs.m_parentAllocator);
+
+		rhs.m_parentAllocator = nullptr;
 	}
 
 	DescriptorHeapAllocation& DescriptorHeapAllocation::operator=(DescriptorHeapAllocation&& rhs) noexcept
@@ -67,17 +71,27 @@ namespace BINDU
 	D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapAllocation::GetCpuHandle(std::uint32_t offset) const
 	{
 		auto cpuHandle = m_firstCpuHandle;
-		if (offset != 0)
+
+		if (offset != 0 && offset < GetNumOfHandles())
 			cpuHandle.ptr += static_cast<size_t>(offset) * m_descriptorIncrementSize;
+		else
+			THROW_EXCEPTION(3, "Invalid offset requested, the amount of Handles this DescriptorHeapAllocation has is : " + std::to_string(GetNumOfHandles()));
+
 
 		return cpuHandle;
 	}
 
 	D3D12_GPU_DESCRIPTOR_HANDLE DescriptorHeapAllocation::GetGpuHandle(std::uint32_t offset) const
 	{
+		if (!IsShaderVisible())
+			THROW_EXCEPTION(3, "Invalid request, this DescriptorHeapAllocation is not shader visible");
+
 		auto gpuHandle = m_firstGpuHandle;
-		if (offset != 0)
+
+		if (offset != 0 && offset < GetNumOfHandles())
 			gpuHandle.ptr += static_cast<size_t>(offset) * m_descriptorIncrementSize;
+		else
+			THROW_EXCEPTION(3, "Invalid offset requested, the amount of Handles this DescriptorHeapAllocation has is : " + std::to_string(GetNumOfHandles()));
 
 		return gpuHandle;
 	}
@@ -157,6 +171,10 @@ namespace BINDU
 		std::swap(this->m_firstGpuHandle, rhs.m_firstGpuHandle);
 		std::swap(this->m_managerId, rhs.m_managerId);
 		std::swap(this->m_freeDescriptors, rhs.m_freeDescriptors);
+
+		rhs.m_descriptorHeap = nullptr;
+		rhs.m_parentAllocator = nullptr;
+		rhs.m_d3dDevice = nullptr;
 	}
 
 	DescriptorHeapManager& DescriptorHeapManager::operator=(DescriptorHeapManager&& rhs) noexcept
@@ -169,6 +187,10 @@ namespace BINDU
 		std::swap(this->m_firstGpuHandle, rhs.m_firstGpuHandle);
 		std::swap(this->m_managerId, rhs.m_managerId);
 		std::swap(this->m_freeDescriptors, rhs.m_freeDescriptors);
+
+		rhs.m_descriptorHeap = nullptr;
+		rhs.m_parentAllocator = nullptr;
+		rhs.m_d3dDevice = nullptr;
 
 		return *this;
 	}

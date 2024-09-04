@@ -13,10 +13,11 @@
     "\\Core\\Renderer\\DirectX\\Utility",
     "\\Shaders",
     "\\Shaders\\Default",
+    "\\Temp",
     "\\Utility",
     "\\Utility\\Common",
     "\\Window"
   ],
-  "SelectedNode": "\\Core\\Renderer\\DirectX\\DX12Renderer.cpp",
+  "SelectedNode": "\\Temp\\RenderTexture.cpp",
   "PreviewInSolutionExplorer": false
 }
