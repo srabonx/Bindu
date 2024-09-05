@@ -7,7 +7,7 @@
 namespace BINDU
 {
 	RenderTexture::RenderTexture(DXGI_FORMAT rtBuffFormat, DXGI_FORMAT dsBuffFormat, std::uint8_t bufferCount) :
-		m_bufferCount(bufferCount), m_rtBuffFormat(rtBuffFormat), m_dsBuffFormat(dsBuffFormat)
+		m_bufferCount(bufferCount), m_rtBuffFormat(rtBuffFormat), m_dsBuffFormat(dsBuffFormat), m_currentState(D3D12_RESOURCE_STATE_RENDER_TARGET)
 	{
 		
 	}
@@ -30,14 +30,22 @@ namespace BINDU
 			THROW_EXCEPTION(3, "Invalid buffer count");
 
 		// Check if the device supports requested format
-		D3D12_FEATURE_DATA_FORMAT_SUPPORT formatSupport = { m_rtBuffFormat, D3D12_FORMAT_SUPPORT1_NONE, D3D12_FORMAT_SUPPORT2_NONE };
+		D3D12_FEATURE_DATA_FORMAT_SUPPORT rtFormatSupport = { m_rtBuffFormat, D3D12_FORMAT_SUPPORT1_NONE, D3D12_FORMAT_SUPPORT2_NONE };
 
+		D3D12_FEATURE_DATA_FORMAT_SUPPORT dsFormatSupport = { m_dsBuffFormat, D3D12_FORMAT_SUPPORT1_NONE, D3D12_FORMAT_SUPPORT2_NONE };
 
-		DXThrowIfFailed(pDevice->CheckFeatureSupport(D3D12_FEATURE_FORMAT_SUPPORT, &formatSupport, sizeof(formatSupport)));
+		D3D12_FEATURE_DATA_FORMAT_SUPPORT formats[] = {rtFormatSupport, dsFormatSupport};
 
-		UINT requiredFormats = D3D12_FORMAT_SUPPORT1_RENDER_TARGET | D3D12_FORMAT_SUPPORT1_TEXTURE2D;
+		DXThrowIfFailed(pDevice->CheckFeatureSupport(D3D12_FEATURE_FORMAT_SUPPORT, &formats, sizeof(formats)));
 
-		if ((formatSupport.Support1 & requiredFormats) != requiredFormats)
+		UINT rtRequiredFormats = D3D12_FORMAT_SUPPORT1_RENDER_TARGET | D3D12_FORMAT_SUPPORT1_TEXTURE2D;
+
+		UINT dsRequiredFormats = D3D12_FORMAT_SUPPORT1_DEPTH_STENCIL | D3D12_FORMAT_SUPPORT1_TEXTURE2D;
+
+		if ((rtFormatSupport.Support1 & rtRequiredFormats) != rtRequiredFormats)
+			THROW_EXCEPTION(3, "Direct3D device does not support required format");
+
+		if ((dsFormatSupport.Support1 & dsRequiredFormats) != dsRequiredFormats)
 			THROW_EXCEPTION(3, "Direct3D device does not support required format");
 
 		// Allocate space in the rtv heap
@@ -76,9 +84,13 @@ namespace BINDU
 		// Reset the previous resource
 		Reset();
 
+		CreateRTBuffer(width, height);
+
+		CreateDSBuffer(width, height);
 		
-		
-		
+		m_width = width;
+
+		m_height = height;
 	}
 
 	void RenderTexture::Reset()
@@ -95,22 +107,27 @@ namespace BINDU
 
 	ID3D12Resource* RenderTexture::GetCurrentRtBuffer() const
 	{
+		return m_rtBuffers[m_currentRtBuffer].Get();
 	}
 
 	ID3D12Resource* RenderTexture::GetDsBuffer() const
 	{
+		return m_dsBuffer.Get();
 	}
 
 	D3D12_CPU_DESCRIPTOR_HANDLE RenderTexture::GetCurrentRtvCpuHandle() const
 	{
+		return m_rtvCpuHeapAllocation.GetCpuHandle(m_currentRtBuffer);
 	}
 
 	D3D12_CPU_DESCRIPTOR_HANDLE RenderTexture::GetCurrentSrvCpuHandle() const
 	{
+		return m_srvCpuHeapAllocation.GetCpuHandle(m_currentRtBuffer);
 	}
 
 	D3D12_CPU_DESCRIPTOR_HANDLE RenderTexture::GetDsvCpuHandle() const
 	{
+		return m_dsvCpuHeapAllocation.GetCpuHandle();
 	}
 
 	void RenderTexture::TransitionTo(D3D12_RESOURCE_STATES state)

@@ -18,6 +18,6 @@
     "\\Utility\\Common",
     "\\Window"
   ],
-  "SelectedNode": "\\Temp\\RenderTexture.cpp",
+  "SelectedNode": "\\Core\\Renderer\\DirectX\\DX12Renderer.cpp",
   "PreviewInSolutionExplorer": false
 }
