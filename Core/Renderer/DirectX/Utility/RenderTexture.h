@@ -18,7 +18,7 @@ namespace BINDU
 		/* rtBuffFormat = Render target buffer format
 		 * dsBuffFormat = Depth stencil buffer format
 		 */
-		RenderTexture(DXGI_FORMAT rtBuffFormat, DXGI_FORMAT dsBuffFormat, std::uint8_t bufferCount);
+		RenderTexture(DXGI_FORMAT rtBuffFormat, DXGI_FORMAT dsBuffFormat, std::uint8_t bufferCount, DXGI_SAMPLE_DESC sampleDesc);
 
 		~RenderTexture();
 
@@ -29,8 +29,10 @@ namespace BINDU
 		
 		void						End();
 
+		// Reset and resize the buffers to the new size
 		void						Resize(std::uint16_t width, std::uint16_t height);
 
+		// Reset current resources
 		void						Reset();
 
 		// TODO: Implement this method along with Vec4
@@ -45,6 +47,18 @@ namespace BINDU
 		D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentSrvCpuHandle() const;
 
 		D3D12_CPU_DESCRIPTOR_HANDLE	GetDsvCpuHandle() const;
+
+		std::uint8_t				GetBufferCount() const;
+
+		DXGI_FORMAT					GetRenderTargetBufferFormat() const;
+
+		DXGI_FORMAT					GetDepthStencilBufferFormat() const;
+
+		DXGI_SAMPLE_DESC			GetSampleDesc() const;
+
+
+
+		void						SetSampleDesc(DXGI_SAMPLE_DESC sampleDesc);
 
 
 	private:
@@ -81,6 +95,9 @@ namespace BINDU
 
 		// Depth stencil buffer format			
 		DXGI_FORMAT								m_dsBuffFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+		// Sample description
+		DXGI_SAMPLE_DESC						m_sampleDesc;
 
 		// Current index of the RenderTarget buffer
 		std::uint8_t							m_currentRtBuffer{ 0 };

@@ -84,7 +84,13 @@ add_library(Bindu STATIC
         Core/Renderer/DirectX/Utility/GpuDescriptorHeap.h
         Core/Renderer/DirectX/Utility/GpuDescriptorHeap.cpp 
         Core/Renderer/DirectX/IRenderDevice.h
-        "Core/Renderer/DirectX/D3DRenderDevice.h"
-        "Core/Renderer/DirectX/D3DRenderDevice.cpp" "Core/Renderer/DirectX/Utility/RenderTexture.h" "Core/Renderer/DirectX/Utility/RenderTexture.cpp")
+        Core/Renderer/DirectX/D3DRenderDevice.h
+        Core/Renderer/DirectX/D3DRenderDevice.cpp
+        Core/Renderer/DirectX/Utility/RenderTexture.h
+        Core/Renderer/DirectX/Utility/RenderTexture.cpp
+        Core/Renderer/DirectX/D3DRenderer.h
+        Core/Renderer/DirectX/D3DRenderer.cpp
+        Core/Renderer/DirectX/D3DRenderContext.h
+        Core/Renderer/DirectX/D3DRenderContext.cpp)
 
 

@@ -10,7 +10,6 @@
     "\\Core",
     "\\Core\\Renderer",
     "\\Core\\Renderer\\DirectX",
-    "\\Core\\Renderer\\DirectX\\Utility",
     "\\Shaders",
     "\\Shaders\\Default",
     "\\Temp",
@@ -18,6 +17,6 @@
     "\\Utility\\Common",
     "\\Window"
   ],
-  "SelectedNode": "\\Core\\Renderer\\DirectX\\DX12Renderer.cpp",
+  "SelectedNode": "\\Core\\Renderer\\DirectX\\D3DRenderContext.cpp",
   "PreviewInSolutionExplorer": false
 }

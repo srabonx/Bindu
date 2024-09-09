@@ -6,7 +6,7 @@ namespace BINDU
 	class IRenderDevice
 	{
 	public:
-		~IRenderDevice() {}
+		virtual				~IRenderDevice() {}
 
 		// Initialize the RenderDevice
 		virtual void		Initialize() = 0;

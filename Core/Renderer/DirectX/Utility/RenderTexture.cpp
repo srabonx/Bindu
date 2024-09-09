@@ -6,8 +6,10 @@
 
 namespace BINDU
 {
-	RenderTexture::RenderTexture(DXGI_FORMAT rtBuffFormat, DXGI_FORMAT dsBuffFormat, std::uint8_t bufferCount) :
-		m_bufferCount(bufferCount), m_rtBuffFormat(rtBuffFormat), m_dsBuffFormat(dsBuffFormat), m_currentState(D3D12_RESOURCE_STATE_RENDER_TARGET)
+	RenderTexture::RenderTexture(DXGI_FORMAT rtBuffFormat, DXGI_FORMAT dsBuffFormat, std::uint8_t bufferCount, DXGI_SAMPLE_DESC sampleDesc) :
+		m_bufferCount(bufferCount), m_rtBuffFormat(rtBuffFormat), m_dsBuffFormat(dsBuffFormat),
+		m_sampleDesc(sampleDesc),
+		m_currentState(D3D12_RESOURCE_STATE_RENDER_TARGET)
 	{
 		
 	}
@@ -130,6 +132,42 @@ namespace BINDU
 		return m_dsvCpuHeapAllocation.GetCpuHandle();
 	}
 
+	std::uint8_t RenderTexture::GetBufferCount() const
+	{
+		return m_bufferCount;
+	}
+
+	DXGI_FORMAT RenderTexture::GetRenderTargetBufferFormat() const
+	{
+		return m_rtBuffFormat;
+	}
+
+	DXGI_FORMAT RenderTexture::GetDepthStencilBufferFormat() const
+	{
+		return m_dsBuffFormat;
+	}
+
+	DXGI_SAMPLE_DESC RenderTexture::GetSampleDesc() const
+	{
+		return m_sampleDesc;
+	}
+
+	void RenderTexture::SetSampleDesc(DXGI_SAMPLE_DESC sampleDesc)
+	{
+		m_sampleDesc = sampleDesc;
+
+		// Recreate the RT buffer and DS buffer
+
+		// Reset() resets the width and height value, So caching it here
+		auto width = m_width;
+
+		auto height = m_height;
+
+		Reset();
+
+		Resize(width, height);
+	}
+
 	void RenderTexture::TransitionTo(D3D12_RESOURCE_STATES state)
 	{
 
@@ -147,7 +185,7 @@ namespace BINDU
 		D3D12_RESOURCE_DESC rsrcDesc = CD3DX12_RESOURCE_DESC::Tex2D(m_rtBuffFormat,
 			width,
 			height,
-			1, 1, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
+			1, 1, m_sampleDesc.Count, m_sampleDesc.Quality, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
 
 		// TODO: Implement Vec4 implementation
 		float color[4] = { 1,0,0,1 };
@@ -174,7 +212,6 @@ namespace BINDU
 			m_d3dDevice->CreateShaderResourceView(itr->Get(), nullptr,
 				m_srvCpuHeapAllocation.GetCpuHandle(static_cast<std::uint32_t>(index)));
 		}
-
 	}
 
 	void RenderTexture::CreateDSBuffer(std::uint16_t width, std::uint16_t height)
@@ -186,7 +223,7 @@ namespace BINDU
 
 		D3D12_RESOURCE_DESC rsrcDesc = CD3DX12_RESOURCE_DESC::Tex2D(m_dsBuffFormat,
 			width, height,
-			1, 1, 1, 0,
+			1, 1, m_sampleDesc.Count, m_sampleDesc.Quality,
 			D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 
 		CD3DX12_HEAP_PROPERTIES heapProp(D3D12_HEAP_TYPE_DEFAULT);
