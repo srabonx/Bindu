@@ -19,18 +19,25 @@ namespace BINDU
 
 		void			EndRender();
 
+		void			Resize();
+
 		void			Close();
 
 	private:
 
+		Win32Window*								m_window{ nullptr };
+
 		// RenderDevice
-		D3DRenderDevice			m_renderDevice;
+		std::shared_ptr<D3DRenderDevice>			m_renderDevice;
 
 		// Render Texture of this Renderer
-		RenderTexture			m_renderTexture;
+		std::shared_ptr<RenderTexture>				m_renderTexture;
 
-		// Render Context of this Renderer
-		D3DRenderContext		m_renderContext;
+
+		std::unique_ptr<FlyFrame>					m_flyFrame;
+
+		D3D12_VIEWPORT								m_viewport;
+		D3D12_RECT									m_rect;
 	};
 }
 

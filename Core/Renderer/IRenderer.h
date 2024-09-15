@@ -20,7 +20,7 @@ namespace BINDU {
 
         virtual void BeginRender() = 0;
 
-        // Clear the screen with the specified color
+        // ClearBuffer the screen with the specified color
         virtual void ClearScreen(float r, float g, float b, float a) = 0;
 
         // Present the render to the display

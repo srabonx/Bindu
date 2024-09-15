@@ -14,7 +14,7 @@ namespace BINDU
 		// Begin rendering
 		virtual void		BeginRender() = 0;
 
-		// Clear the screen with specified color
+		// ClearBuffer the screen with specified color
 		// TODO: Implement Vec4
 		virtual void		ClearScreen() = 0;
 

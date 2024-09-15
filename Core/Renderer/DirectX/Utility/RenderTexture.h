@@ -11,9 +11,15 @@
 
 namespace BINDU
 {
+	class D3DRenderDevice;
+	class D3DSwapChain;
+	class D3DCommandContext;
+
 	using namespace Microsoft::WRL;
+
 	class RenderTexture
 	{
+		friend class D3DSwapChain;
 	public:
 		/* rtBuffFormat = Render target buffer format
 		 * dsBuffFormat = Depth stencil buffer format
@@ -22,12 +28,14 @@ namespace BINDU
 
 		~RenderTexture();
 
-		void						Initialize(ID3D12Device* pDevice, CpuDescriptorHeap* pRtvHeap, CpuDescriptorHeap* pDsvHeap,
-												CpuDescriptorHeap* pSrvHeap);
+		void						Initialize(std::uint16_t width, std::uint16_t height, const std::shared_ptr<D3DRenderDevice>& pDevice,
+												bool isSwapChainBuffer = false);
 
-		void						Begin();
+		void						Begin(const D3DCommandContext& commandContext);
+
+		void						Clear(const D3DCommandContext& commandContext, const float* color, float depth, std::uint8_t stencil) const;
 		
-		void						End();
+		void						End(const D3DCommandContext& commandContext);
 
 		// Reset and resize the buffers to the new size
 		void						Resize(std::uint16_t width, std::uint16_t height);
@@ -38,6 +46,8 @@ namespace BINDU
 		// TODO: Implement this method along with Vec4
 		//void						SetOptimizedClearColor(Vec4 color);
 
+		ID3D12Resource*				GetRtBuffer(int index) const;
+
 		ID3D12Resource*				GetCurrentRtBuffer() const;
 
 		ID3D12Resource*				GetDsBuffer() const;
@@ -45,6 +55,10 @@ namespace BINDU
 		D3D12_CPU_DESCRIPTOR_HANDLE	GetCurrentRtvCpuHandle() const;
 
 		D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentSrvCpuHandle() const;
+
+		D3D12_CPU_DESCRIPTOR_HANDLE	GetRtvCpuHandle(int index) const;
+
+		D3D12_CPU_DESCRIPTOR_HANDLE GetSrvCpuHandle(int index) const;
 
 		D3D12_CPU_DESCRIPTOR_HANDLE	GetDsvCpuHandle() const;
 
@@ -56,21 +70,28 @@ namespace BINDU
 
 		DXGI_SAMPLE_DESC			GetSampleDesc() const;
 
+		std::uint16_t				GetWidth() const;
+
+		std::uint16_t				GetHeight() const;
+
 
 
 		void						SetSampleDesc(DXGI_SAMPLE_DESC sampleDesc);
 
+		bool						IsSwapChainBuffer() const;
+
 
 	private:
-		void						TransitionTo(D3D12_RESOURCE_STATES state);
+		void						TransitionTo(ID3D12GraphicsCommandList* commandList, D3D12_RESOURCE_STATES state);
 
 		void						CreateRTBuffer(std::uint16_t width, std::uint16_t height);
 
 		void						CreateDSBuffer(std::uint16_t width, std::uint16_t height);
 
 	private:
-		// Pointer to the Direct3D Device
-		ComPtr<ID3D12Device>					m_d3dDevice{ nullptr };
+
+		// Pointer to the render device this texture was initialized with
+		std::shared_ptr<D3DRenderDevice>		m_renderDevice{ nullptr };
 
 		// Back buffer count
 		std::uint8_t							m_bufferCount{ 2 };
@@ -104,6 +125,8 @@ namespace BINDU
 
 		// Current state of the 
 		D3D12_RESOURCE_STATES					m_currentState;
+
+		bool									m_isSwapChainBuffer{ false };
 
 		// Width and height of the RenderTexture
 		std::uint16_t							m_width{ 0 };

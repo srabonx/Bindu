@@ -284,7 +284,6 @@ namespace BINDU {
             4,3,7
         };
 
-
         UINT vbByteSize = vertices.size() * sizeof(Vertex);
 
         UINT ibByteSize = indices.size() * sizeof(std::uint16_t);
@@ -645,6 +644,7 @@ namespace BINDU {
 
         m_impl->m_d3dCommandList->SetGraphicsRootDescriptorTable(0, m_impl->m_cbvSrvUavGpuHeap->GetGPUHandleAt(2));
 
+
         m_impl->m_d3dCommandList->DrawIndexedInstanced(m_impl->m_geometry->SubMeshMap["Box"].IndexCount,
             1, 0, 0, 0);
 
@@ -685,7 +685,6 @@ namespace BINDU {
 #ifdef GUI_ENABLE
 
         m_impl->m_renderTexture->EndScene(m_impl->m_d3dCommandList.Get());
-
 
         D3D12_CPU_DESCRIPTOR_HANDLE rtvDescriptor = m_impl->m_rtvHeap->GetCPUHandleAt(m_impl->m_currentBackBuffer);
 
@@ -1178,10 +1177,9 @@ namespace BINDU {
         CD3DX12_DESCRIPTOR_RANGE    cbvTable;
     	cbvTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
 
-
         // Setting this root parameter as a descriptor table
         slotRootParameter[0].InitAsDescriptorTable(1, &cbvTable);
-
+      
         // Root signature is just an array of root parameters
         CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(1, slotRootParameter, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 

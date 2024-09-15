@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "../../../Window/Win32Window.h"
+#include "Utility/FlyFrame.h"
 #include "Utility/RenderTexture.h"
 
 namespace BINDU
@@ -24,27 +25,33 @@ namespace BINDU
 
 		~D3DRenderContext();
 
-		void			Initialize();
+		void				Initialize();
 
-		void			CreateSwapChain(D3DRenderDevice* renderDevice, RenderTexture* renderTexture);
+		void				BeginRender(D3DRenderDevice* pRenderDevice);
 
-		void			Resize(std::uint16_t width, std::uint16_t height);
+		void				EndRender(D3DRenderDevice* pRenderDevice);
+
+		void				CreateSwapChain(D3DRenderDevice* pRenderDevice, RenderTexture* pRenderTexture);
+
+		void				AddFlyFrame(std::unique_ptr<FlyFrame>& flyFrame);
+
+		void				Resize();
 
 		// Returns the indexed adapter from the available adapter list
-		IDXGIAdapter*	GetAdapter(int index) const;
+		IDXGIAdapter*		GetAdapter(int index) const;
 
 		// Returns the WARP adapter
-		IDXGIAdapter*	GetWarpAdapter();
+		IDXGIAdapter*		GetWarpAdapter();
 
-		void			SetMSAADesc(DXGI_SAMPLE_DESC sampleDesc);
+		void				SetMSAADesc(DXGI_SAMPLE_DESC sampleDesc);
 
 
 	private:
-		void			InitDXGI();
+		void				InitDXGI();
 
-		void			EnumAdapters(IDXGIFactory* pdxgiFactory);
+		void				EnumAdapters(IDXGIFactory* pdxgiFactory);
 
-		void			CreateSwapChain(IDXGIFactory* pdxgiFactory, D3DRenderDevice* renderDevice, RenderTexture* renderTexture);
+		void				CreateSwapChain(IDXGIFactory* pdxgiFactory, D3DRenderDevice* renderDevice, RenderTexture* renderTexture);
 
 	private:
 
@@ -52,10 +59,10 @@ namespace BINDU
 		Win32Window*						m_window{ nullptr };
 
 		// Pointer to the render device that created this context
-		std::shared_ptr<D3DRenderDevice>	m_renderDevice{ nullptr };
+		D3DRenderDevice*					m_renderDevice{ nullptr };
 
 		// Pointer to the render texture this context will use
-		std::shared_ptr<RenderTexture>		m_renderTexture{ nullptr };
+		RenderTexture*						m_renderTexture{ nullptr };
 
 		// DXGI Factory 4
 		ComPtr<IDXGIFactory4>				m_dxgiFactory{ nullptr };
@@ -68,6 +75,8 @@ namespace BINDU
 
 		// WARP adapter
 		ComPtr<IDXGIAdapter>				m_warpAdapter{ nullptr };
+
+		std::unique_ptr<FlyFrame>			m_flyFrame{ nullptr };
 	};
 }
 

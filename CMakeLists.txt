@@ -38,8 +38,6 @@ add_library(Bindu STATIC
         Input/Mouse.h
         Input/Mouse.cpp
         Core/Renderer/IRenderer.h
-        Core/Renderer/DirectX/DX12Renderer.cpp
-        Core/Renderer/DirectX/DX12Renderer.h
         Core/Renderer/DirectX/Utility/D3DUtillity.h
         Core/Renderer/DirectX/Error/ComException.h
         Core/Renderer/DirectX/Utility/d3dx12.h
@@ -63,8 +61,6 @@ add_library(Bindu STATIC
         Gui/DX12/imgui_impl_dx12.cpp
         Gui/DX12/DX12Imgui.h
         Gui/DX12/DX12Imgui.cpp 
-        Temp/RenderTexture.h
-        Temp/RenderTexture.cpp
         Core/Renderer/DirectX/Utility/DescriptorHeap.h
         Core/Renderer/DirectX/Utility/DescriptorHeap.cpp 
         Core/Renderer/DirectX/Utility/UploadBuffer.h 
@@ -88,9 +84,13 @@ add_library(Bindu STATIC
         Core/Renderer/DirectX/D3DRenderDevice.cpp
         Core/Renderer/DirectX/Utility/RenderTexture.h
         Core/Renderer/DirectX/Utility/RenderTexture.cpp
-        Core/Renderer/DirectX/D3DRenderer.h
-        Core/Renderer/DirectX/D3DRenderer.cpp
-        Core/Renderer/DirectX/D3DRenderContext.h
-        Core/Renderer/DirectX/D3DRenderContext.cpp)
+        Core/Renderer/DirectX/Utility/FlyFrame.h
+        Core/Renderer/DirectX/Utility/FlyFrame.cpp
+        Core/Renderer/DirectX/D3DSwapChain.h
+        Core/Renderer/DirectX/D3DSwapChain.cpp
+        Core/Renderer/DirectX/D3DCommandContext.h
+        Core/Renderer/DirectX/D3DCommandContext.cpp
+        Core/Renderer/DirectX/D3DFence.h
+        Core/Renderer/DirectX/D3DFence.cpp "Core/GameObject/Transformable.h" "Core/GameObject/Renderable.h" "Core/GameObject/GameObject.h" "Core/GameObject/GameObject.cpp" "Core/GameObject/Renderable.cpp" "Core/GameObject/Vertex.h" "Core/GameObject/Buffers.h" "Core/GameObject/Buffers.cpp")
 
 

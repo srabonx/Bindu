@@ -12,6 +12,12 @@ namespace BINDU
 	using namespace Microsoft::WRL;
 	using namespace DirectX;
 
+	struct Vertex
+	{
+		XMFLOAT3	Position;
+		XMFLOAT4	Color;
+	};
+
 	struct SubMeshGeometry
 	{
 		// Index count of this SubMesh
@@ -54,6 +60,7 @@ namespace BINDU
 
 		// A mesh geometry can store multiple SubMesh geometry in one vertex/index buffer
 		std::map<std::string, SubMeshGeometry>	SubMeshMap;
+
 
 		D3D12_VERTEX_BUFFER_VIEW VertexBufferView() const
 		{

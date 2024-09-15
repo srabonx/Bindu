@@ -24,28 +24,81 @@ namespace BINDU
 
 	}
 
-	void D3DRenderContext::CreateSwapChain(D3DRenderDevice* renderDevice, RenderTexture* renderTexture)
+	void D3DRenderContext::BeginRender(D3DRenderDevice* pRenderDevice)
 	{
-		if (!renderDevice)
-			THROW_EXCEPTION(3, "Invalid RenderDevice");
+		// Update the fly frame
+		m_flyFrame->Update();
 
-		if (!renderTexture)
-			THROW_EXCEPTION(3, "Invalid RenderTexture");
+		// Get command list allocator of current frame
+		auto cmdListAlloc = m_flyFrame->GetCurrentFrame().CommandAllocator;
 
-		CreateSwapChain(m_dxgiFactory.Get(), renderDevice, renderTexture);
+		// Reset the allocator to reuse memory
+		DXThrowIfFailed(cmdListAlloc->Reset());
 
+		// Reset the command list with current command allocator
+		auto commandList = pRenderDevice->GetCommandList();
+		commandList->Reset(cmdListAlloc.Get(), nullptr);
 
-		m_renderDevice.reset(renderDevice);
+		D3D12_VIEWPORT viewport = { 0,0, static_cast<FLOAT>(m_window->GetWidth()), static_cast<FLOAT>(m_window->GetHeight()),
+		0.0f,1.0f };
+		D3D12_RECT scissorRect = { 0,0, static_cast<LONG>(m_window->GetWidth()),static_cast<LONG>(m_window->GetHeight()) };
 
-		m_renderTexture.reset(renderTexture);
+		commandList->RSSetViewports(1, &viewport);
+		commandList->RSSetScissorRects(1, &scissorRect);
+
+		// Prepare the render texture
+		m_renderTexture->Begin(commandList);
+
+		float color[] = { 1.0f,0.0f,0.0f,1.0f };
+
+		m_renderTexture->Clear(commandList, color, 1.0f, 0.0);
 
 	}
 
-	void D3DRenderContext::Resize(std::uint16_t width, std::uint16_t height)
+	void D3DRenderContext::EndRender(D3DRenderDevice* pRenderDevice)
 	{
-		CreateSwapChain(m_dxgiFactory.Get(), m_renderDevice.get(), m_renderTexture.get());
+		auto commandList = pRenderDevice->GetCommandList();
 
-		m_renderTexture->Resize(width, height);
+		m_renderTexture->End(commandList);
+
+		// Execute command List upto this point
+		pRenderDevice->ExecuteCommands();
+		
+		// Present the render
+		DXThrowIfFailed(
+			m_dxgiSwapChain->Present(0, 0));
+
+		pRenderDevice->UpdateFenceValueBy(1);
+
+		m_flyFrame->GetCurrentFrame().FenceValue = pRenderDevice->GetFenceValue();
+
+		pRenderDevice->WaitForGPU();
+	}
+
+	void D3DRenderContext::CreateSwapChain(D3DRenderDevice* pRenderDevice, RenderTexture* pRenderTexture)
+	{
+		if (!pRenderDevice)
+			THROW_EXCEPTION(3, "Invalid RenderDevice");
+
+		if (!pRenderTexture)
+			THROW_EXCEPTION(3, "Invalid RenderTexture");
+
+		CreateSwapChain(m_dxgiFactory.Get(), pRenderDevice, pRenderTexture);
+
+		m_renderDevice = pRenderDevice;
+		m_renderTexture = pRenderTexture;
+	}
+
+	void D3DRenderContext::AddFlyFrame(std::unique_ptr<FlyFrame>& flyFrame)
+	{
+		m_flyFrame = std::move(flyFrame);
+	}
+
+	void D3DRenderContext::Resize()
+	{
+		CreateSwapChain(m_dxgiFactory.Get(), m_renderDevice, m_renderTexture);
+
+		m_renderTexture->Resize(static_cast<std::uint16_t>(m_window->GetWidth()), static_cast<std::uint16_t>(m_window->GetHeight()));
 	}
 
 	IDXGIAdapter* D3DRenderContext::GetAdapter(int index) const
@@ -70,7 +123,7 @@ namespace BINDU
 	void D3DRenderContext::SetMSAADesc(DXGI_SAMPLE_DESC sampleDesc)
 	{
 		m_renderTexture->SetSampleDesc(sampleDesc);
-		CreateSwapChain(m_dxgiFactory.Get(), m_renderDevice.get(), m_renderTexture.get());
+		CreateSwapChain(m_dxgiFactory.Get(), m_renderDevice, m_renderTexture);
 	}
 
 
@@ -139,5 +192,6 @@ namespace BINDU
 		DXThrowIfFailed(
 			pfactory->CreateSwapChainForHwnd(renderDevice->GetCommandQueue(), m_window->GetHandle(), &scd, &scfd, nullptr,
 				m_dxgiSwapChain.ReleaseAndGetAddressOf()));
+
 	}
 }

@@ -71,28 +71,31 @@
 				26,
 				28,
 				31,
-				33,
-				39,
-				42,
+				37,
+				40,
+				45,
+				46,
 				47,
 				48,
-				49,
-				50,
+				51,
 				53,
 				55,
 				57,
-				59,
-				61,
+				62,
+				64,
 				66,
 				68,
 				70,
-				72,
-				74,
-				77,
+				73,
+				76,
+				78,
 				80,
 				82,
 				84,
-				86
+				86,
+				90,
+				91,
+				94
 			]
 		}
 	],
@@ -131,38 +134,43 @@
 				29,
 				30,
 				32,
+				33,
 				34,
 				35,
 				36,
-				37,
 				38,
-				40,
+				39,
 				41,
+				42,
 				43,
 				44,
-				45,
-				46,
-				51,
+				49,
+				50,
 				52,
 				54,
 				56,
 				58,
+				59,
 				60,
-				62,
+				61,
 				63,
-				64,
 				65,
 				67,
 				69,
 				71,
-				73,
+				72,
+				74,
 				75,
-				76,
-				78,
+				77,
 				79,
 				81,
 				83,
-				85
+				85,
+				87,
+				88,
+				89,
+				92,
+				93
 			]
 		},
 		{
@@ -181,28 +189,31 @@
 				26,
 				28,
 				31,
-				33,
-				39,
-				42,
+				37,
+				40,
+				45,
+				46,
 				47,
 				48,
-				49,
-				50,
+				51,
 				53,
 				55,
 				57,
-				59,
-				61,
+				62,
+				64,
 				66,
 				68,
 				70,
-				72,
-				74,
-				77,
+				73,
+				76,
+				78,
 				80,
 				82,
 				84,
-				86
+				86,
+				90,
+				91,
+				94
 			]
 		}
 	],
@@ -387,17 +398,6 @@
 		},
 		{
 			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "Core/Renderer/DirectX/DX12Renderer.cpp",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 1,
-			"path" : "Core/Renderer/DirectX/DX12Renderer.h",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
 			"path" : "Core/Renderer/DirectX/Utility/D3DUtillity.h",
 			"sourceGroupIndex" : 0
 		},
@@ -518,17 +518,6 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "Gui/DX12/DX12Imgui.cpp",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 1,
-			"path" : "Temp/RenderTexture.h",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "Temp/RenderTexture.cpp",
 			"sourceGroupIndex" : 1
 		},
 		{
@@ -657,24 +646,89 @@
 		},
 		{
 			"backtrace" : 1,
-			"path" : "Core/Renderer/DirectX/D3DRenderer.h",
+			"path" : "Core/Renderer/DirectX/Utility/FlyFrame.h",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "Core/Renderer/DirectX/D3DRenderer.cpp",
+			"path" : "Core/Renderer/DirectX/Utility/FlyFrame.cpp",
 			"sourceGroupIndex" : 1
 		},
 		{
 			"backtrace" : 1,
-			"path" : "Core/Renderer/DirectX/D3DRenderContext.h",
+			"path" : "Core/Renderer/DirectX/D3DSwapChain.h",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "Core/Renderer/DirectX/D3DRenderContext.cpp",
+			"path" : "Core/Renderer/DirectX/D3DSwapChain.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Core/Renderer/DirectX/D3DCommandContext.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "Core/Renderer/DirectX/D3DCommandContext.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Core/Renderer/DirectX/D3DFence.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "Core/Renderer/DirectX/D3DFence.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Core/GameObject/Transformable.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Core/GameObject/Renderable.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Core/GameObject/GameObject.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "Core/GameObject/GameObject.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "Core/GameObject/Renderable.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Core/GameObject/Vertex.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Core/GameObject/Buffers.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "Core/GameObject/Buffers.cpp",
 			"sourceGroupIndex" : 1
 		}
 	],

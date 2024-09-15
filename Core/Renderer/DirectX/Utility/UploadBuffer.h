@@ -7,21 +7,39 @@ namespace BINDU
 {
 	using namespace Microsoft::WRL;
 
-	template<typename T>
 	class UploadBuffer
 	{
 	public:
 		/*
-		*	pDevice				=	Pointer to the Direct3D device
-		*	elementCount		=	Elements to be stored in the buffer
 		*	isConstantBuffer	=	Set this to true is you want this UploadBuffer to be treated as a constant buffer
 		*/
-		UploadBuffer(ID3D12Device* pDevice, UINT elementCount, bool isConstantBuffer = false) : m_isConstantBuffer(isConstantBuffer)
+		UploadBuffer(bool isConstantBuffer) : m_isConstantBuffer(isConstantBuffer)
+		{			
+		}
+
+		// No copy constructor
+		UploadBuffer(const UploadBuffer& rhs) = delete;
+		// No assignment operator
+		UploadBuffer& operator = (const UploadBuffer& rhs) = delete;
+
+		// When we are done with the resource, release the mapped data
+		~UploadBuffer()
+		{
+			if (m_resource != nullptr)
+				m_resource->Unmap(0, nullptr);
+		}
+
+		/*
+	*	pDevice				=	Pointer to the Direct3D device
+	*	elementCount		=	Elements to be stored in the buffer
+	*/
+		template <typename T>
+		void	Initialize(ID3D12Device* pDevice, UINT elementCount)
 		{
 			m_elementByteSize = sizeof(T);
 
 			// if the buffer is to be a constant buffer then we need to calculate the appropiate constant buffer byteSize
-			if (isConstantBuffer)
+			if (m_isConstantBuffer)
 				m_elementByteSize = D3DUtility::CalculateConstantBufferByteSize(m_elementByteSize);
 
 			// Create the Buffer with heap type Upload
@@ -35,23 +53,10 @@ namespace BINDU
 			// Map the data of the upload buffer to be modified later on
 			DXThrowIfFailed(m_resource->Map(0, nullptr, reinterpret_cast<void**>(&m_mappedData)));
 
-			
+
 			// We can hold onto the mapped data until we are done with the resource,
 			// but we need to make sure that we do not write to the buffer while the GPU is reading from it.
 			// So CPU, GPU synchronization must be in place
-			
-		}
-
-		// No copy constructor
-		UploadBuffer(const UploadBuffer& rhs) = delete;
-		// No assignment operator
-		UploadBuffer& operator = (const UploadBuffer& rhs) = delete;
-
-		// When we are done with the resource, release the mapped data
-		~UploadBuffer()
-		{
-			if (m_resource != nullptr)
-				m_resource->Unmap(0, nullptr);
 		}
 
 		// Returns the underlying resource of the UploadBuffer
@@ -72,6 +77,7 @@ namespace BINDU
 			return m_resource->GetGPUVirtualAddress() + (index * m_elementByteSize);
 		}
 
+		template<typename T>
 		void CopyData(UINT elementIndex, const T& data)
 		{
 			// copy the data to the memory location of element at elementIndex

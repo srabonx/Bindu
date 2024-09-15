@@ -3,60 +3,70 @@
 
 #include "IRenderDevice.h"
 #include <d3d12.h>
-#include <dxgi.h>
+#include <dxgi1_4.h>
 #include <wrl/client.h>
 
 #include "Utility/CpuDescriptorHeap.h"
+#include "Utility/FlyFrame.h"
 #include "Utility/GpuDescriptorHeap.h"
 
 
 namespace BINDU
 {
+	class RenderTexture;
+}
+
+namespace BINDU
+{
 	using namespace Microsoft::WRL;
 
-	class D3DRenderDevice : public IRenderDevice
+	class D3DRenderDevice
 	{
 	public:
 		D3DRenderDevice();
 
 		~D3DRenderDevice();
 
-		void				Initialize() override;
+		void				Initialize();
 
-		void				Initialize(IDXGIAdapter* adapter, IDXGIAdapter* warpAdapter);
+		void				Close();
 
-		void				BeginRender() override;
+		// Check the MSAA quality level for the given buffer format
+		std::uint32_t		CheckMSAAQuality(std::uint8_t sampleCount, DXGI_FORMAT bufferFormat) const;
 
-		void				ClearScreen() override;
-
-		void				EndRender() override;
-
-		ID3D12CommandQueue* GetCommandQueue() const;
 
 		ID3D12Device*		GetD3DDevice() const;
 
-		CpuDescriptorHeap* GetRtvCpuHeap() const;
+		IDXGIFactory4*		GetDXGIFactory() const;
 
-		CpuDescriptorHeap* GetDsvCpuHeap() const;
+		CpuDescriptorHeap*	GetRtvCpuHeap() const;
 
-		CpuDescriptorHeap* GetCbvSrvUavCpuHeap() const;
+		CpuDescriptorHeap*	GetDsvCpuHeap() const;
 
-		CpuDescriptorHeap* GetSamplerCpuHeap() const;
+		CpuDescriptorHeap*	GetCbvSrvUavCpuHeap() const;
+
+		CpuDescriptorHeap*	GetSamplerCpuHeap() const;
 
 
 	private:
-		bool				InitD3D(IDXGIAdapter* adapter, IDXGIAdapter* warpAdapter);
+		void				InitD3D(IDXGIAdapter* primaryAdapter, IDXGIAdapter* warpAdapter);
+
+		void				InitDxgi();
+
+		void				EnumAdapters(IDXGIFactory* pdxgiFactory);
+
+		void				CheckFeatureLevelSupport(ID3D12Device* pDevice);
 
 	private:
 
 		// Direct3D Device
 		ComPtr<ID3D12Device>					m_d3dDevice{ nullptr };
 
-		// DXGI adapter(GPU) this device is created with
-		ComPtr<IDXGIAdapter>					m_dxgiAdapter{ nullptr };
+		// DXGI factory
+		ComPtr<IDXGIFactory4>					m_dxgiFactory{ nullptr };
 
-		// Direct3D CommandQueue
-		ComPtr<ID3D12CommandQueue>				m_commandQueue{ nullptr };
+		// List of all the available adapters(GPU)
+		std::vector<ComPtr<IDXGIAdapter>>		m_adapters;
 
 		// Cpu Descriptor Heaps
 		std::shared_ptr<CpuDescriptorHeap>		m_rtvCpuHeap{ nullptr };
@@ -70,6 +80,18 @@ namespace BINDU
 		std::shared_ptr<GpuDescriptorHeap>		m_cbvSrvUavGpuHeap{ nullptr };
 
 		std::shared_ptr<GpuDescriptorHeap>		m_samplerGpuHeap{ nullptr };
+
+		// Minimum feature level the GPU must support to create this device
+		D3D_FEATURE_LEVEL						m_minimumFeatureLevel = D3D_FEATURE_LEVEL_11_0;
+
+		// Maximum feature level the GPU supports
+		D3D_FEATURE_LEVEL						m_maximumFeatureLevel;
+
+
+
+		// Device states
+		bool									m_isPrepared{ false };
+
 
 	};
 }

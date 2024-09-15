@@ -72,11 +72,11 @@ namespace BINDU
 	{
 		auto cpuHandle = m_firstCpuHandle;
 
-		if (offset != 0 && offset < GetNumOfHandles())
-			cpuHandle.ptr += static_cast<size_t>(offset) * m_descriptorIncrementSize;
-		else
+		if (offset > GetNumOfHandles() || offset < 0)
 			THROW_EXCEPTION(3, "Invalid offset requested, the amount of Handles this DescriptorHeapAllocation has is : " + std::to_string(GetNumOfHandles()));
 
+
+		cpuHandle.ptr += static_cast<size_t>(offset) * m_descriptorIncrementSize;
 
 		return cpuHandle;
 	}
@@ -88,10 +88,11 @@ namespace BINDU
 
 		auto gpuHandle = m_firstGpuHandle;
 
-		if (offset != 0 && offset < GetNumOfHandles())
-			gpuHandle.ptr += static_cast<size_t>(offset) * m_descriptorIncrementSize;
-		else
+		if (offset > GetNumOfHandles() || offset < 0)
 			THROW_EXCEPTION(3, "Invalid offset requested, the amount of Handles this DescriptorHeapAllocation has is : " + std::to_string(GetNumOfHandles()));
+
+
+		gpuHandle.ptr += static_cast<size_t>(offset) * m_descriptorIncrementSize;
 
 		return gpuHandle;
 	}
