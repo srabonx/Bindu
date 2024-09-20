@@ -8,16 +8,14 @@
   "ExpandedNodes": [
     "",
     "\\Core",
-    "\\Core\\Renderer",
-    "\\Core\\Renderer\\DirectX",
-    "\\Core\\Renderer\\DirectX\\Utility",
-    "\\Shaders",
-    "\\Shaders\\Default",
+    "\\Core\\GameObject",
     "\\Temp",
+    "\\Temp\\DirectX",
+    "\\Temp\\DirectX\\Utility",
+    "\\Temp\\GameObject",
     "\\Utility",
     "\\Utility\\Common",
     "\\Window"
   ],
-  "SelectedNode": "\\Core\\Renderer\\DirectX\\Utility\\MeshGeometry.h",
   "PreviewInSolutionExplorer": false
 }

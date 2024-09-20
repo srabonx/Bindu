@@ -1,13 +1,38 @@
 #include "Buffers.h"
 
 #include "../Renderer/DirectX/D3DCommandContext.h"
-#include "../Renderer/DirectX/D3DRenderDevice.h"
-#include "../Renderer/DirectX/Utility/D3DUtillity.h"
+#include "../Renderer/DirectX/D3DDeviceManager.h"
+#include "../Renderer/DirectX/D3DUtillity.h"
 
 namespace BINDU
 {
 
 	// Buffer
+
+	Buffer::Buffer(Buffer&& rhs) noexcept
+	{
+		this->m_bufferCpu = std::move(rhs.m_bufferCpu);
+		this->m_bufferGpu = std::move(rhs.m_bufferGpu);
+		this->m_bufferUploader = std::move(rhs.m_bufferUploader);
+
+		rhs.m_bufferCpu->Release();
+		rhs.m_bufferGpu->Release();
+		rhs.m_bufferUploader->Release();
+
+	}
+
+	Buffer& Buffer::operator=(Buffer&& rhs) noexcept
+	{
+		this->m_bufferCpu = std::move(rhs.m_bufferCpu);
+		this->m_bufferGpu = std::move(rhs.m_bufferGpu);
+		this->m_bufferUploader = std::move(rhs.m_bufferUploader);
+
+		rhs.m_bufferCpu->Release();
+		rhs.m_bufferGpu->Release();
+		rhs.m_bufferUploader->Release();
+
+		return *this;
+	}
 
 	Buffer::~Buffer()
 	{
@@ -16,7 +41,8 @@ namespace BINDU
 
 	void Buffer::Create(const D3DCommandContext& commandContext, const void* initData, std::uint64_t byteSize)
 	{
-		auto device = commandContext.GetParentDevice()->GetD3DDevice();
+		auto deviceManager = commandContext.GetDeviceManager();
+		auto d3dDevice = deviceManager->GetD3DDevice();
 		auto cmdList = commandContext.GetCommandList();
 
 		// Create the Blob
@@ -27,7 +53,7 @@ namespace BINDU
 		CopyMemory(m_bufferCpu->GetBufferPointer(), initData, byteSize);
 
 		// Create the DefaultBuffer for GPU
-		m_bufferGpu = D3DUtility::CreateDefaultBuffer(device, cmdList.Get(),
+		m_bufferGpu = D3DUtility::CreateDefaultBuffer(d3dDevice, cmdList.Get(),
 			initData, byteSize, m_bufferUploader);
 	}
 
@@ -44,6 +70,24 @@ namespace BINDU
 	{
 	}
 
+	IndexBuffer::IndexBuffer(IndexBuffer&& rhs) noexcept
+	{
+		this->m_dataFormat = rhs.m_dataFormat;
+		this->m_bufferCpu = std::move(rhs.m_bufferCpu);
+		this->m_bufferGpu = std::move(rhs.m_bufferGpu);
+		this->m_bufferUploader = std::move(rhs.m_bufferUploader);
+			}
+
+	IndexBuffer& IndexBuffer::operator=(IndexBuffer&& rhs) noexcept
+	{
+		this->m_dataFormat = rhs.m_dataFormat;
+		this->m_bufferCpu = std::move(rhs.m_bufferCpu);
+		this->m_bufferGpu = std::move(rhs.m_bufferGpu);
+		this->m_bufferUploader = std::move(rhs.m_bufferUploader);
+
+		return *this;
+	}
+
 	D3D12_INDEX_BUFFER_VIEW IndexBuffer::GetView() const
 	{
 		return D3D12_INDEX_BUFFER_VIEW{ m_bufferGpu->GetGPUVirtualAddress(),
@@ -57,6 +101,25 @@ namespace BINDU
 
 	VertexBuffer::VertexBuffer(std::uint16_t strideInBytes) : m_byteStride(strideInBytes)
 	{
+	}
+
+	VertexBuffer::VertexBuffer(VertexBuffer&& rhs) noexcept
+	{
+		this->m_byteStride = rhs.m_byteStride;
+		this->m_bufferCpu = std::move(rhs.m_bufferCpu);
+		this->m_bufferGpu = std::move(rhs.m_bufferGpu);
+		this->m_bufferUploader = std::move(rhs.m_bufferUploader);
+
+	}
+
+	VertexBuffer& VertexBuffer::operator=(VertexBuffer&& rhs) noexcept
+	{
+		this->m_byteStride = rhs.m_byteStride;
+		this->m_bufferCpu = std::move(rhs.m_bufferCpu);
+		this->m_bufferGpu = std::move(rhs.m_bufferGpu);
+		this->m_bufferUploader = std::move(rhs.m_bufferUploader);
+
+		return *this;
 	}
 
 	D3D12_VERTEX_BUFFER_VIEW VertexBuffer::GetView() const

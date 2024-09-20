@@ -1,31 +1,27 @@
 #include "D3DFence.h"
 
-#include "D3DRenderDevice.h"
+#include "D3DDeviceManager.h"
 #include "../../../Utility/Common/CommonUtility.h"
-#include "Utility/D3DUtillity.h"
+#include "D3DUtillity.h"
 
 namespace BINDU
 {
-	void D3DFence::Initialize(const std::shared_ptr<D3DRenderDevice>& parentDevice)
+	void D3DFence::Initialize(const std::shared_ptr<D3DDeviceManager>& deviceManager)
 	{
-		if (!parentDevice)
-			THROW_EXCEPTION(3, "Invalid Device");
+		if (!deviceManager)
+			THROW_EXCEPTION(3, "Invalid Device Manager");
 
-		auto d3dDevice = parentDevice->GetD3DDevice();
+		auto d3dDevice = deviceManager->GetD3DDevice();
 
 		DXThrowIfFailed(
 			d3dDevice->CreateFence(m_fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(m_fence.ReleaseAndGetAddressOf())));
 
-		m_parentDevice = parentDevice;
+		m_deviceManager = deviceManager;
 	}
 
 	std::uint64_t D3DFence::Advance()
 	{
 		return ++m_fenceValue;
-	}
-	D3DRenderDevice* D3DFence::GetParentDevice() const
-	{
-		return m_parentDevice.get();
 	}
 
 	std::uint64_t D3DFence::GetCurrentValue() const

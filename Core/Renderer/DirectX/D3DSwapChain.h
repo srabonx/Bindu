@@ -1,6 +1,7 @@
 #ifndef D3DSWAPCHAIN_H
 #define D3DSWAPCHAIN_H
 
+#include <d3d12.h>
 #include <dxgi1_4.h>
 #include <wrl/client.h>
 #include <memory>
@@ -10,9 +11,9 @@ namespace BINDU
 	using namespace Microsoft::WRL;
 
 	// Forward declaration
-	class D3DCommandContext;
 	class RenderTexture;
-	class Win32Window;
+
+	class D3DDeviceManager;
 
 	class D3DSwapChain
 	{
@@ -21,42 +22,46 @@ namespace BINDU
 
 		~D3DSwapChain() = default;
 
-		void				Initialize(const std::shared_ptr<D3DCommandContext>& parentContext,
-										const std::shared_ptr<RenderTexture>& renderTexture,
-										 Win32Window* window);
+		void				Initialize(const std::shared_ptr<D3DDeviceManager>& parentDeviceManager,
+							HWND hwnd, std::uint16_t width, std::uint16_t height, std::uint8_t bufferCount = 2);
 
-		void				PresentRender() const;
+		void				PresentRender(std::uint8_t syncInterval = 1, std::uint8_t flags = 0) const;
 
 		// Resize buffers to the new size
-		void				Resize();
+		void				Resize(std::uint16_t width, std::uint16_t height);
 
-		D3DCommandContext* GetParentCommandContext() const;
-
-		RenderTexture*		GetRenderTexture() const;
+		RenderTexture*		GetRenderTarget() const;
 
 	private:
 
-		void				CreateSwapChain(D3DCommandContext* context, RenderTexture* renderTexture, Win32Window* window);
+		void				InitDXGI();
 
-		void				CreateRtBuffersFromSwapChainBuffers(RenderTexture* renderTexture) const;
+		void				CreateSwapChain(HWND hwnd, std::uint16_t width, std::uint16_t height, std::uint8_t bufferCount);
+
+		void				CreateBackBuffers();
 
 	private:
 
-		// Pointer to the CommandContext that Initialized this SwapChain
-		std::shared_ptr<D3DCommandContext>	m_parentCommandContext{ nullptr };
+		// Parent Device Manager for this SwapChain
+		std::shared_ptr<D3DDeviceManager>	m_parentDeviceManager{ nullptr };
 
-		// Pointer to the RenderTexture this SwapChain uses as its buffer.
-		std::shared_ptr<RenderTexture>		m_renderTexture{ nullptr };
+		std::shared_ptr<RenderTexture>		m_renderTarget{ nullptr };
 
-		// Pointer to the Window this SwapChain got created for
-		Win32Window*						m_window{ nullptr };
+		// Underlying DXGI Factory
+		ComPtr<IDXGIFactory4>				m_dxgiFactory{ nullptr };
 
 		// Underlying SwapChain interface
-		ComPtr<IDXGISwapChain1>				m_dxgiSwapChain{ nullptr };
+		ComPtr<IDXGISwapChain3>				m_dxgiSwapChain{ nullptr };
 
 		std::uint16_t						m_width{ 0 };
 
 		std::uint16_t						m_height{ 0 };
+
+		std::uint8_t						m_bufferCount{ 0 };
+
+		DXGI_FORMAT							m_backBufferFormat{ DXGI_FORMAT_R8G8B8A8_UNORM };
+
+		DXGI_SAMPLE_DESC					m_sampleDesc;
 
 	};
 }

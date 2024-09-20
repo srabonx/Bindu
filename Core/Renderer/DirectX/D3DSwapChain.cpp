@@ -1,114 +1,128 @@
 #include "D3DSwapChain.h"
 
-#include "D3DCommandContext.h"
-#include "D3DRenderDevice.h"
+#include "D3DDeviceManager.h"
 #include "../../../Utility/Common/CommonUtility.h"
-#include "../../../Window/Win32Window.h"
-#include "Utility/D3DUtillity.h"
-#include "Utility/RenderTexture.h"
+#include "D3DUtillity.h"
+#include "RenderTexture.h"
 
 namespace BINDU
 {
-	void D3DSwapChain::Initialize(const std::shared_ptr<D3DCommandContext>& parentContext,
-		const std::shared_ptr<RenderTexture>& renderTexture,
-		Win32Window* window)
+	void D3DSwapChain::Initialize(const std::shared_ptr<D3DDeviceManager>& parentDeviceManager,
+		HWND hwnd, std::uint16_t width, std::uint16_t height, std::uint8_t bufferCount)
 	{
-		if (!parentContext || !renderTexture || !window)
-			THROW_EXCEPTION(3, "Invalid arguments");
+		if (!parentDeviceManager)
+			THROW_EXCEPTION(3, "Invalid Device Manager");
 
-		if (!renderTexture->IsSwapChainBuffer())
-			THROW_EXCEPTION(3, "RenderTexture is not initialized as SwapChain buffer");
+		m_width = width;
+		m_height = height;
+		m_bufferCount = bufferCount;
+		m_parentDeviceManager = parentDeviceManager;
+		m_sampleDesc = { 1,0 };
 
-		CreateSwapChain(parentContext.get(), renderTexture.get(), window);
+		InitDXGI();
 
-		CreateRtBuffersFromSwapChainBuffers(renderTexture.get());
+		CreateSwapChain(hwnd, width, height, bufferCount);
 
-		m_parentCommandContext = parentContext;
-		m_renderTexture = renderTexture;
-		m_window = window;
-		m_width = static_cast<std::uint16_t>(window->GetWidth());
-		m_height = static_cast<std::uint16_t>(window->GetHeight());
+		CreateBackBuffers();
+
 	}
 
-	void D3DSwapChain::PresentRender() const
+	void D3DSwapChain::PresentRender(std::uint8_t syncInterval, std::uint8_t flags) const
 	{
 		DXThrowIfFailed(
-			m_dxgiSwapChain->Present(0, 0));
+			m_dxgiSwapChain->Present(syncInterval, flags));
 	}
 
-	void D3DSwapChain::Resize()
+	void D3DSwapChain::Resize(std::uint16_t width, std::uint16_t height)
 	{
-		auto newWidth = static_cast<std::uint16_t>(m_window->GetWidth());
-		auto newHeight = static_cast<std::uint16_t>(m_window->GetHeight());
 
-		if (m_width == newWidth && m_height == newHeight)
+		if (m_width == width && m_height == height)
 			return;
 
-		m_renderTexture->Resize(newWidth, newHeight);
+		auto rtFormat = m_renderTarget->GetRenderTargetBufferFormat();
+
+		m_renderTarget.reset();
 
 		DXThrowIfFailed(
-			m_dxgiSwapChain->ResizeBuffers(m_renderTexture->GetBufferCount(), newWidth, newHeight,
-				m_renderTexture->GetRenderTargetBufferFormat(), DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH));
+			m_dxgiSwapChain->ResizeBuffers(m_bufferCount, width, height,
+				rtFormat, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH));
 
-		CreateRtBuffersFromSwapChainBuffers(m_renderTexture.get());
 
-		m_width = newWidth;
-		m_height = newHeight;
+		CreateBackBuffers();
+
+		m_width = width;
+		m_height = height;
 	}
 
-	D3DCommandContext* D3DSwapChain::GetParentCommandContext() const
+	RenderTexture* D3DSwapChain::GetRenderTarget() const
 	{
-		return m_parentCommandContext.get();
+		return m_renderTarget.get();
 	}
 
-	RenderTexture* D3DSwapChain::GetRenderTexture() const
+	void D3DSwapChain::InitDXGI()
 	{
-		return m_renderTexture.get();
+		UINT factoryFlag = 0;
+
+		// Enable Debug layer if in DEBUG mode
+#if defined (DEBUG) || defined (_DEBUG)
+		factoryFlag = DXGI_CREATE_FACTORY_DEBUG;
+#endif
+
+		// Create the DXGI Factory
+		DXThrowIfFailed(CreateDXGIFactory2(factoryFlag, IID_PPV_ARGS(m_dxgiFactory.ReleaseAndGetAddressOf())));
 	}
 
 
-	void D3DSwapChain::CreateSwapChain(D3DCommandContext* context, RenderTexture* renderTexture, Win32Window* window)
+	void D3DSwapChain::CreateSwapChain(HWND hwnd, std::uint16_t width, std::uint16_t height, std::uint8_t bufferCount)
 	{
 		// Release the previous SwapChain
 		m_dxgiSwapChain.Reset();
 
-		auto dxgiFactory = context->GetParentDevice()->GetDXGIFactory();
-
-		m_width = renderTexture->GetWidth();
-		m_height = renderTexture->GetHeight();
-
 		DXGI_SWAP_CHAIN_DESC1 scd = {};
 		scd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;				// Allow fullscreen
-		scd.Format = renderTexture->GetRenderTargetBufferFormat();
-		scd.SampleDesc = renderTexture->GetSampleDesc();
+		scd.Format = m_backBufferFormat;
+		scd.SampleDesc = m_sampleDesc;
 		scd.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
-		scd.BufferCount = renderTexture->GetBufferCount();
+		scd.BufferCount = bufferCount;
 		scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		scd.Width = renderTexture->GetWidth();
-		scd.Height = renderTexture->GetHeight();
+		scd.Width = width;
+		scd.Height = height;
 		scd.Scaling = DXGI_SCALING_STRETCH;
 		scd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 
 		DXGI_SWAP_CHAIN_FULLSCREEN_DESC scfd = {};
 		scfd.Windowed = TRUE;
 
+		auto commandQueue = m_parentDeviceManager->GetCommandQueue();
+
+		// Temporary SwapChain
+		ComPtr<IDXGISwapChain1> swapChain{ nullptr };
+
 		// SwapChain uses Command Queue for flush
 		DXThrowIfFailed(
-			dxgiFactory->CreateSwapChainForHwnd(context->m_commandQueue.Get(), window->GetHandle(), &scd, &scfd,
+			m_dxgiFactory->CreateSwapChainForHwnd(commandQueue, hwnd, &scd, &scfd,
 				nullptr,
-				m_dxgiSwapChain.ReleaseAndGetAddressOf()));
+				swapChain.ReleaseAndGetAddressOf()));
+
+		swapChain.As(&m_dxgiSwapChain);
+
+
 	}
 
-	void D3DSwapChain::CreateRtBuffersFromSwapChainBuffers(RenderTexture* renderTexture) const
+	void D3DSwapChain::CreateBackBuffers()
 	{
-		for(int i = 0; i< renderTexture->GetBufferCount(); i++)
-		{
-			auto& buffer = renderTexture->m_rtBuffers[i];
+		std::vector<ComPtr<ID3D12Resource>> renderTargets(m_bufferCount);
 
-			m_dxgiSwapChain->GetBuffer(i, IID_PPV_ARGS(&buffer));
-			
+		for (int i = 0; i < m_bufferCount; i++)
+		{
+			DXThrowIfFailed(
+				m_dxgiSwapChain->GetBuffer(i, IID_PPV_ARGS(renderTargets[i].ReleaseAndGetAddressOf())));
 		}
 
-		renderTexture->CreateRTBuffer(renderTexture->GetWidth(), renderTexture->GetHeight());
+		m_renderTarget = std::make_shared<RenderTexture>(m_backBufferFormat, DXGI_FORMAT_D24_UNORM_S8_UINT,
+			m_bufferCount,
+			m_sampleDesc);
+
+		m_renderTarget->Initialize(m_parentDeviceManager, renderTargets);
 	}
 }

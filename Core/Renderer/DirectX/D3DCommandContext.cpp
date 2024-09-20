@@ -1,9 +1,9 @@
 #include "D3DCommandContext.h"
 
 #include "D3DFence.h"
-#include "D3DRenderDevice.h"
+#include "D3DDeviceManager.h"
+#include "D3DUtillity.h"
 #include "../../../Utility/Common/CommonUtility.h"
-#include "Utility/D3DUtillity.h"
 
 namespace BINDU
 {
@@ -14,34 +14,30 @@ namespace BINDU
 	{
 	}
 
-	void D3DCommandContext::Initialize(const std::shared_ptr<D3DRenderDevice>& parentDevice)
+	void D3DCommandContext::Initialize(const std::shared_ptr<D3DDeviceManager>& deviceManager)
 	{
-		if (!parentDevice)
-			THROW_EXCEPTION(3, "Invalid Device");
+		if (!deviceManager)
+			THROW_EXCEPTION(3, "Invalid Device Manager");
 
-		CreateCommandObjects(parentDevice.get());
+		CreateCommandObjects(deviceManager.get());
 
-		m_parentDevice = parentDevice;
+		m_deviceManager = deviceManager;
+		m_commandQueue = deviceManager->GetCommandQueue();
 	}
 
 	void D3DCommandContext::PrepareForCommands(ID3D12CommandAllocator* commandAllocator) const
 	{
-		DXThrowIfFailed(
-			commandAllocator->Reset());
+		auto cmdAllocator = commandAllocator;
+
+		if (cmdAllocator == nullptr)
+			cmdAllocator = m_commandAllocator.Get();
 
 		DXThrowIfFailed(
-			m_commandList->Reset(commandAllocator, nullptr));
+			cmdAllocator->Reset());
 
-	}
+		DXThrowIfFailed(
+			m_commandList->Reset(cmdAllocator, nullptr));
 
-	void D3DCommandContext::SetViewport(std::uint8_t numOfViewport, const D3D12_VIEWPORT* viewports) const
-	{
-		m_commandList->RSSetViewports(numOfViewport, viewports);
-	}
-
-	void D3DCommandContext::SetScissorRect(std::uint8_t numOfRect, const D3D12_RECT* rects) const
-	{
-		m_commandList->RSSetScissorRects(numOfRect, rects);
 	}
 
 	void D3DCommandContext::ExecuteCommands() const
@@ -83,10 +79,11 @@ namespace BINDU
 
 	}
 
-	D3DRenderDevice* D3DCommandContext::GetParentDevice() const
+	D3DDeviceManager* D3DCommandContext::GetDeviceManager() const
 	{
-		return m_parentDevice.get();
+		return m_deviceManager.get();
 	}
+
 
 	ComPtr<ID3D12GraphicsCommandList> D3DCommandContext::GetCommandList() const
 	{
@@ -104,9 +101,9 @@ namespace BINDU
 	}
 
 
-	void D3DCommandContext::CreateCommandObjects(const D3DRenderDevice* renderDevice)
+	void D3DCommandContext::CreateCommandObjects(const D3DDeviceManager* deviceManager)
 	{
-		auto d3dDevice = renderDevice->GetD3DDevice();
+		auto d3dDevice = deviceManager->GetD3DDevice();
 
 		// Create CommandAllocator
 		DXThrowIfFailed(
@@ -117,13 +114,13 @@ namespace BINDU
 			d3dDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_commandAllocator.Get(),
 				nullptr, IID_PPV_ARGS(m_commandList.ReleaseAndGetAddressOf())));
 
-		// Create CommandQueue
-		D3D12_COMMAND_QUEUE_DESC commandQueueDesc = {};
-		commandQueueDesc.NodeMask = 0;
-		commandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-		commandQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+		//// Create CommandQueue
+		//D3D12_COMMAND_QUEUE_DESC commandQueueDesc = {};
+		//commandQueueDesc.NodeMask = 0;
+		//commandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+		//commandQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 
-		DXThrowIfFailed(
-			d3dDevice->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(m_commandQueue.ReleaseAndGetAddressOf())));
+		//DXThrowIfFailed(
+		//	d3dDevice->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(m_commandQueue.ReleaseAndGetAddressOf())));
 	}
 }

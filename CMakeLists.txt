@@ -37,10 +37,6 @@ add_library(Bindu STATIC
         Input/Keyboard.h
         Input/Mouse.h
         Input/Mouse.cpp
-        Core/Renderer/IRenderer.h
-        Core/Renderer/DirectX/Utility/D3DUtillity.h
-        Core/Renderer/DirectX/Error/ComException.h
-        Core/Renderer/DirectX/Utility/d3dx12.h
         Utility/Common/Timer.h
         Utility/Common/Timer.cpp 
         Gui/Common/imconfig.h
@@ -59,38 +55,49 @@ add_library(Bindu STATIC
         Gui/DX12/imgui_impl_win32.cpp
         Gui/DX12/imgui_impl_dx12.h
         Gui/DX12/imgui_impl_dx12.cpp
-        Gui/DX12/DX12Imgui.h
-        Gui/DX12/DX12Imgui.cpp 
-        Core/Renderer/DirectX/Utility/DescriptorHeap.h
-        Core/Renderer/DirectX/Utility/DescriptorHeap.cpp 
-        Core/Renderer/DirectX/Utility/UploadBuffer.h 
-        Core/Renderer/DirectX/Utility/MeshGeometry.h
-        Utility/Common/CircleBuffer.h
-        Core/Renderer/DirectX/Utility/GPUDescriptorHeapManager.h
-        Core/Renderer/DirectX/Utility/GPUDescriptorHeapManager.cpp 
-        Core/Renderer/DirectX/Utility/VariableSizeMemoryAllocator.h
-        Core/Renderer/DirectX/Utility/VariableSizeMemoryAllocator.cpp
-        Core/Renderer/DirectX/Utility/VariableSizeGpuMemoryAllocator.h
-        Core/Renderer/DirectX/Utility/VariableSizeGpuMemoryAllocator.cpp
-        Core/Renderer/DirectX/Utility/DescriptorHeapManager.h
-        Core/Renderer/DirectX/Utility/DescriptorHeapManager.cpp
-        Core/Renderer/DirectX/Utility/CpuDescriptorHeap.h
-        Core/Renderer/DirectX/Utility/CpuDescriptorHeap.cpp
-        Core/Renderer/DirectX/Utility/IDescriptorHeapAllocator.h
-        Core/Renderer/DirectX/Utility/GpuDescriptorHeap.h
-        Core/Renderer/DirectX/Utility/GpuDescriptorHeap.cpp 
-        Core/Renderer/DirectX/IRenderDevice.h
-        Core/Renderer/DirectX/D3DRenderDevice.h
-        Core/Renderer/DirectX/D3DRenderDevice.cpp
-        Core/Renderer/DirectX/Utility/RenderTexture.h
-        Core/Renderer/DirectX/Utility/RenderTexture.cpp
-        Core/Renderer/DirectX/Utility/FlyFrame.h
-        Core/Renderer/DirectX/Utility/FlyFrame.cpp
+        Utility/Common/CircleBuffer.h 
+        Core/Renderer/DirectX/D3DDeviceManager.h
+        Core/Renderer/DirectX/D3DDeviceManager.cpp
         Core/Renderer/DirectX/D3DSwapChain.h
         Core/Renderer/DirectX/D3DSwapChain.cpp
-        Core/Renderer/DirectX/D3DCommandContext.h
+        Core/Renderer/DirectX/RenderTexture.h 
+        Core/Renderer/DirectX/RenderTexture.cpp
+        Core/Renderer/DirectX/D3DUtillity.h
+        Core/Renderer/DirectX/ComException.h
+        Core/Renderer/DirectX/d3dx12.h
+        Core/Renderer/DirectX/CpuDescriptorHeap.h
+        Core/Renderer/DirectX/CpuDescriptorHeap.cpp
+        Core/Renderer/DirectX/DescriptorHeap.h
+        Core/Renderer/DirectX/DescriptorHeap.cpp
+        Core/Renderer/DirectX/DescriptorHeapManager.h
+        Core/Renderer/DirectX/DescriptorHeapManager.cpp
+        Core/Renderer/DirectX/GpuDescriptorHeap.h 
+        Core/Renderer/DirectX/GpuDescriptorHeap.cpp
+        Core/Renderer/DirectX/VariableSizeGpuMemoryAllocator.h
+        Core/Renderer/DirectX/VariableSizeGpuMemoryAllocator.cpp
+        Core/Renderer/DirectX/VariableSizeMemoryAllocator.h
+        Core/Renderer/DirectX/VariableSizeMemoryAllocator.cpp
+        Core/Renderer/DirectX/D3DCommandContext.h 
         Core/Renderer/DirectX/D3DCommandContext.cpp
         Core/Renderer/DirectX/D3DFence.h
-        Core/Renderer/DirectX/D3DFence.cpp "Core/GameObject/Transformable.h" "Core/GameObject/Renderable.h" "Core/GameObject/GameObject.h" "Core/GameObject/GameObject.cpp" "Core/GameObject/Renderable.cpp" "Core/GameObject/Vertex.h" "Core/GameObject/Buffers.h" "Core/GameObject/Buffers.cpp")
+        Core/Renderer/DirectX/D3DFence.cpp
+        Core/Renderer/DirectX/IDescriptorHeapAllocator.h
+        Core/Renderer/DirectX/D3DPipelineStateManager.h
+        Core/Renderer/DirectX/D3DPipelineStateManager.cpp
+        Core/Renderer/DirectX/D3DShader.h
+        Core/Renderer/DirectX/D3DShader.cpp
+        Core/Renderer/DirectX/DefaultRenderContext.h
+        Core/Renderer/DirectX/DefaultRenderContext.cpp
+        Core/GameObject/Transform.h
+        Core/GameObject/Transform.cpp
+        Core/GameObject/GameObject.h
+        Core/GameObject/GameObject.cpp
+        Core/GameObject/MeshObject.h
+        Core/GameObject/MeshObject.cpp
+        Core/GameObject/Buffers.h
+        Core/GameObject/Buffers.cpp
+        Core/Renderer/DirectX/UploadBuffer.h
+        Core/GameObject/Camera.h
+        Core/GameObject/Camera.cpp)
 
 

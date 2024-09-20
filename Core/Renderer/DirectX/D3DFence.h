@@ -11,7 +11,7 @@ namespace BINDU
 	using namespace Microsoft::WRL;
 
 	// Forward declaration
-	class D3DRenderDevice;
+	class D3DDeviceManager;
 
 	class D3DCommandContext;
 
@@ -25,17 +25,15 @@ namespace BINDU
 
 		~D3DFence() = default;
 
-		void					Initialize(const std::shared_ptr<D3DRenderDevice>& parentDevice);
+		void					Initialize(const std::shared_ptr<D3DDeviceManager>& deviceManager);
 
 		std::uint64_t			Advance();
-
-		D3DRenderDevice*		GetParentDevice() const;
 
 		std::uint64_t			GetCurrentValue() const;
 
 	private:
 		// Shared pointer to the RenderDevice that created this Fence.
-		std::shared_ptr<D3DRenderDevice>	m_parentDevice{ nullptr };
+		std::shared_ptr<D3DDeviceManager>	m_deviceManager{ nullptr };
 		
 		// Underlying Fence object
 		ComPtr<ID3D12Fence>					m_fence{ nullptr };
