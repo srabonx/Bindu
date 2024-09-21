@@ -23,6 +23,8 @@ namespace BINDU {
 
         void Run() override;
 
+        void RunUnlocked() override;
+
         void Close() override;
 
     private:

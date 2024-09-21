@@ -16,7 +16,14 @@ namespace BINDU
 	public:
 		MeshObject();
 
+		MeshObject(const MeshObject& rhs) = default;
+
+		MeshObject& operator = (const MeshObject& rhs) = default;
+
 		void	SetMesh(VertexBuffer&& vertexBuffer, IndexBuffer&& indexBuffer, std::uint32_t vertexCount, std::uint32_t indexCount);
+
+		void	SetMesh(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer, std::uint32_t vertexCount, std::uint32_t indexCount);
+
 
 		virtual void Render(const D3DCommandContext& commandContext, const D3DPipelineStateManager& pipelineManager, const std::string& pipelineName);
 

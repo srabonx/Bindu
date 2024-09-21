@@ -26,6 +26,10 @@ namespace BINDU
 	public:
 		GameObject();
 
+		GameObject(const GameObject& obj);
+
+		GameObject& operator = (const GameObject& obj);
+
 		virtual ~GameObject() {}
 
 		virtual void Initialize(const D3DDeviceManager& deviceManager);
@@ -43,7 +47,7 @@ namespace BINDU
 
 		XMFLOAT4X4			m_worldMatrix;
 
-		UploadBuffer		m_constantBuffer;
+		std::shared_ptr<UploadBuffer>		m_constantBuffer;
 
 		Transform			m_transformComponent;
 

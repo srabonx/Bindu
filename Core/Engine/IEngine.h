@@ -47,6 +47,8 @@ namespace BINDU {
         // Run the Main Loop
         virtual void Run() = 0;
 
+        virtual void RunUnlocked() = 0;
+
         // Closing Routine goes in here
         virtual void Close() = 0;
 

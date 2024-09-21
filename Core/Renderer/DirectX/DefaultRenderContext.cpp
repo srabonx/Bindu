@@ -42,7 +42,7 @@ namespace BINDU
 
 		auto commandList = m_commandContext->GetCommandList();
 
-		D3D12_VIEWPORT viewport = D3D12_VIEWPORT{ 0,0,static_cast<float>(m_width),static_cast<float>(m_height), 1.0f,1000.f };
+		D3D12_VIEWPORT viewport = D3D12_VIEWPORT{ 0,0,static_cast<float>(m_width),static_cast<float>(m_height), 0.0f,1.0f };
 
 		D3D12_RECT scissorRect = D3D12_RECT{ 0,0, static_cast<LONG>(m_width),static_cast<LONG>(m_height) };
 
@@ -109,5 +109,10 @@ namespace BINDU
 	D3DCommandContext* DefaultRenderContext::GetCommandContext() const
 	{
 		return m_commandContext.get();
+	}
+
+	D3DFence* DefaultRenderContext::GetFence() const
+	{
+		return m_fence.get();
 	}
 }

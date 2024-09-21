@@ -5,15 +5,34 @@
 
 namespace BINDU
 {
-	GameObject::GameObject() : m_constantBuffer(true)
+	GameObject::GameObject()
 	{
+		m_constantBuffer = std::make_shared<UploadBuffer>(true);
+
 		XMStoreFloat4x4(&m_worldMatrix,XMMatrixIdentity());
+	}
+
+	GameObject::GameObject(const GameObject& obj)
+	{
+		this->m_transformComponent = obj.m_transformComponent;
+		this->m_constantBuffer = obj.m_constantBuffer;
+		this->m_rootParamSlot = obj.m_rootParamSlot;
+		this->m_worldMatrix = obj.m_worldMatrix;
+	}
+
+	GameObject& GameObject::operator=(const GameObject& obj)
+	{
+		this->m_transformComponent = obj.m_transformComponent;
+		this->m_constantBuffer = obj.m_constantBuffer;
+		this->m_rootParamSlot = obj.m_rootParamSlot;
+		this->m_worldMatrix = obj.m_worldMatrix;
+		return *this;
 	}
 
 	void GameObject::Initialize(const D3DDeviceManager& deviceManager)
 	{
 		auto d3dDevice = deviceManager.GetD3DDevice();
-		m_constantBuffer.Initialize<ObjectConstant>(d3dDevice, 1);
+		m_constantBuffer->Initialize<ObjectConstant>(d3dDevice, 1);
 	}
 
 	void GameObject::Update()
@@ -38,7 +57,7 @@ namespace BINDU
 		XMStoreFloat4x4(&oc.WorldMatrix, XMMatrixTranspose(worldMat));
 
 
-		m_constantBuffer.CopyData(0,oc);
+		m_constantBuffer->CopyData(0,oc);
 	}
 
 

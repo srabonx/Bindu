@@ -8,7 +8,8 @@
   "ExpandedNodes": [
     "",
     "\\Core",
-    "\\Core\\GameObject",
+    "\\Core\\Renderer",
+    "\\Core\\Renderer\\DirectX",
     "\\Temp",
     "\\Temp\\DirectX",
     "\\Temp\\DirectX\\Utility",
@@ -17,5 +18,6 @@
     "\\Utility\\Common",
     "\\Window"
   ],
+  "SelectedNode": "\\Core\\Renderer\\DirectX\\D3DSwapChain.cpp",
   "PreviewInSolutionExplorer": false
 }

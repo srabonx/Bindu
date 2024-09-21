@@ -201,6 +201,55 @@ namespace BINDU {
 
     }
 
+    void Win32Engine::RunUnlocked()
+    {
+
+        using TimePoint = std::chrono::time_point<std::chrono::steady_clock>;
+
+        TimePoint endTime = std::chrono::steady_clock::now();
+        TimePoint startTime = std::chrono::steady_clock::now();
+
+
+        std::chrono::steady_clock::duration elapsedTime = {};
+
+
+        MSG msg{ 0 };
+
+        bool isDone = false;
+        while (!isDone)
+        {
+
+            startTime = std::chrono::steady_clock::now();
+
+            elapsedTime = startTime - endTime;
+
+            endTime = startTime;
+
+            long delta = static_cast<long>(elapsedTime.count());
+
+            double deltaSec = delta * 0.000000001;
+
+            while (PeekMessageA(&msg, nullptr, 0, 0, PM_REMOVE))
+            {
+                if (msg.message == WM_QUIT)
+                {
+                    isDone = true;
+                }
+
+                TranslateMessage(&msg);
+                DispatchMessageA(&msg);
+            }
+
+            if (isDone)
+                break;
+
+            m_impl->m_app->Update(deltaSec);
+            m_impl->m_app->Render();
+
+        }
+
+    }
+
 
     void Win32Engine::Close()
     {

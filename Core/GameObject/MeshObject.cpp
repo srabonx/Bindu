@@ -18,6 +18,16 @@ namespace BINDU
 		m_indexCount = indexCount;
 	}
 
+	void MeshObject::SetMesh(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer, std::uint32_t vertexCount,
+		std::uint32_t indexCount)
+	{
+		m_vertexBuffer = vertexBuffer;
+		m_indexBuffer = indexBuffer;
+
+		m_vertexCount = vertexCount;
+		m_indexCount = indexCount;
+	}
+
 	void MeshObject::Render(const D3DCommandContext& commandContext, const D3DPipelineStateManager& pipelineManager, const std::string& pipelineName)
 	{
 		auto cmdList = commandContext.GetCommandList();
@@ -28,7 +38,7 @@ namespace BINDU
 		cmdList->IASetIndexBuffer(&ibv);
 		cmdList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		cmdList->SetGraphicsRootConstantBufferView(m_rootParamSlot, m_constantBuffer.GetGPUVirtualAddress());
+		cmdList->SetGraphicsRootConstantBufferView(m_rootParamSlot, m_constantBuffer->GetGPUVirtualAddress());
 
 		cmdList->DrawIndexedInstanced(m_indexCount, 1, 0,0,0);
 

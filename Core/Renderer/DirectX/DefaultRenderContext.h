@@ -45,6 +45,8 @@ namespace BINDU
 
 		D3DCommandContext*	GetCommandContext() const;
 
+		D3DFence*           GetFence() const;
+
 	private:
 		std::shared_ptr<D3DDeviceManager>		m_deviceManager{ nullptr };
 

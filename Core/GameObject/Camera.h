@@ -27,8 +27,6 @@ namespace BINDU
 
 		void Render(const D3DCommandContext& commandContext, const D3DPipelineStateManager& pipelineManager, const std::string& pipelineName) override;
 
-		void Resize(std::uint16_t width, std::uint16_t height);
-
 
 		// Get Camera basis vectors
 		XMVECTOR	GetRight() const;
@@ -66,7 +64,8 @@ namespace BINDU
 		XMFLOAT4X4	GetProj4x4f() const;
 
 		// Strafe/Walk the camera a distance d.
-		void		Strafe(float d);
+		void		StrafeX(float d);
+		void		StrafeY(float d);
 		void		Walk(float d);
 
 		// Rotate the camera.
