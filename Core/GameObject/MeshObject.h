@@ -25,7 +25,7 @@ namespace BINDU
 		void	SetMesh(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer, std::uint32_t vertexCount, std::uint32_t indexCount);
 
 
-		virtual void Render(const D3DCommandContext& commandContext, const D3DPipelineStateManager& pipelineManager, const std::string& pipelineName);
+		virtual void Render(const D3DCommandContext& commandContext);
 
 	private:
 

@@ -32,26 +32,34 @@ namespace BINDU
 
 		virtual ~GameObject() {}
 
-		virtual void Initialize(const D3DDeviceManager& deviceManager);
+		virtual void	 Initialize(const D3DDeviceManager& deviceManager);
 
-		virtual void Update();
+		virtual void	 Update() = 0;
 
-		virtual void Render(const D3DCommandContext& commandContext, const D3DPipelineStateManager& pipelineManager, const std::string& pipelineName) = 0;
+		virtual void	 Render(const D3DCommandContext& commandContext) = 0;
 
 
 		void			 SetObjectConstantRootParameterSlot(std::uint8_t RootParamSlot);
 
+
 		Transform*		 GetTransformComponent();
+
+		void			 SetTransform(const Transform& transform);
 
 	protected:
 
-		XMFLOAT4X4			m_worldMatrix;
+		void			 UpdateConstantBuffer();
+
+	protected:
+
+		ObjectConstant						m_objectConstants;
 
 		std::shared_ptr<UploadBuffer>		m_constantBuffer;
 
-		Transform			m_transformComponent;
+		Transform							m_transformComponent;
 
-		std::uint8_t		m_rootParamSlot{0};
+		std::uint8_t						m_rootParamSlot{0};
+
 	};
 
 }

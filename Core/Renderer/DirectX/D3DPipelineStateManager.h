@@ -20,9 +20,9 @@ namespace BINDU
 		D3DPipelineStateManager() = default;
 		~D3DPipelineStateManager() = default;
 
-		void		Initialize(const std::shared_ptr<D3DDeviceManager>& deviceManager);
+		void					Initialize(const std::shared_ptr<D3DDeviceManager>& deviceManager);
 
-		void		AddPipelineState(const std::string& name, const D3DShader& vertexShader,
+		void					AddPipelineState(const std::string& name, const D3DShader& vertexShader,
 									const D3DShader& pixelShader, const D3D12_INPUT_LAYOUT_DESC& inputLayout,
 									const D3D12_ROOT_SIGNATURE_DESC& rootSigDesc);
 

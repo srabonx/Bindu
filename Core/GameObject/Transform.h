@@ -37,6 +37,10 @@ namespace BINDU
 
 		XMFLOAT3		 GetTranslation3f() const;
 
+		bool			 IsDirty() const;
+
+		void			 SetDirty(bool dirty);
+
 	private:
 
 		XMFLOAT3			m_rotation{0.0f,0.0f,0.0f};
@@ -44,6 +48,9 @@ namespace BINDU
 		XMFLOAT3			m_scale{1.0f,1.0f,1.0f};
 
 		XMFLOAT3			m_translation{0.0f,0.0f,0.0f};
+
+		// Indicates if this component is dirty or not
+		bool				m_isDirty{ false };
 
 	};
 }

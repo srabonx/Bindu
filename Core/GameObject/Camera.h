@@ -25,7 +25,7 @@ namespace BINDU
 
 		void Update() override;
 
-		void Render(const D3DCommandContext& commandContext, const D3DPipelineStateManager& pipelineManager, const std::string& pipelineName) override;
+		void Render(const D3DCommandContext& commandContext) override;
 
 
 		// Get Camera basis vectors
@@ -99,7 +99,6 @@ namespace BINDU
 		float			m_farWindowHeight{0.0f};
 
 		bool			m_viewDirty{true};
-
 
 	};
 }

@@ -30,12 +30,6 @@ namespace BINDU
 
 		void						Initialize(const std::shared_ptr<D3DDeviceManager>& deviceManager, const std::vector<ComPtr<ID3D12Resource>>& renderTargetBuffers);
 
-		void						Begin(const D3DCommandContext* commandContext);
-
-		void						Clear(const D3DCommandContext* commandContext, const float* color, float depth, std::uint8_t stencil) const;
-		
-		void						End(const D3DCommandContext* commandContext);
-
 		// Reset and resize the buffers to the new size
 		void						Resize(std::uint16_t width, std::uint16_t height);
 
@@ -71,9 +65,25 @@ namespace BINDU
 
 		std::uint16_t				GetHeight() const;
 
+		const float*				GetClearColor() const;
+
+		float						GetDepth() const;
+
+		std::uint8_t				GetStencil() const;
+
 
 
 		void						SetSampleDesc(DXGI_SAMPLE_DESC sampleDesc);
+
+		void						SetState(ID3D12GraphicsCommandList* commandList, const D3D12_RESOURCE_STATES& state);
+
+		void						SetClearColor(float clearColor[4]);
+
+		void						SetDepth(float depth);
+
+		void						SetStencil(std::uint8_t stencil);
+
+		void						SetDepthStencil(float depth, std::uint8_t stencil);
 
 
 	private:
@@ -131,6 +141,13 @@ namespace BINDU
 		std::uint16_t							m_width{ 0 };
 
 		std::uint16_t							m_height{ 0 };
+
+		// Clear color and depth/stencil information
+		float									m_clearColor[4]{ 0.0f,0.0f,1.0f,1.0f };
+
+		float									m_depth{ 1.0f };
+
+		std::uint8_t							m_stencil{ 0 };
 	};
 
 }

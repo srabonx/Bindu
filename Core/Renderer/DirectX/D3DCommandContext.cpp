@@ -2,7 +2,9 @@
 
 #include "D3DFence.h"
 #include "D3DDeviceManager.h"
+#include "D3DPipelineStateManager.h"
 #include "D3DUtillity.h"
+#include "RenderTexture.h"
 #include "../../../Utility/Common/CommonUtility.h"
 
 namespace BINDU
@@ -48,6 +50,51 @@ namespace BINDU
 		ID3D12CommandList* commandList[] = {m_commandList.Get()};
 
 		m_commandQueue->ExecuteCommandLists(_countof(commandList), commandList);
+	}
+
+	void D3DCommandContext::Begin(RenderTexture* renderTexture)
+	{
+		if (m_beginEndPair)
+			THROW_EXCEPTION(3, "D3DCommandContext::End() has not been called in last frame");
+
+		m_beginEndPair = true;
+		m_tempRenderTexture = renderTexture;
+
+		renderTexture->SetState(m_commandList.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+		auto currentRtvHandle = renderTexture->GetCurrentRtvCpuHandle();
+		auto dsvHandle = renderTexture->GetDsvCpuHandle();
+
+		m_commandList->OMSetRenderTargets(1, &currentRtvHandle,
+			TRUE, &dsvHandle);
+
+		m_commandList->ClearRenderTargetView(currentRtvHandle, renderTexture->GetClearColor(), 0, nullptr);
+
+		m_commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL,
+			renderTexture->GetDepth(), renderTexture->GetStencil(), 0, nullptr);
+	}
+
+	void D3DCommandContext::BindPipeline(const D3DPipelineStateManager& pipelineManager, const std::string& pipelineName) const
+	{
+		if (!m_beginEndPair)
+			THROW_EXCEPTION(3, "D3DCommandContext::Begin() was not called prior to calling BindPipeline()");
+
+		auto pipeline = pipelineManager.GetPipelineState(pipelineName);
+		auto rootSig = pipelineManager.GetRootSignature(pipelineName);
+
+		m_commandList->SetGraphicsRootSignature(rootSig);
+
+		m_commandList->SetPipelineState(pipeline);
+	}
+
+	void D3DCommandContext::End()
+	{
+		if (!m_beginEndPair)
+			THROW_EXCEPTION(3, "D3DCommandContext::Begin() was not called prior to calling End()");
+
+		m_tempRenderTexture->SetState(m_commandList.Get(), D3D12_RESOURCE_STATE_PRESENT);
+
+		m_tempRenderTexture = nullptr;
 	}
 
 	void D3DCommandContext::Signal(const D3DFence* fence) const

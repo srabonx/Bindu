@@ -4,6 +4,7 @@
 #include <wrl/client.h>
 #include <d3d12.h>
 #include <memory>
+#include <string>
 
 
 namespace BINDU
@@ -13,6 +14,10 @@ namespace BINDU
 	// Forward declaration
 	class D3DDeviceManager;
 	class D3DFence;
+	class RenderTexture;
+	class GameObject;
+	class D3DPipelineStateManager;
+
 
 	// Primary object to submit commands to GPU
 	class D3DCommandContext
@@ -28,6 +33,14 @@ namespace BINDU
 		void		PrepareForCommands(ID3D12CommandAllocator* commandAllocator) const;
 
 		void		ExecuteCommands() const;
+
+		// Begin rendering on the given render texture
+		void		Begin(RenderTexture* renderTexture);
+
+		// Bind Pipeline State
+		void		BindPipeline(const D3DPipelineStateManager& pipelineManager, const std::string& pipelineName) const;
+
+		void		End();
 
 		// Mark commands up to this fence point
 		void		Signal(const D3DFence* fence) const;
@@ -48,7 +61,7 @@ namespace BINDU
 
 	private:
 		
-		// Shared pointer to the RenderDevice that created this CommandContext.
+		// Shared pointer to the DeviceManager that created this CommandContext.
 		std::shared_ptr<D3DDeviceManager>	m_deviceManager{ nullptr };
 		
 		// The CommandQueue interface. The GPU executes commands from this Queue.
@@ -59,6 +72,11 @@ namespace BINDU
 
 		// The CommandAllocator interface. It allocates commands from CommandList
 		ComPtr<ID3D12CommandAllocator>		m_commandAllocator{ nullptr };
+
+		// Currently bound render texture for rendering
+		RenderTexture*						m_tempRenderTexture{ nullptr };
+
+		bool								m_beginEndPair{ false };
 	};
 }
 

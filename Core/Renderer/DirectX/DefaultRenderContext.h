@@ -1,6 +1,7 @@
 #ifndef DEFAULTRENDERCONTEXT_H
 #define DEFAULTRENDERCONTEXT_H
 
+#include <DirectXMath.h>
 #include <memory>
 
 #include "D3DDeviceManager.h"
@@ -12,12 +13,30 @@
 
 namespace BINDU
 {
+	using namespace DirectX;
 	//class D3DDeviceManager;
 	//class D3DCommandContext;
 	//class D3DSwapChain;
 	//class D3DFence;
 	class GameObject;
 	//class RenderTexture;
+
+	struct PerPassConstants
+	{
+		XMFLOAT4X4	ViewMatrix;
+
+		XMFLOAT4X4	ProjMatrix;
+
+		XMFLOAT4X4	ViewProjMatrix;
+
+		XMFLOAT4X4	InvViewMatrix;
+
+		XMFLOAT4X4	InvProjMatrix;
+
+		XMFLOAT4X4	InvViewProjMatrix;
+
+		XMFLOAT3	EyePos;		// Camera Pos
+	};
 
 
 	class DefaultRenderContext
@@ -29,23 +48,29 @@ namespace BINDU
 
 		void		Initialize();
 
-		void		BeginRender();
+		void		BeginRender(float clearColor[4]);
 
-		void		RenderGameObject(GameObject* gameObject, const std::string& pipelineName) const;
+		void		BindPipeline(const std::string& pipelineName) const;
+
+		void		RenderGameObject(GameObject* gameObject) const;
 
 		void		EndRender();
 
 		void		Resize(std::uint16_t width, std::uint16_t height);
 
 		void		Close() const;
+		
+		D3DPipelineStateManager*	GetPipelineStateManager() const;
 
-		D3DPipelineStateManager* GetPipelineStateManager() const;
+		D3DDeviceManager*			GetDeviceManager() const;
 
-		D3DDeviceManager*	GetDeviceManager() const;
+		D3DCommandContext*			GetCommandContext() const;
 
-		D3DCommandContext*	GetCommandContext() const;
+		D3DFence*					GetFence() const;
 
-		D3DFence*           GetFence() const;
+		D3DSwapChain*				GetSwapChain() const;
+
+
 
 	private:
 		std::shared_ptr<D3DDeviceManager>		m_deviceManager{ nullptr };
@@ -58,12 +83,14 @@ namespace BINDU
 
 		std::unique_ptr<D3DPipelineStateManager> m_pipelineStateManager{nullptr};
 
-		RenderTexture*							m_renderTexture{ nullptr };
+		D3D12_VIEWPORT							m_viewport;
 
-		std::uint16_t	m_width{ 0 };
-		std::uint16_t	m_height{ 0 };
+		D3D12_RECT								m_scissorRect;
 
-		HWND m_hwnd;
+		std::uint16_t							m_width{ 0 };
+		std::uint16_t							m_height{ 0 };
+
+		HWND									m_hwnd;
 	};
 }
 

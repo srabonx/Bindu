@@ -28,8 +28,10 @@ namespace BINDU
 		m_indexCount = indexCount;
 	}
 
-	void MeshObject::Render(const D3DCommandContext& commandContext, const D3DPipelineStateManager& pipelineManager, const std::string& pipelineName)
+	void MeshObject::Render(const D3DCommandContext& commandContext)
 	{
+		UpdateConstantBuffer();
+
 		auto cmdList = commandContext.GetCommandList();
 		auto vbv  = m_vertexBuffer.GetView();
 		auto ibv = m_indexBuffer.GetView();

@@ -86,50 +86,6 @@ namespace BINDU
 		CreateDSBuffer(m_width, m_height);
 	}
 
-
-	void RenderTexture::Begin(const D3DCommandContext* commandContext)
-	{
-		if (!commandContext)
-			THROW_EXCEPTION(3, "Invalid Command Context");
-
-		auto commandList = commandContext->GetCommandList();
-
-		TransitionTo(commandList.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET);
-
-		auto currentRtvHandle = m_rtvCpuHeapAllocation.GetCpuHandle(m_currentRtBuffer);
-		auto currentDsvHandle = m_dsvCpuHeapAllocation.GetCpuHandle();
-
-		commandList->OMSetRenderTargets(1, &currentRtvHandle, TRUE,
-			&currentDsvHandle);
-	}
-
-	void RenderTexture::Clear(const D3DCommandContext* commandContext, const float* color, float depth, std::uint8_t stencil) const
-	{
-		if (!commandContext)
-			THROW_EXCEPTION(3, "Invalid Command Context");
-
-		auto commandList = commandContext->GetCommandList();
-
-		// Clear the render target view
-		commandList->ClearRenderTargetView(m_rtvCpuHeapAllocation.GetCpuHandle(m_currentRtBuffer), color, 0, nullptr);
-
-		// Clear the depth stencil view
-		commandList->ClearDepthStencilView(m_dsvCpuHeapAllocation.GetCpuHandle(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL,
-			depth, stencil, 0, nullptr);
-	}
-
-	void RenderTexture::End(const D3DCommandContext* commandContext)
-	{
-		if (!commandContext)
-			THROW_EXCEPTION(3, "Invalid Command Context");
-
-		auto commandList = commandContext->GetCommandList();
-
-		TransitionTo(commandList.Get(), D3D12_RESOURCE_STATE_PRESENT);
-
-		m_currentRtBuffer = (m_currentRtBuffer + 1) % m_bufferCount;
-	}
-
 	void RenderTexture::Resize(std::uint16_t width, std::uint16_t height)
 	{
 		// If the width and height are same then no need to do anything
@@ -245,6 +201,43 @@ namespace BINDU
 		return m_height;
 	}
 
+	const float* RenderTexture::GetClearColor() const
+	{
+		return m_clearColor;
+	}
+
+	float RenderTexture::GetDepth() const
+	{
+		return m_depth;
+	}
+
+	std::uint8_t RenderTexture::GetStencil() const
+	{
+		return m_stencil;
+	}
+
+	void RenderTexture::SetClearColor(float clearColor[4])
+	{
+		m_clearColor = { clearColor };
+	}
+
+	void RenderTexture::SetDepth(float depth)
+	{
+		m_depth = depth;
+	}
+
+	void RenderTexture::SetStencil(std::uint8_t stencil)
+	{
+		m_stencil = stencil;
+	}
+
+	void RenderTexture::SetDepthStencil(float depth, std::uint8_t stencil)
+	{
+		m_depth = depth;
+
+		m_stencil = stencil;
+	}
+
 	void RenderTexture::SetSampleDesc(DXGI_SAMPLE_DESC sampleDesc)
 	{
 		m_sampleDesc = sampleDesc;
@@ -261,6 +254,11 @@ namespace BINDU
 		Resize(width, height);
 	}
 
+	void RenderTexture::SetState(ID3D12GraphicsCommandList* commandList, const D3D12_RESOURCE_STATES& state)
+	{
+		TransitionTo(commandList, state);
+	}
+
 
 	void RenderTexture::TransitionTo(ID3D12GraphicsCommandList* commandList, D3D12_RESOURCE_STATES state)
 	{
@@ -269,6 +267,9 @@ namespace BINDU
 		commandList->ResourceBarrier(1, &transition);
 
 		m_currentState = state;
+
+		if (state == D3D12_RESOURCE_STATE_PRESENT)
+			m_currentRtBuffer = (m_currentRtBuffer + 1) % m_bufferCount;
 	}
 
 	void RenderTexture::CreateRTV(const D3D12_RENDER_TARGET_VIEW_DESC* rtvDesc)

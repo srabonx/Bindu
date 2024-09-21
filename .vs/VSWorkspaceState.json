@@ -18,6 +18,6 @@
     "\\Utility\\Common",
     "\\Window"
   ],
-  "SelectedNode": "\\Core\\Renderer\\DirectX\\D3DSwapChain.cpp",
+  "SelectedNode": "\\Core\\Renderer\\DirectX\\DefaultRenderContext.h",
   "PreviewInSolutionExplorer": false
 }

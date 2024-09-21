@@ -23,7 +23,7 @@ namespace BINDU
 
 	void Camera::Update()
 	{
-		GameObject::Update();
+		UpdateConstantBuffer();
 
 		if(m_viewDirty)
 		{
@@ -82,18 +82,9 @@ namespace BINDU
 
 	}
 
-	void Camera::Render(const D3DCommandContext& commandContext, const D3DPipelineStateManager& pipelineManager,
-		const std::string& pipelineName)
+	void Camera::Render(const D3DCommandContext& commandContext)
 	{
 		auto cmdList = commandContext.GetCommandList();
-
-		auto pso = pipelineManager.GetPipelineState(pipelineName);
-
-		auto rootSig = pipelineManager.GetRootSignature(pipelineName);
-
-		cmdList->SetGraphicsRootSignature(rootSig);
-
-		cmdList->SetPipelineState(pso);
 
 		cmdList->SetGraphicsRootConstantBufferView(m_rootParamSlot, m_cameraViewConstants.GetGPUVirtualAddress());
 
