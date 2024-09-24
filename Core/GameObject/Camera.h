@@ -7,21 +7,11 @@
 namespace BINDU
 {
 
-	struct CameraViewConstant
-	{
-		XMFLOAT4X4		ViewMatrix;
-		XMFLOAT4X4		ProjMatrix;
-		XMFLOAT4X4		ViewProjMatrix;
-		XMFLOAT4X4		InvViewProjMatrix;
-	};
-
 	class Camera : public GameObject
 	{
 	public:
-		Camera();
-		~Camera() = default;
-
-		void Initialize(const D3DDeviceManager& deviceManager) override;
+		Camera() = default;
+		~Camera() override = default;
 
 		void Update() override;
 
@@ -59,9 +49,11 @@ namespace BINDU
 		// Get View/Proj matrices
 		XMMATRIX	GetView() const;
 		XMMATRIX	GetProj() const;
+		XMMATRIX	GetViewProj() const;
 
 		XMFLOAT4X4	GetView4x4f() const;
 		XMFLOAT4X4	GetProj4x4f() const;
+		XMFLOAT4X4	GetViewProj4x4f() const;
 
 		// Strafe/Walk the camera a distance d.
 		void		StrafeX(float d);
@@ -75,12 +67,9 @@ namespace BINDU
 
 	private:
 
-		UploadBuffer	m_cameraViewConstants;
-
-		XMFLOAT3		m_eyePos;
-
 		XMFLOAT4X4		m_viewMatrix;
 		XMFLOAT4X4		m_projMatrix;
+		XMFLOAT4X4		m_viewProjMatrix;
 
 		float			m_phi{0.2f * XM_PI};
 		float			m_theta{1.5f * XM_PI};

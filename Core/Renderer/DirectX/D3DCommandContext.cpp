@@ -74,17 +74,27 @@ namespace BINDU
 			renderTexture->GetDepth(), renderTexture->GetStencil(), 0, nullptr);
 	}
 
-	void D3DCommandContext::BindPipeline(const D3DPipelineStateManager& pipelineManager, const std::string& pipelineName) const
+	void D3DCommandContext::BindPipeline(const D3DPipelineStateManager& pipelineManager, const std::string& pipelineName, const std::string& rootSigName) const
 	{
 		if (!m_beginEndPair)
 			THROW_EXCEPTION(3, "D3DCommandContext::Begin() was not called prior to calling BindPipeline()");
 
 		auto pipeline = pipelineManager.GetPipelineState(pipelineName);
-		auto rootSig = pipelineManager.GetRootSignature(pipelineName);
+		auto rootSig = pipelineManager.GetRootSignature(rootSigName);
 
 		m_commandList->SetGraphicsRootSignature(rootSig);
 
 		m_commandList->SetPipelineState(pipeline);
+	}
+
+	void D3DCommandContext::BindPipeline(ID3D12PipelineState* pipelineState, ID3D12RootSignature* rootSignature) const
+	{
+		if (!m_beginEndPair)
+			THROW_EXCEPTION(3, "D3DCommandContext::Begin() was not called prior to calling BindPipeline()");
+
+		m_commandList->SetGraphicsRootSignature(rootSignature);
+
+		m_commandList->SetPipelineState(pipelineState);
 	}
 
 	void D3DCommandContext::End()
@@ -95,6 +105,7 @@ namespace BINDU
 		m_tempRenderTexture->SetState(m_commandList.Get(), D3D12_RESOURCE_STATE_PRESENT);
 
 		m_tempRenderTexture = nullptr;
+		m_beginEndPair = false;
 	}
 
 	void D3DCommandContext::Signal(const D3DFence* fence) const
@@ -108,14 +119,20 @@ namespace BINDU
 		// Signal to mark this point
 		Signal(fence);
 
+		WaitForGpu(fence, fence->GetCompletedValue());
+
+	}
+
+	void D3DCommandContext::WaitForGpu(const D3DFence* fence, std::uint64_t fenceValue) const
+	{
 		// If GPU haven't reached this point
-		if(fence->m_fence->GetCompletedValue() < fence->m_fenceValue)
+		if (fence->m_fence->GetCompletedValue() < fenceValue)
 		{
 			// Create an event
 			HANDLE eventHandle = CreateEventEx(nullptr, false, false, EVENT_ALL_ACCESS);
 
 			// Command to Fire event when GPU reaches this fence point
-			fence->m_fence->SetEventOnCompletion(fence->m_fenceValue, eventHandle);
+			fence->m_fence->SetEventOnCompletion(fenceValue, eventHandle);
 
 			// Wait for the event to be fired
 			WaitForSingleObject(eventHandle, INFINITE);
@@ -123,7 +140,6 @@ namespace BINDU
 			// Close the event handle
 			CloseHandle(eventHandle);
 		}
-
 	}
 
 	D3DDeviceManager* D3DCommandContext::GetDeviceManager() const

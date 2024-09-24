@@ -3,7 +3,6 @@
 
 #include <DirectXMath.h>
 #include "Transform.h"
-#include "../Renderer/DirectX/UploadBuffer.h"
 #include "../Renderer/DirectX/DescriptorHeapManager.h"
 
 
@@ -13,10 +12,11 @@ namespace BINDU
 	class D3DDeviceManager;
 	class D3DCommandContext;
 	class D3DPipelineStateManager;
+	class D3DConstantBuffer;
 
 	using namespace DirectX;
 
-	struct ObjectConstant
+	struct ObjectConstants
 	{
 		XMFLOAT4X4		WorldMatrix;
 	};
@@ -26,13 +26,17 @@ namespace BINDU
 	public:
 		GameObject();
 
-		GameObject(const GameObject& obj);
+		GameObject(const GameObject& obj) = delete;
 
-		GameObject& operator = (const GameObject& obj);
+		GameObject& operator = (const GameObject& obj) = delete;
 
-		virtual ~GameObject() {}
+		GameObject(GameObject&& obj) noexcept;
 
-		virtual void	 Initialize(const D3DDeviceManager& deviceManager);
+		GameObject& operator = (GameObject&& obj) noexcept;
+
+		virtual ~GameObject();
+
+		virtual void	 Initialize(const std::shared_ptr<D3DConstantBuffer>& constantBuffer);
 
 		virtual void	 Update() = 0;
 
@@ -46,19 +50,25 @@ namespace BINDU
 
 		void			 SetTransform(const Transform& transform);
 
+		void			 Close();
+
 	protected:
 
 		void			 UpdateConstantBuffer();
 
 	protected:
 
-		ObjectConstant						m_objectConstants;
+		ObjectConstants						m_objectConstants;
 
-		std::shared_ptr<UploadBuffer>		m_constantBuffer;
+		std::shared_ptr<D3DConstantBuffer>	m_constantBuffer{ nullptr };
+
+	//	std::shared_ptr<UploadBuffer>		m_constantBuffer;
 
 		Transform							m_transformComponent;
 
 		std::uint8_t						m_rootParamSlot{0};
+
+		std::uint64_t						m_cbIndex{ 0 };
 
 	};
 

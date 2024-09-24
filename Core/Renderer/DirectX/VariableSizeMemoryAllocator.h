@@ -7,7 +7,7 @@
 
 namespace BINDU
 {
-	constexpr std::uint32_t InvalidOffset = UINT32_MAX;
+	constexpr std::uint64_t InvalidOffset = UINT64_MAX;
 
 	class VariableSizeMemoryAllocator
 	{
@@ -32,15 +32,15 @@ namespace BINDU
 
 
 		// Returns the offset where size amount of memory is available
-		std::uint32_t		Allocate(size_t size);
+		std::uint64_t		Allocate(size_t size);
 
 		// Frees the size amount of memory at the given offset
-		void				Free(std::uint32_t offset, size_t size);
+		void				Free(std::uint64_t offset, size_t size);
 
 	private:
 
 		// Allocates a new memory block at the given offset
-		void				AddNewBlock(std::uint32_t offset, size_t size);
+		void				AddNewBlock(std::uint64_t offset, size_t size);
 
 
 	private:
@@ -48,7 +48,7 @@ namespace BINDU
 		// Holds information about the free memory block
 		struct FreeBlockInfo;
 
-		using offset = std::uint32_t;
+		using offset = std::uint64_t;
 
 		using OffsetMap = std::map < offset, FreeBlockInfo>;
 

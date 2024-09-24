@@ -1,43 +1,25 @@
 #ifndef DEFAULTRENDERCONTEXT_H
 #define DEFAULTRENDERCONTEXT_H
 
-#include <DirectXMath.h>
 #include <memory>
 
 #include "D3DDeviceManager.h"
 #include "D3DCommandContext.h"
+#include "D3DConstantBuffer.h"
 #include "D3DFence.h"
 #include "D3DSwapChain.h"
 #include "RenderTexture.h"
 #include "D3DPipelineStateManager.h"
+#include "FlyFrame.h"
 
 namespace BINDU
 {
-	using namespace DirectX;
 	//class D3DDeviceManager;
 	//class D3DCommandContext;
 	//class D3DSwapChain;
 	//class D3DFence;
 	class GameObject;
 	//class RenderTexture;
-
-	struct PerPassConstants
-	{
-		XMFLOAT4X4	ViewMatrix;
-
-		XMFLOAT4X4	ProjMatrix;
-
-		XMFLOAT4X4	ViewProjMatrix;
-
-		XMFLOAT4X4	InvViewMatrix;
-
-		XMFLOAT4X4	InvProjMatrix;
-
-		XMFLOAT4X4	InvViewProjMatrix;
-
-		XMFLOAT3	EyePos;		// Camera Pos
-	};
-
 
 	class DefaultRenderContext
 	{
@@ -50,11 +32,17 @@ namespace BINDU
 
 		void		BeginRender(float clearColor[4]);
 
-		void		BindPipeline(const std::string& pipelineName) const;
+		void		BindPipeline(const std::string& pipelineName, const std::string& rootSigName) const;
 
-		void		RenderGameObject(GameObject* gameObject) const;
+		void		BindPipeline(ID3D12PipelineState* pipelineState, ID3D12RootSignature* rootSignature) const;
+
+		void		BindPerPassConstant(std::uint16_t rootParamSlot) const;
+
+		void		RenderGameObject(GameObject* gameObject);
 
 		void		EndRender();
+
+		void		UpdatePerPassConstants(const PerPassConstants& perPassConstants) const;
 
 		void		Resize(std::uint16_t width, std::uint16_t height);
 
@@ -70,6 +58,8 @@ namespace BINDU
 
 		D3DSwapChain*				GetSwapChain() const;
 
+		std::shared_ptr<D3DConstantBuffer>&			GetConstantBuffer();
+
 
 
 	private:
@@ -82,6 +72,10 @@ namespace BINDU
 		std::unique_ptr<D3DFence>				m_fence{ nullptr };
 
 		std::unique_ptr<D3DPipelineStateManager> m_pipelineStateManager{nullptr};
+
+		std::unique_ptr<FlyFrame>				m_flyFrame{ nullptr };
+
+		std::shared_ptr<D3DConstantBuffer>		m_constantBuffer;
 
 		D3D12_VIEWPORT							m_viewport;
 

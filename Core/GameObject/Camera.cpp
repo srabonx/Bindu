@@ -1,30 +1,10 @@
 #include "Camera.h"
-#include "../Renderer/DirectX/D3DDeviceManager.h"
-#include "../Renderer/DirectX/UploadBuffer.h"
-#include "../Renderer/DirectX/CpuDescriptorHeap.h"
-#include "../Renderer/DirectX/D3DCommandContext.h"
-#include "../Renderer/DirectX/D3DPipelineStateManager.h"
-
 
 namespace BINDU
 {
-	Camera::Camera() : m_cameraViewConstants(true)
-	{
-	}
-
-	void Camera::Initialize(const D3DDeviceManager& deviceManager)
-	{
-		auto d3dDevice = deviceManager.GetD3DDevice();
-		m_constantBuffer->Initialize<ObjectConstant>(d3dDevice, 1);
-
-		m_cameraViewConstants.Initialize<CameraViewConstant>(d3dDevice, 1);
-
-	}
 
 	void Camera::Update()
 	{
-		UpdateConstantBuffer();
-
 		if(m_viewDirty)
 		{
 			XMVECTOR right = XMLoadFloat3(&m_right);
@@ -70,12 +50,7 @@ namespace BINDU
 
 
 			XMMATRIX viewProj = XMMatrixMultiply(XMLoadFloat4x4(&m_viewMatrix), XMLoadFloat4x4(&m_projMatrix));
-
-			CameraViewConstant cvc;
-			cvc.ViewMatrix = m_viewMatrix;
-			cvc.ProjMatrix = m_projMatrix;
-			XMStoreFloat4x4(&cvc.ViewProjMatrix, XMMatrixTranspose(viewProj));
-			m_cameraViewConstants.CopyData(0, cvc);
+			XMStoreFloat4x4(&m_viewProjMatrix, XMMatrixTranspose(viewProj));
 
 			m_viewDirty = false;
 		}
@@ -84,10 +59,7 @@ namespace BINDU
 
 	void Camera::Render(const D3DCommandContext& commandContext)
 	{
-		auto cmdList = commandContext.GetCommandList();
-
-		cmdList->SetGraphicsRootConstantBufferView(m_rootParamSlot, m_cameraViewConstants.GetGPUVirtualAddress());
-
+		UpdateConstantBuffer();
 	}
 
 
@@ -216,6 +188,16 @@ namespace BINDU
 	XMMATRIX Camera::GetProj() const
 	{
 		return XMLoadFloat4x4(&m_projMatrix);
+	}
+
+	XMMATRIX Camera::GetViewProj() const
+	{
+		return XMLoadFloat4x4(&m_viewProjMatrix);
+	}
+
+	XMFLOAT4X4 Camera::GetViewProj4x4f() const
+	{
+		return m_viewProjMatrix;
 	}
 
 	XMFLOAT4X4 Camera::GetView4x4f() const

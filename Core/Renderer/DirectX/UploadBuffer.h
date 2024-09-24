@@ -34,7 +34,7 @@ namespace BINDU
 	*	elementCount		=	Elements to be stored in the buffer
 	*/
 		template <typename T>
-		void	Initialize(ID3D12Device* pDevice, UINT elementCount)
+		void	Initialize(ID3D12Device* pDevice, std::uint64_t elementCount)
 		{
 			m_elementByteSize = sizeof(T);
 
@@ -72,23 +72,23 @@ namespace BINDU
 		}
 
 		// Returns the GPU virtual address at offset index
-		D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddressAt(UINT index) const
+		D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddressAt(std::uint64_t index) const
 		{
-			return m_resource->GetGPUVirtualAddress() + (index * m_elementByteSize);
+			return m_resource->GetGPUVirtualAddress() + (m_elementByteSize * index);
 		}
 
 		template<typename T>
-		void CopyData(UINT elementIndex, const T& data)
+		void CopyData(std::uint64_t elementIndex, const T& data)
 		{
 			// copy the data to the memory location of element at elementIndex
 			memcpy(&m_mappedData[elementIndex * m_elementByteSize], &data, sizeof(T));
 		}
 
 		// Returns if this buffer is a constant buffer or not
-		bool IsConstantBuffer() const { return m_isConstantBuffer; }
+		bool			IsConstantBuffer() const { return m_isConstantBuffer; }
 
 		// Returns the size of elements in the buffer in bytes
-		UINT GetElementByteSize() const { return m_elementByteSize; }
+		std::uint64_t	GetElementByteSize() const { return m_elementByteSize; }
 
 	private:
 		// The underlying resource
@@ -101,7 +101,7 @@ namespace BINDU
 		bool						m_isConstantBuffer{ false };
 
 		// ByteSize of the elements in buffer
-		UINT						m_elementByteSize{ 0 };
+		std::uint64_t				m_elementByteSize{ 0 };
 	};
 }
 

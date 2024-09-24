@@ -16,8 +16,43 @@ namespace BINDU
 		m_parentDeviceManager = deviceManager;
 	}
 
-	void D3DPipelineStateManager::AddPipelineState(const std::string& name, const D3DShader& vertexShader,
-		const D3DShader& pixelShader, const D3D12_INPUT_LAYOUT_DESC& inputLayout, const D3D12_ROOT_SIGNATURE_DESC& rootSigDesc)
+	ID3D12PipelineState* D3DPipelineStateManager::CreatePipelineState(const std::string& name, const PipelineStateDesc& pipelineState)
+	{
+		auto d3dDevice = m_parentDeviceManager->GetD3DDevice();
+
+		if (!pipelineState.RootSignature)
+			THROW_EXCEPTION(3, "Invalid root signature");
+
+		D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
+		psoDesc.InputLayout.NumElements = pipelineState.InputElementDescs.size(); // Input layout for vertex data
+		psoDesc.InputLayout.pInputElementDescs = pipelineState.InputElementDescs.data();
+		psoDesc.pRootSignature = pipelineState.RootSignature;
+		psoDesc.VS = pipelineState.VertexShader.GetShaderByteCode(); // Vertex shader
+		psoDesc.PS = pipelineState.PixelShader.GetShaderByteCode();  // Pixel shader
+		psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+		psoDesc.RasterizerState.CullMode = pipelineState.CullMode; // Set culling mode
+		psoDesc.RasterizerState.FillMode = pipelineState.FillMode;
+		psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+		psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+		psoDesc.SampleMask = UINT_MAX;
+		psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		psoDesc.NumRenderTargets = 1;
+		psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM; // Render target format
+		psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT; // Depth-stencil format
+		psoDesc.SampleDesc.Count = 1;
+
+		ComPtr<ID3D12PipelineState>	pso{ nullptr };
+
+		DXThrowIfFailed(
+			d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(pso.ReleaseAndGetAddressOf()))
+		);
+
+		m_pipelineStateObjects.emplace(name, std::make_pair(pipelineState, pso));
+
+		return pso.Get();
+	}
+
+	ID3D12RootSignature* D3DPipelineStateManager::CreateRootSignature(const std::string& name, const D3D12_ROOT_SIGNATURE_DESC& rootSigDesc)
 	{
 		auto d3dDevice = m_parentDeviceManager->GetD3DDevice();
 
@@ -37,35 +72,14 @@ namespace BINDU
 			d3dDevice->CreateRootSignature(0, rootSigBlob->GetBufferPointer(),
 				rootSigBlob->GetBufferSize(), IID_PPV_ARGS(rootSig.ReleaseAndGetAddressOf())));
 
-		D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-		psoDesc.InputLayout = inputLayout; // Input layout for vertex data
-		psoDesc.pRootSignature = rootSig.Get();
-		psoDesc.VS = vertexShader.GetShaderByteCode(); // Vertex shader
-		psoDesc.PS = pixelShader.GetShaderByteCode();  // Pixel shader
-		psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-		psoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK; // Set culling mode
-		psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-		psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-		psoDesc.SampleMask = UINT_MAX;
-		psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-		psoDesc.NumRenderTargets = 1;
-		psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM; // Render target format
-		psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT; // Depth-stencil format
-		psoDesc.SampleDesc.Count = 1;
-
-		ComPtr<ID3D12PipelineState>	pso{ nullptr };
-
-		d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(pso.ReleaseAndGetAddressOf()));
-
-		m_pipelineStateObjects.emplace(name, pso);
-
 		m_rootSignatures.emplace(name, rootSig);
 
+		return rootSig.Get();
 	}
 
 	ID3D12PipelineState* D3DPipelineStateManager::GetPipelineState(const std::string& name) const
 	{
-		return m_pipelineStateObjects.at(name).Get();
+		return m_pipelineStateObjects.at(name).second.Get();
 	}
 
 	ID3D12RootSignature* D3DPipelineStateManager::GetRootSignature(const std::string& name) const

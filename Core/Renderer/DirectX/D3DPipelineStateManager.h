@@ -6,13 +6,28 @@
 #include <unordered_map>
 #include <string>
 #include <memory>
+#include "D3DShader.h"
 
 namespace BINDU
 {
 	using namespace Microsoft::WRL;
 
 	class D3DDeviceManager;
-	class D3DShader;
+
+	struct PipelineStateDesc
+	{
+		using InputElements = std::vector<D3D12_INPUT_ELEMENT_DESC>;
+
+		D3D12_CULL_MODE				CullMode{ D3D12_CULL_MODE_BACK };
+		D3D12_FILL_MODE				FillMode{ D3D12_FILL_MODE_SOLID };
+
+		D3DShader					VertexShader;
+		D3DShader					PixelShader;
+
+		InputElements				InputElementDescs;
+
+		ID3D12RootSignature*		RootSignature{ nullptr };
+	};
 
 	class D3DPipelineStateManager
 	{
@@ -22,9 +37,9 @@ namespace BINDU
 
 		void					Initialize(const std::shared_ptr<D3DDeviceManager>& deviceManager);
 
-		void					AddPipelineState(const std::string& name, const D3DShader& vertexShader,
-									const D3DShader& pixelShader, const D3D12_INPUT_LAYOUT_DESC& inputLayout,
-									const D3D12_ROOT_SIGNATURE_DESC& rootSigDesc);
+		ID3D12PipelineState*	CreatePipelineState(const std::string& name, const PipelineStateDesc& pipelineState);
+
+		ID3D12RootSignature*	CreateRootSignature(const std::string& name, const D3D12_ROOT_SIGNATURE_DESC& rootSigDesc);
 
 		ID3D12PipelineState*	GetPipelineState(const std::string& name) const;
 
@@ -32,7 +47,8 @@ namespace BINDU
 		
 
 	private:
-		using PipelineStateObjectMap = std::unordered_map<std::string, ComPtr<ID3D12PipelineState>>;
+
+		using PipelineStateObjectMap = std::unordered_map<std::string, std::pair<PipelineStateDesc, ComPtr<ID3D12PipelineState>>>;
 
 		using RootSignatureMap = std::unordered_map <std::string, ComPtr<ID3D12RootSignature>>;
 

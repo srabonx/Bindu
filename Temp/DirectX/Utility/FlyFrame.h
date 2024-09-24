@@ -45,7 +45,7 @@ namespace BINDU
 
 			auto d3dDevice = m_parentDevice->GetD3DDevice();
 
-			for(auto& f : m_frames)
+			for (auto& f : m_frames)
 			{
 				f.ObjectCb = std::make_unique<UploadBuffer>(true);
 				f.ObjectCb->Initialize<T>(d3dDevice, elementPerFrame);
@@ -67,7 +67,7 @@ namespace BINDU
 
 				auto byteSize = f.PassCb->GetElementByteSize();
 
-				for(int i = 0; i< passPerFrame ; i++)
+				for (int i = 0; i < passPerFrame; i++)
 				{
 					D3D12_GPU_VIRTUAL_ADDRESS cbAddress = f.PassCb->GetGPUVirtualAddress();
 
@@ -87,13 +87,13 @@ namespace BINDU
 
 		void				Update();
 
-		FrameResource&		GetCurrentFrame();
+		FrameResource& GetCurrentFrame();
 
-		D3DRenderDevice*	GetParentDevice() const;
+		D3DRenderDevice* GetParentDevice() const;
 
 		std::uint16_t		GetFrameCount() const;
 
-		FrameResource&		GetFrame(std::uint16_t index);
+		FrameResource& GetFrame(std::uint16_t index);
 
 		DescriptorHeapAllocation* GetGPUHeapAllocation();
 	private:

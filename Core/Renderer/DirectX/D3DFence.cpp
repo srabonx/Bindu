@@ -28,4 +28,9 @@ namespace BINDU
 	{
 		return m_fenceValue;
 	}
+
+	std::uint64_t D3DFence::GetCompletedValue() const
+	{
+		return m_fence->GetCompletedValue();
+	}
 }

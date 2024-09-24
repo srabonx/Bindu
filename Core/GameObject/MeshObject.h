@@ -5,6 +5,7 @@
 #include <string>
 #include "Buffers.h"
 #include "GameObject.h"
+#include "MeshManager.h"
 
 namespace BINDU
 {
@@ -14,27 +15,20 @@ namespace BINDU
 	class MeshObject : public GameObject
 	{
 	public:
-		MeshObject();
+		MeshObject() = default;
 
-		MeshObject(const MeshObject& rhs) = default;
+		MeshObject(MeshObject&& rhs) = default;
 
-		MeshObject& operator = (const MeshObject& rhs) = default;
+		MeshObject& operator = (MeshObject&& rhs) = default;
 
-		void	SetMesh(VertexBuffer&& vertexBuffer, IndexBuffer&& indexBuffer, std::uint32_t vertexCount, std::uint32_t indexCount);
-
-		void	SetMesh(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer, std::uint32_t vertexCount, std::uint32_t indexCount);
-
+		void	SetMesh(const MeshData& meshData);
 
 		virtual void Render(const D3DCommandContext& commandContext);
 
+		virtual void Update();
+
 	private:
-
-		VertexBuffer		m_vertexBuffer;
-		IndexBuffer			m_indexBuffer;
-
-		std::uint32_t		m_vertexCount{0};
-		std::uint32_t		m_indexCount{0};
-
+		MeshData			m_meshData;
 	};
 }
 

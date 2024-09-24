@@ -24,7 +24,7 @@ namespace BINDU
 		return *this;
 	}
 
-	std::uint32_t VariableSizeMemoryAllocator::Allocate(size_t size)
+	std::uint64_t VariableSizeMemoryAllocator::Allocate(size_t size)
 	{
 
 		// If not enough free memory
@@ -59,7 +59,7 @@ namespace BINDU
 		return offset;
 	}
 
-	void VariableSizeMemoryAllocator::Free(std::uint32_t offset, size_t size)
+	void VariableSizeMemoryAllocator::Free(std::uint64_t offset, size_t size)
 	{
 		// Find the first element whose offset is greater than the specified offset
 		auto nextBlock = m_offsetMap.upper_bound(offset);
@@ -118,7 +118,7 @@ namespace BINDU
 		m_freeSize += size;
 	}
 
-	void VariableSizeMemoryAllocator::AddNewBlock(std::uint32_t offset, size_t size)
+	void VariableSizeMemoryAllocator::AddNewBlock(std::uint64_t offset, size_t size)
 	{
 		auto newBlockIt = m_offsetMap.emplace(offset, size);
 

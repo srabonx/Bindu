@@ -98,6 +98,10 @@ add_library(Bindu STATIC
         Core/GameObject/Buffers.cpp
         Core/Renderer/DirectX/UploadBuffer.h
         Core/GameObject/Camera.h
-        Core/GameObject/Camera.cpp)
+        Core/GameObject/Camera.cpp 
+        Core/Renderer/DirectX/FlyFrame.h
+        Core/Renderer/DirectX/FlyFrame.cpp 
+        Core/Renderer/DirectX/D3DConstantBuffer.h
+        Core/Renderer/DirectX/D3DConstantBuffer.cpp "Core/GameObject/MeshManager.h" "Core/GameObject/MeshManager.cpp" "Core/GameObject/GeometryGenerator.cpp" "Core/GameObject/GeometryGenerator.h")
 
 

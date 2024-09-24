@@ -1,41 +1,43 @@
 #include "GameObject.h"
 
-#include "../Renderer/DirectX/CpuDescriptorHeap.h"
-#include "../Renderer/DirectX/D3DDeviceManager.h"
+#include "../Renderer/DirectX/D3DConstantBuffer.h"
 
 namespace BINDU
 {
 	GameObject::GameObject()
 	{
-		m_constantBuffer = std::make_shared<UploadBuffer>(true);
-
 		XMStoreFloat4x4(&m_objectConstants.WorldMatrix,XMMatrixIdentity());
 	}
 
-	GameObject::GameObject(const GameObject& obj)
+	GameObject::GameObject(GameObject&& obj) noexcept
 	{
-		this->m_transformComponent = obj.m_transformComponent;
-		this->m_constantBuffer = obj.m_constantBuffer;
-		this->m_rootParamSlot = obj.m_rootParamSlot;
-		this->m_objectConstants = obj.m_objectConstants;
+		std::swap(this->m_transformComponent, obj.m_transformComponent);
+		std::swap(this->m_constantBuffer, obj.m_constantBuffer);
+		std::swap(this->m_rootParamSlot, obj.m_rootParamSlot);
+		std::swap(this->m_objectConstants, obj.m_objectConstants);
+		std::swap(this->m_cbIndex, obj.m_cbIndex);
 	}
 
-	GameObject& GameObject::operator=(const GameObject& obj)
+	GameObject& GameObject::operator=(GameObject&& obj) noexcept
 	{
-		if (this == &obj)
-			return *this;
+		std::swap(this->m_transformComponent, obj.m_transformComponent);
+		std::swap(this->m_constantBuffer, obj.m_constantBuffer);
+		std::swap(this->m_rootParamSlot, obj.m_rootParamSlot);
+		std::swap(this->m_objectConstants, obj.m_objectConstants);
+		std::swap(this->m_cbIndex, obj.m_cbIndex);
 
-		this->m_transformComponent = obj.m_transformComponent;
-		this->m_constantBuffer = obj.m_constantBuffer;
-		this->m_rootParamSlot = obj.m_rootParamSlot;
-		this->m_objectConstants = obj.m_objectConstants;
 		return *this;
 	}
 
-	void GameObject::Initialize(const D3DDeviceManager& deviceManager)
+	GameObject::~GameObject()
 	{
-		auto d3dDevice = deviceManager.GetD3DDevice();
-		m_constantBuffer->Initialize<ObjectConstant>(d3dDevice, 1);
+		Close();
+	}
+
+	void GameObject::Initialize(const std::shared_ptr<D3DConstantBuffer>& constantBuffer)
+	{
+		m_constantBuffer = constantBuffer;
+		m_cbIndex = m_constantBuffer->Allocate();
 	}
 
 	void GameObject::SetObjectConstantRootParameterSlot(std::uint8_t RootParamSlot)
@@ -53,6 +55,15 @@ namespace BINDU
 		m_transformComponent = transform;
 	}
 
+	void GameObject::Close()
+	{
+		if (m_constantBuffer)
+		{
+			m_constantBuffer->Free(m_cbIndex);
+			m_constantBuffer.reset();
+		}
+	}
+
 	void GameObject::UpdateConstantBuffer()
 	{
 		if (m_transformComponent.IsDirty())
@@ -66,13 +77,13 @@ namespace BINDU
 			auto scaleMat = XMMatrixScalingFromVector(scaleVec);
 			auto translationMat = XMMatrixTranslationFromVector(translationVec);
 
-			auto worldMat = translationMat * rotationMat * scaleMat;
+			auto worldMat = rotationMat * scaleMat * translationMat;
 
 
 			XMStoreFloat4x4(&m_objectConstants.WorldMatrix, XMMatrixTranspose(worldMat));
 
-
-			m_constantBuffer->CopyData(0, m_objectConstants);
+			// Update the entry in constant buffer
+			m_constantBuffer->UpdateBuffer(m_cbIndex, m_objectConstants);
 
 			m_transformComponent.SetDirty(false);
 		}

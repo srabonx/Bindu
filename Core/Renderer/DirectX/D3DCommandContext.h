@@ -38,7 +38,9 @@ namespace BINDU
 		void		Begin(RenderTexture* renderTexture);
 
 		// Bind Pipeline State
-		void		BindPipeline(const D3DPipelineStateManager& pipelineManager, const std::string& pipelineName) const;
+		void		BindPipeline(const D3DPipelineStateManager& pipelineManager, const std::string& pipelineName, const std::string& rootSigName) const;
+
+		void		BindPipeline(ID3D12PipelineState* pipelineState, ID3D12RootSignature* rootSignature) const;
 
 		void		End();
 
@@ -47,6 +49,9 @@ namespace BINDU
 
 		// Wait for GPU to complete commands up to this fence point
 		void		WaitForGpu(const D3DFence* fence) const;
+
+		// Wait for GPU to complete commands up to this fence value point
+		void		WaitForGpu(const D3DFence* fence, std::uint64_t fenceValue) const;
 
 		D3DDeviceManager*					GetDeviceManager() const;
 

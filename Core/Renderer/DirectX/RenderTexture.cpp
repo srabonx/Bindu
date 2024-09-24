@@ -218,7 +218,10 @@ namespace BINDU
 
 	void RenderTexture::SetClearColor(float clearColor[4])
 	{
-		m_clearColor = { clearColor };
+		m_clearColor[0] = clearColor[0];
+		m_clearColor[1] = clearColor[1];
+		m_clearColor[2] = clearColor[2];
+		m_clearColor[3] = clearColor[3];
 	}
 
 	void RenderTexture::SetDepth(float depth)

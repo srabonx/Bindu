@@ -31,6 +31,8 @@ namespace BINDU
 
 		std::uint64_t			GetCurrentValue() const;
 
+		std::uint64_t			GetCompletedValue() const;
+
 	private:
 		// Shared pointer to the RenderDevice that created this Fence.
 		std::shared_ptr<D3DDeviceManager>	m_deviceManager{ nullptr };

@@ -212,6 +212,8 @@ namespace BINDU {
 
         std::chrono::steady_clock::duration elapsedTime = {};
 
+        double          fpsElapsedTime{ 0.0 };
+        std::uint32_t   fpsCounter{ 0 };
 
         MSG msg{ 0 };
 
@@ -229,6 +231,8 @@ namespace BINDU {
 
             double deltaSec = delta * 0.000000001;
 
+            fpsElapsedTime += deltaSec;
+
             while (PeekMessageA(&msg, nullptr, 0, 0, PM_REMOVE))
             {
                 if (msg.message == WM_QUIT)
@@ -245,6 +249,21 @@ namespace BINDU {
 
             m_impl->m_app->Update(deltaSec);
             m_impl->m_app->Render();
+
+            fpsCounter++;
+
+            if(fpsElapsedTime >= 1.000000000)
+            {
+                m_impl->m_engineStats.UpTime++;
+                m_impl->m_engineStats.FPS = fpsCounter;
+                m_impl->m_engineStats.TPS = fpsCounter;
+
+                m_impl->m_app->GetEngineStat(m_impl->m_engineStats);
+
+                fpsCounter = 0;
+
+                fpsElapsedTime = 0.0;
+            }
 
         }
 
