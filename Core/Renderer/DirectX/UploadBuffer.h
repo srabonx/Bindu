@@ -32,13 +32,14 @@ namespace BINDU
 		/*
 	*	pDevice				=	Pointer to the Direct3D device
 	*	elementCount		=	Elements to be stored in the buffer
+	*	byteSize			=	Size of the data structure in bytes
 	*/
-		template <typename T>
-		void	Initialize(ID3D12Device* pDevice, std::uint64_t elementCount)
+		void	Initialize(ID3D12Device* pDevice, std::uint64_t elementCount, std::uint32_t byteSize)
 		{
-			m_elementByteSize = sizeof(T);
+			m_elementByteSize = byteSize;
+			m_initialElementByteSize = byteSize;
 
-			// if the buffer is to be a constant buffer then we need to calculate the appropiate constant buffer byteSize
+			// if the buffer is to be a constant buffer then we need to calculate the appropriate constant buffer byteSize
 			if (m_isConstantBuffer)
 				m_elementByteSize = D3DUtility::CalculateConstantBufferByteSize(m_elementByteSize);
 
@@ -77,11 +78,10 @@ namespace BINDU
 			return m_resource->GetGPUVirtualAddress() + (m_elementByteSize * index);
 		}
 
-		template<typename T>
-		void CopyData(std::uint64_t elementIndex, const T& data)
+		void CopyData(std::uint64_t elementIndex, void const* data) const
 		{
 			// copy the data to the memory location of element at elementIndex
-			memcpy(&m_mappedData[elementIndex * m_elementByteSize], &data, sizeof(T));
+			memcpy(&m_mappedData[elementIndex * m_elementByteSize], data, m_initialElementByteSize);
 		}
 
 		// Returns if this buffer is a constant buffer or not
@@ -101,7 +101,11 @@ namespace BINDU
 		bool						m_isConstantBuffer{ false };
 
 		// ByteSize of the elements in buffer
-		std::uint64_t				m_elementByteSize{ 0 };
+		std::uint32_t				m_elementByteSize{ 0 };
+
+		std::uint32_t				m_initialElementByteSize{ 0 };
+
+
 	};
 }
 

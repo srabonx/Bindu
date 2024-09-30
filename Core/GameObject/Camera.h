@@ -1,13 +1,13 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "GameObject.h"
+#include "MeshObject.h"
 
 
 namespace BINDU
 {
 
-	class Camera : public GameObject
+	class Camera : public MeshObject
 	{
 	public:
 		Camera() = default;
@@ -15,7 +15,7 @@ namespace BINDU
 
 		void Update() override;
 
-		void Render(const D3DCommandContext& commandContext) override;
+		void Render(const D3DCommandContext& commandContext,const UploadBuffer* constantBuffer) override;
 
 
 		// Get Camera basis vectors

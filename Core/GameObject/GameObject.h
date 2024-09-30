@@ -2,23 +2,39 @@
 #define GAMEOBJECT_H
 
 #include <DirectXMath.h>
+
+#include "LightData.h"
 #include "Transform.h"
 #include "../Renderer/DirectX/DescriptorHeapManager.h"
+#include "../../MathHelper/MathHelper.h"
 
 
 
 namespace BINDU
 {
-	class D3DDeviceManager;
+	class UploadBuffer;
 	class D3DCommandContext;
-	class D3DPipelineStateManager;
-	class D3DConstantBuffer;
+
 
 	using namespace DirectX;
 
 	struct ObjectConstants
 	{
-		XMFLOAT4X4		WorldMatrix;
+		XMFLOAT4X4			WorldMatrix = MathHelper::Identity4x4();
+
+		XMFLOAT4X4			TextureTransform = MathHelper::Identity4x4();
+
+	/*	XMFLOAT4			DiffuseAlbedo{ 1.0f,1.0f,1.0f,1.0f };
+
+		XMFLOAT3			FresnelR0{ 0.01f,0.01f,0.01f };
+
+		float				Roughness{ 0.25f };
+
+		XMFLOAT4X4			MatTransform = MathHelper::Identity4x4();
+
+		XMFLOAT4			AmbientLight = { 0.25f, 0.25f, 0.35f, 1.0f };
+
+		LightData			LightData[16]; */
 	};
 
 	class GameObject
@@ -36,39 +52,22 @@ namespace BINDU
 
 		virtual ~GameObject();
 
-		virtual void	 Initialize(const std::shared_ptr<D3DConstantBuffer>& constantBuffer);
-
 		virtual void	 Update() = 0;
 
-		virtual void	 Render(const D3DCommandContext& commandContext) = 0;
-
-
-		void			 SetObjectConstantRootParameterSlot(std::uint8_t RootParamSlot);
-
+		virtual void	 Render(const D3DCommandContext& commandContext, const UploadBuffer* constantBuffer) = 0;
 
 		Transform*		 GetTransformComponent();
 
 		void			 SetTransform(const Transform& transform);
 
-		void			 Close();
+		UUID			 GetGuid() const;
+
 
 	protected:
 
-		void			 UpdateConstantBuffer();
-
-	protected:
-
-		ObjectConstants						m_objectConstants;
-
-		std::shared_ptr<D3DConstantBuffer>	m_constantBuffer{ nullptr };
-
-	//	std::shared_ptr<UploadBuffer>		m_constantBuffer;
+		UUID								m_guid{ 0 };
 
 		Transform							m_transformComponent;
-
-		std::uint8_t						m_rootParamSlot{0};
-
-		std::uint64_t						m_cbIndex{ 0 };
 
 	};
 

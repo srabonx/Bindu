@@ -15,8 +15,8 @@ namespace BINDU
 
 		DescriptorHeapAllocation();
 
-		DescriptorHeapAllocation(IDescriptorHeapAllocator* parentAllocator, const std::shared_ptr<DescriptorHeap>& pDescriptorHeap,
-			D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle, size_t numOfHandles, std::uint32_t managerId);
+		DescriptorHeapAllocation(const std::shared_ptr<IDescriptorHeapAllocator>& parentAllocator, const std::shared_ptr<DescriptorHeap>& pDescriptorHeap,
+		                         D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle, size_t numOfHandles, std::uint32_t managerId);
 
 		DescriptorHeapAllocation(DescriptorHeapAllocation&& rhs) noexcept;
 
@@ -53,10 +53,10 @@ namespace BINDU
 		DescriptorHeapAllocation& operator = (const DescriptorHeapAllocation& rhs) = delete;
 
 		// Weak pointer to the DescriptorHeap where this allocation is from
-		std::weak_ptr<DescriptorHeap>		m_descriptorHeap;
+		std::weak_ptr<DescriptorHeap>						m_descriptorHeap;
 
 		// Pointer to the parent allocation manager that created this allocation
-		IDescriptorHeapAllocator *			m_parentAllocator{ nullptr };
+		std::weak_ptr<IDescriptorHeapAllocator>				m_parentAllocator;
 
 		// first cpu handle in the allocation
 		D3D12_CPU_DESCRIPTOR_HANDLE			m_firstCpuHandle{ 0 };
@@ -79,11 +79,11 @@ namespace BINDU
 	class DescriptorHeapManager
 	{
 	public:
-		DescriptorHeapManager(IDescriptorHeapAllocator* parentAllocator, ID3D12Device* pDevice, D3D12_DESCRIPTOR_HEAP_DESC& heapDesc,
+		DescriptorHeapManager(const std::shared_ptr<IDescriptorHeapAllocator>& parentAllocator, ID3D12Device* pDevice, D3D12_DESCRIPTOR_HEAP_DESC& heapDesc,
 			std::uint32_t managerId);
 
 		// To manage a sub-range of descriptors from a DescriptorHeap
-		DescriptorHeapManager(IDescriptorHeapAllocator* parentAllocator, ID3D12Device* pDevice, const std::shared_ptr<DescriptorHeap>& pDescriptorHeap,
+		DescriptorHeapManager(const std::shared_ptr<IDescriptorHeapAllocator>& parentAllocator, ID3D12Device* pDevice, const std::shared_ptr<DescriptorHeap>& pDescriptorHeap,
 			std::uint32_t managerId, std::uint32_t offset, size_t numOfDescriptors);
 
 		~DescriptorHeapManager();
@@ -124,7 +124,7 @@ namespace BINDU
 		std::shared_ptr<DescriptorHeap>		m_descriptorHeap{ nullptr };
 
 		// Pointer to the parent allocator
-		IDescriptorHeapAllocator*			m_parentAllocator{ nullptr };
+		std::weak_ptr<IDescriptorHeapAllocator>			m_parentAllocator;
 
 		// Memory allocator to help manage the allocation and deallocation
 		VariableSizeGpuMemoryAllocator		m_freeMemAllocator;

@@ -19,6 +19,10 @@ namespace BINDU
 	{
 	}
 
+	void CpuDescriptorHeap::Initialize()
+	{
+	}
+
 	DescriptorHeapAllocation CpuDescriptorHeap::Allocate(size_t count)
 	{
 		DescriptorHeapAllocation allocation;
@@ -45,7 +49,7 @@ namespace BINDU
 			m_descriptorHeapDesc.NumDescriptors = std::max(m_descriptorHeapDesc.NumDescriptors, static_cast<UINT>(count));
 
 			// Create a new DescriptorHeapManager, use descriptorHeapPools size as manager id.
-			m_descriptorHeapPool.emplace_back(this, m_d3dDevice, m_descriptorHeapDesc,
+			m_descriptorHeapPool.emplace_back(shared_from_this(), m_d3dDevice, m_descriptorHeapDesc,
 				static_cast<std::uint32_t>(m_descriptorHeapPool.size()));
 
 			// Put it into availableDescriptorHeaps

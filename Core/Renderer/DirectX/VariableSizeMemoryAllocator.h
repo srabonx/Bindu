@@ -13,7 +13,7 @@ namespace BINDU
 	{
 	public:
 
-		~VariableSizeMemoryAllocator() = default;
+		virtual ~VariableSizeMemoryAllocator(){}
 
 		// initialSize = The memory size this allocator will handle initially
 		explicit VariableSizeMemoryAllocator(size_t initialSize);

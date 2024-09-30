@@ -11,14 +11,16 @@ namespace BINDU
 
 	struct MeshData
 	{
-		std::string			Name;
+		std::string					Name;
 
-		VertexBuffer*		p_VertexBuffer{ nullptr };
-		IndexBuffer*		p_IndexBuffer{ nullptr };
+		VertexBuffer*				p_VertexBuffer{ nullptr };
+		IndexBuffer*				p_IndexBuffer{ nullptr };
 
-		std::uint64_t		IndexCount{ 0 };
-		std::uint64_t		StartIndexLocation{ 0 };
-		std::uint64_t		BaseVertexLocation{ 0 };
+		D3D12_PRIMITIVE_TOPOLOGY	PrimitiveTopology{ D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST };
+
+		std::uint64_t				IndexCount{ 0 };
+		std::uint64_t				StartIndexLocation{ 0 };
+		std::uint64_t				BaseVertexLocation{ 0 };
 	};
 
 	template<class V, typename I>
@@ -37,7 +39,8 @@ namespace BINDU
 			m_indexBuffer = std::make_unique<IndexBuffer>(DXGI_FORMAT_R16_UINT);
 		}
 
-		void				AddMesh(const std::string& name, const std::vector<V>& vertexData, const std::vector<I>& indexData)
+		void				AddMesh(const std::string& name, const std::vector<V>& vertexData, const std::vector<I>& indexData,
+									D3D12_PRIMITIVE_TOPOLOGY primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
 		{
 			m_intermediateVertexBuffer.insert(m_intermediateVertexBuffer.end(), vertexData.begin(), vertexData.end());
 			m_intermediateIndexBuffer.insert(m_intermediateIndexBuffer.end(), indexData.begin(), indexData.end());
@@ -48,6 +51,7 @@ namespace BINDU
 			meshData.Name = name;
 			meshData.p_VertexBuffer = m_vertexBuffer.get();
 			meshData.p_IndexBuffer = m_indexBuffer.get();
+			meshData.PrimitiveTopology = primitiveTopology;
 			meshData.IndexCount = indexData.size();
 			meshData.StartIndexLocation = m_lastStartIndexOffset;
 			meshData.BaseVertexLocation = m_lastBaseVertexOffset;

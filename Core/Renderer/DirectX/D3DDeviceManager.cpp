@@ -29,6 +29,14 @@ namespace BINDU
 
 		m_cbvSrvUavGpuHeap = std::make_shared<GpuDescriptorHeap>(m_d3dDevice.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		m_samplerGpuHeap = std::make_shared<GpuDescriptorHeap>(m_d3dDevice.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
+
+		m_rtvCpuHeap->Initialize();
+		m_dsvCpuHeap->Initialize();
+		m_cbvSrvUavCpuHeap->Initialize();
+		m_samplerCpuHeap->Initialize();
+
+		m_cbvSrvUavGpuHeap->Initialize();
+		m_samplerGpuHeap->Initialize();
 	}
 
 	void D3DDeviceManager::Close()

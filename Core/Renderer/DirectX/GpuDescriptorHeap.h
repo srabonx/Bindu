@@ -18,6 +18,8 @@ namespace BINDU
 
 		~GpuDescriptorHeap();
 
+		void						Initialize() override;
+
 		DescriptorHeapAllocation	Allocate(size_t count) override;
 
 		DescriptorHeapAllocation	AllocateDynamic(size_t count);
@@ -77,6 +79,8 @@ namespace BINDU
 		explicit DynamicSubAllocationManager(GpuDescriptorHeap* parentGpuDescHeap);
 
 		~DynamicSubAllocationManager();
+
+		void									Initialize() override;
 
 		DescriptorHeapAllocation				Allocate(size_t count) override;
 

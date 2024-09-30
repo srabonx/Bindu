@@ -15,7 +15,7 @@ namespace BINDU
 	{
 	}
 
-	DescriptorHeapAllocation::DescriptorHeapAllocation(IDescriptorHeapAllocator* parentAllocator,
+	DescriptorHeapAllocation::DescriptorHeapAllocation(const std::shared_ptr<IDescriptorHeapAllocator>& parentAllocator,
 	                                                   const std::shared_ptr<DescriptorHeap>& pDescriptorHeap,
 	                                                   D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle,
 	                                                   D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle,
@@ -27,7 +27,6 @@ namespace BINDU
 		m_numOfHandles(numOfHandles), m_managerId(managerId)
 	{
 		auto descriptorHeap = m_descriptorHeap.lock();
-
 		if (descriptorHeap != nullptr)
 			m_descriptorIncrementSize = descriptorHeap->IncrementSize();
 		else
@@ -44,7 +43,7 @@ namespace BINDU
 		std::swap(this->m_numOfHandles, rhs.m_numOfHandles);
 		std::swap(this->m_parentAllocator, rhs.m_parentAllocator);
 
-		rhs.m_parentAllocator = nullptr;
+		rhs.m_parentAllocator.reset();//= nullptr;
 	}
 
 	DescriptorHeapAllocation& DescriptorHeapAllocation::operator=(DescriptorHeapAllocation&& rhs) noexcept
@@ -57,15 +56,17 @@ namespace BINDU
 		std::swap(this->m_numOfHandles, rhs.m_numOfHandles);
 		std::swap(this->m_parentAllocator, rhs.m_parentAllocator);
 
-		rhs.m_parentAllocator = nullptr;
+		rhs.m_parentAllocator.reset();// = nullptr;
 
 		return *this;
 	}
 
 	DescriptorHeapAllocation::~DescriptorHeapAllocation()
 	{
-		if (!IsNull() && m_parentAllocator)
-			m_parentAllocator->Free(std::move(*this));
+		if (!IsNull() && m_parentAllocator.lock())
+		{
+			m_parentAllocator.lock()->Free(std::move(*this));
+		}
 	}
 
 	D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapAllocation::GetCpuHandle(std::uint32_t offset) const
@@ -134,7 +135,7 @@ namespace BINDU
 	// DescriptorHeapManager
 
 
-	DescriptorHeapManager::DescriptorHeapManager(IDescriptorHeapAllocator* parentAllocator,
+	DescriptorHeapManager::DescriptorHeapManager(const std::shared_ptr<IDescriptorHeapAllocator>& parentAllocator,
 		ID3D12Device* pDevice, D3D12_DESCRIPTOR_HEAP_DESC& heapDesc, std::uint32_t managerId) :
 		m_d3dDevice(pDevice), m_parentAllocator(parentAllocator), m_freeMemAllocator(heapDesc.NumDescriptors), m_managerId(managerId)
 	{
@@ -147,7 +148,7 @@ namespace BINDU
 		m_freeDescriptors = heapDesc.NumDescriptors;
 	}
 
-	DescriptorHeapManager::DescriptorHeapManager(IDescriptorHeapAllocator* parentAllocator, 
+	DescriptorHeapManager::DescriptorHeapManager(const std::shared_ptr<IDescriptorHeapAllocator>& parentAllocator,
 		ID3D12Device* pDevice, const std::shared_ptr<DescriptorHeap>& pDescriptorHeap, std::uint32_t managerId,
 		std::uint32_t offset, size_t numOfDescriptors) :
 		m_d3dDevice(pDevice), m_descriptorHeap(pDescriptorHeap), m_parentAllocator(parentAllocator), m_freeMemAllocator(numOfDescriptors), m_managerId(managerId)
@@ -174,7 +175,7 @@ namespace BINDU
 		std::swap(this->m_freeDescriptors, rhs.m_freeDescriptors);
 
 		rhs.m_descriptorHeap = nullptr;
-		rhs.m_parentAllocator = nullptr;
+		rhs.m_parentAllocator.reset();// = nullptr;
 		rhs.m_d3dDevice = nullptr;
 	}
 
@@ -190,7 +191,7 @@ namespace BINDU
 		std::swap(this->m_freeDescriptors, rhs.m_freeDescriptors);
 
 		rhs.m_descriptorHeap = nullptr;
-		rhs.m_parentAllocator = nullptr;
+		rhs.m_parentAllocator.reset();// = nullptr;
 		rhs.m_d3dDevice = nullptr;
 
 		return *this;
@@ -215,7 +216,7 @@ namespace BINDU
 		// Decrease the free descriptor count
 		m_freeDescriptors -= count;
 
-		return { m_parentAllocator, m_descriptorHeap, cpuHandle, gpuHandle, count, m_managerId };
+		return { m_parentAllocator.lock(), m_descriptorHeap, cpuHandle, gpuHandle, count, m_managerId };
 	}
 
 	void DescriptorHeapManager::Free(DescriptorHeapAllocation&& allocation)

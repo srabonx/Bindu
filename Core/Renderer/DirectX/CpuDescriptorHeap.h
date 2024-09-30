@@ -15,6 +15,8 @@ namespace BINDU
 		
 		~CpuDescriptorHeap();
 
+		void						Initialize() override;
+
 		// Allocates the specified amount of descriptors in the heap and returns the allocation
 		DescriptorHeapAllocation	Allocate(size_t count) override;
 

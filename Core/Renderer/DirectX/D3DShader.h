@@ -15,7 +15,7 @@ namespace BINDU
 		D3DShader() = default;
 		~D3DShader() = default;
 
-		void					CompileFromFile(const std::string& fileName, const std::string& entryPoint, const std::string& target);
+		void					CompileFromFile(const std::string& fileName,const D3D_SHADER_MACRO* pDefines, const std::string& entryPoint, const std::string& target);
 
 		D3D12_SHADER_BYTECODE	GetShaderByteCode() const;
 

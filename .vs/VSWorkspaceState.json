@@ -8,15 +8,14 @@
   "ExpandedNodes": [
     "",
     "\\Core",
-    "\\Core\\App",
-    "\\Core\\Engine",
-    "\\Core\\GameObject",
     "\\Core\\Renderer",
     "\\Core\\Renderer\\DirectX",
+    "\\Core\\Resources",
+    "\\Core\\Scene",
+    "\\MathHelper",
     "\\Utility",
     "\\Utility\\Common",
     "\\Window"
   ],
-  "SelectedNode": "\\Core\\Renderer\\DirectX\\D3DCommandContext.cpp",
   "PreviewInSolutionExplorer": false
 }

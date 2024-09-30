@@ -2,15 +2,18 @@
 #define IDESCRIPTORHEAPALLOCATOR_H
 
 #include <cstdint>
+#include <memory>
 
 namespace BINDU
 {
 	class DescriptorHeapAllocation;
 
-	class IDescriptorHeapAllocator
+	class IDescriptorHeapAllocator : public std::enable_shared_from_this<IDescriptorHeapAllocator>
 	{
 	public:
 		virtual ~IDescriptorHeapAllocator() {}
+
+		virtual void					 Initialize() = 0;
 
 		// Allocate the specified count of descriptors from DescriptorHeap
 		virtual DescriptorHeapAllocation Allocate(size_t count) = 0;

@@ -18,15 +18,18 @@ namespace BINDU
 	{
 		using InputElements = std::vector<D3D12_INPUT_ELEMENT_DESC>;
 
-		D3D12_CULL_MODE				CullMode{ D3D12_CULL_MODE_BACK };
-		D3D12_FILL_MODE				FillMode{ D3D12_FILL_MODE_SOLID };
+		D3D12_CULL_MODE						CullMode{ D3D12_CULL_MODE_BACK };
+		D3D12_FILL_MODE						FillMode{ D3D12_FILL_MODE_SOLID };
 
-		D3DShader					VertexShader;
-		D3DShader					PixelShader;
+		D3DShader							VertexShader;
+		D3DShader							PixelShader;
 
-		InputElements				InputElementDescs;
+		D3D12_RENDER_TARGET_BLEND_DESC		RTBlendDesc;
 
-		ID3D12RootSignature*		RootSignature{ nullptr };
+		InputElements						InputElementDescs;
+
+		ID3D12RootSignature*				RootSignature{ nullptr };
+
 	};
 
 	class D3DPipelineStateManager

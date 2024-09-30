@@ -20,20 +20,23 @@ namespace BINDU
 		m_descriptorHeapDesc.NumDescriptors = GPU_DESCRIPTOR_HEAP_DESCRIPTORS_COUNT;
 		m_descriptorHeapDesc.Type = heapType;
 
-		// Instantiating descriptor heap
-		m_descriptorHeap = std::make_shared<DescriptorHeap>(m_d3dDevice, m_descriptorHeapDesc);
-
-		// Instantiating two heap managers
-		m_staticHeapManager = std::make_unique<DescriptorHeapManager>(this, pDevice, m_descriptorHeap,
-			m_staticHeapManagerId, m_staticHeapManagerOffset, m_staticHeapManagerDescriptorCount);
-
-		m_dynamicHeapManager = std::make_unique<DescriptorHeapManager>(this, pDevice, m_descriptorHeap,
-			m_dynamicHeapManagerId, m_dynamicHeapManagerOffset, m_dynamicHeapManagerDescriptorCount);
-
 	}
 
 	GpuDescriptorHeap::~GpuDescriptorHeap()
 	{
+	}
+
+	void GpuDescriptorHeap::Initialize()
+	{
+		// Instantiating descriptor heap
+		m_descriptorHeap = std::make_shared<DescriptorHeap>(m_d3dDevice, m_descriptorHeapDesc);
+
+		// Instantiating two heap managers
+		m_staticHeapManager = std::make_unique<DescriptorHeapManager>(shared_from_this(), m_d3dDevice, m_descriptorHeap,
+			m_staticHeapManagerId, m_staticHeapManagerOffset, m_staticHeapManagerDescriptorCount);
+
+		m_dynamicHeapManager = std::make_unique<DescriptorHeapManager>(shared_from_this(), m_d3dDevice, m_descriptorHeap,
+			m_dynamicHeapManagerId, m_dynamicHeapManagerOffset, m_dynamicHeapManagerDescriptorCount);
 	}
 
 	DescriptorHeapAllocation GpuDescriptorHeap::Allocate(size_t count)
@@ -94,6 +97,10 @@ namespace BINDU
 	{
 	}
 
+	void DynamicSubAllocationManager::Initialize()
+	{
+	}
+
 	DescriptorHeapAllocation DynamicSubAllocationManager::Allocate(size_t count)
 	{
 		// Check if there are no allocations or the last allocation does not have enough space
@@ -114,7 +121,7 @@ namespace BINDU
 
 		auto managerId = lastAllocation.GetManagerId();
 
-		DescriptorHeapAllocation allocation(this, lastAllocation.GetDescriptorHeap().lock(),
+		DescriptorHeapAllocation allocation(nullptr, lastAllocation.GetDescriptorHeap().lock(),
 			lastAllocation.GetCpuHandle(m_currentSubAllocationOffset),
 			lastAllocation.GetGpuHandle(m_currentSubAllocationOffset),
 			count,

@@ -19,7 +19,7 @@ namespace BINDU
 	ID3D12PipelineState* D3DPipelineStateManager::CreatePipelineState(const std::string& name, const PipelineStateDesc& pipelineState)
 	{
 		auto d3dDevice = m_parentDeviceManager->GetD3DDevice();
-
+		
 		if (!pipelineState.RootSignature)
 			THROW_EXCEPTION(3, "Invalid root signature");
 
@@ -33,6 +33,7 @@ namespace BINDU
 		psoDesc.RasterizerState.CullMode = pipelineState.CullMode; // Set culling mode
 		psoDesc.RasterizerState.FillMode = pipelineState.FillMode;
 		psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+		psoDesc.BlendState.RenderTarget[0] = pipelineState.RTBlendDesc.BlendEnable ? pipelineState.RTBlendDesc : psoDesc.BlendState.RenderTarget[0];
 		psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 		psoDesc.SampleMask = UINT_MAX;
 		psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;

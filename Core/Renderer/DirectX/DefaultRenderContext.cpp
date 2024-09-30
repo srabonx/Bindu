@@ -1,21 +1,22 @@
 #include "DefaultRenderContext.h"
 
+#include "GpuDescriptorHeap.h"
 #include "../../GameObject/GameObject.h"
+#include "../../Scene/Scene.h"
 
 namespace BINDU
 {
-	DefaultRenderContext::DefaultRenderContext(std::uint16_t width, std::uint16_t height, HWND hwnd) : m_width(width), m_height(height), m_hwnd(hwnd)
+	DefaultRenderContext::DefaultRenderContext(std::uint16_t width, std::uint16_t height, HWND hwnd, std::uint64_t maxObjectsToRender) :
+			m_width(width), m_height(height), m_hwnd(hwnd)
 	{
 		m_deviceManager = std::make_shared<D3DDeviceManager>();
-		m_commandContext = std::make_unique<D3DCommandContext>();
+		m_commandContext = std::make_shared<D3DCommandContext>();
 		m_swapChain = std::make_unique<D3DSwapChain>();
 		m_fence = std::make_unique<D3DFence>();
 
 		m_pipelineStateManager = std::make_unique<D3DPipelineStateManager>();
 
-		m_flyFrame = std::make_unique<FlyFrame>(3);
-
-		m_constantBuffer = std::make_shared<D3DConstantBuffer>(5000);
+		m_flyFrame = std::make_unique<FlyFrame>(3, maxObjectsToRender);
 
 		m_viewport = D3D12_VIEWPORT{ 0,0,static_cast<float>(m_width),static_cast<float>(m_height), 0.0f,1.0f };
 		m_scissorRect = D3D12_RECT{ 0,0, static_cast<LONG>(m_width),static_cast<LONG>(m_height) };
@@ -33,10 +34,6 @@ namespace BINDU
 
 		m_pipelineStateManager->Initialize(m_deviceManager);
 
-		m_flyFrame->Initialize(m_deviceManager);
-
-		m_constantBuffer->Initialize<ObjectConstants>(m_deviceManager.get());
-
 		m_commandContext->ExecuteCommands();
 
 		m_fence->Advance();
@@ -47,6 +44,9 @@ namespace BINDU
 
 	void DefaultRenderContext::BeginRender(float clearColor[4])
 	{
+
+		m_flyFrame->Update();
+
 		auto currentFrame = m_flyFrame->GetCurrentFrame();
 
 		if (currentFrame->FenceValue != 0)
@@ -61,6 +61,10 @@ namespace BINDU
 		commandList->RSSetViewports(1, &m_viewport);
 
 		commandList->RSSetScissorRects(1, &m_scissorRect);
+
+		auto cbvSrvUavGpuHeap = m_deviceManager->GetCbvSrvUavGpuHeap()->GetDescriptorHeap()->Heap().Get();
+
+		commandList->SetDescriptorHeaps(1, &cbvSrvUavGpuHeap);
 
 		auto renderTexture = m_swapChain->GetRenderTarget();
 		renderTexture->SetClearColor(clearColor);
@@ -82,16 +86,26 @@ namespace BINDU
 	{
 		auto cmdList = m_commandContext->GetCommandList();
 
-		cmdList->SetGraphicsRootConstantBufferView(rootParamSlot, m_flyFrame->GetCurrentFrame()->PerPassCb.get()->GetGPUVirtualAddress());
+		cmdList->SetGraphicsRootConstantBufferView(rootParamSlot, m_flyFrame->GetCurrentFrame()->PerPassCb->GetGPUVirtualAddress());
 	}
 
-	void DefaultRenderContext::RenderGameObject(GameObject* gameObject)
+	void DefaultRenderContext::RenderScene(Scene* scene) const
 	{
-		gameObject->Render(*m_commandContext);
+		scene->Render(*m_commandContext.get(), m_flyFrame->GetCurrentFrame());
+	}
+
+	void DefaultRenderContext::RenderGameObject(GameObject* gameObject) const
+	{
+		gameObject->Render(*m_commandContext, m_flyFrame->GetCurrentFrame()->ObjectsCb.get());
 	}
 
 	void DefaultRenderContext::EndRender()
 	{
+
+		auto currFrameCb = m_flyFrame->GetCurrentFrame()->PerPassCb.get();
+
+		currFrameCb->CopyData(0, &m_perPassConstants);
+
 		m_commandContext->End();
 
 		m_commandContext->ExecuteCommands();
@@ -102,16 +116,19 @@ namespace BINDU
 
 		m_commandContext->Signal(m_fence.get());
 
+	//	m_deviceManager->GetCbvSrvUavGpuHeap()->ReleaseStaleAllocations(m_fence->GetCurrentValue());
+
 	//	m_commandContext->WaitForGpu(m_fence.get());
 	}
 
-	void DefaultRenderContext::UpdatePerPassConstants(const PerPassConstants& perPassConstants) const
+	void DefaultRenderContext::UpdateScene(double dt, Scene* scene) const
 	{
-		m_flyFrame->Update();
+		scene->Update(dt, m_flyFrame->GetCurrentFrame());
+	}
 
-		auto currFrameCb = m_flyFrame->GetCurrentFrame()->PerPassCb.get();
-
-		currFrameCb->CopyData(0, perPassConstants);
+	void DefaultRenderContext::UpdatePerPassConstants(const PerPassConstants& perPassConstants)
+	{
+		m_perPassConstants = perPassConstants;
 	}
 
 	void DefaultRenderContext::Resize(std::uint16_t width, std::uint16_t height)
@@ -141,14 +158,14 @@ namespace BINDU
 		return m_pipelineStateManager.get();
 	}
 
-	D3DDeviceManager* DefaultRenderContext::GetDeviceManager() const
+	std::shared_ptr<D3DDeviceManager> DefaultRenderContext::GetDeviceManager() const
 	{
-		return m_deviceManager.get();
+		return m_deviceManager;
 	}
 
-	D3DCommandContext* DefaultRenderContext::GetCommandContext() const
+	std::shared_ptr<D3DCommandContext> DefaultRenderContext::GetCommandContext() const
 	{
-		return m_commandContext.get();
+		return m_commandContext;
 	}
 
 	D3DFence* DefaultRenderContext::GetFence() const
@@ -161,8 +178,4 @@ namespace BINDU
 		return m_swapChain.get();
 	}
 
-	std::shared_ptr<D3DConstantBuffer>& DefaultRenderContext::GetConstantBuffer()
-	{
-		return m_constantBuffer;
-	}
 }

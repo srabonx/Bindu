@@ -57,9 +57,9 @@ namespace BINDU
 
 	}
 
-	void Camera::Render(const D3DCommandContext& commandContext)
+	void Camera::Render(const D3DCommandContext& commandContext,const UploadBuffer* constantBuffer)
 	{
-		UpdateConstantBuffer();
+		UpdateConstantBuffer(constantBuffer);
 	}
 
 

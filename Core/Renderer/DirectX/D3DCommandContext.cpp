@@ -92,9 +92,10 @@ namespace BINDU
 		if (!m_beginEndPair)
 			THROW_EXCEPTION(3, "D3DCommandContext::Begin() was not called prior to calling BindPipeline()");
 
-		m_commandList->SetGraphicsRootSignature(rootSignature);
-
-		m_commandList->SetPipelineState(pipelineState);
+		if (rootSignature)
+			m_commandList->SetGraphicsRootSignature(rootSignature);
+		if (pipelineState)
+			m_commandList->SetPipelineState(pipelineState);
 	}
 
 	void D3DCommandContext::End()

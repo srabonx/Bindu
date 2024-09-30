@@ -7,6 +7,7 @@
 #include <vector>
 #include <wrl/client.h>
 #include "UploadBuffer.h"
+#include "../../GameObject/Light.h"
 
 namespace BINDU
 {
@@ -14,6 +15,7 @@ namespace BINDU
 	using namespace DirectX;
 
 	class D3DDeviceManager;
+	class ConstantBufferManager;
 
 	struct PerPassConstants
 	{
@@ -31,32 +33,62 @@ namespace BINDU
 
 		XMFLOAT3	EyePos;		// Camera Pos
 
+		float		CbPerPassPad1;
+
+		XMFLOAT2	RenderTargetSize;
+
+		XMFLOAT2	InvRenderTargetSize;
+
+		float		NearZ;
+
+		float		FarZ;
+
 		float		TotalTime{ 0.0f };
+
+		float		DeltaTime{ 0.0f };
+
+		XMFLOAT4	FogColor;
+
+		float		FogStart;
+
+		float		FogRange;
+
+		XMFLOAT2	CbPerPassPad2;
 	};
 
 	struct FrameResource
 	{
 		// Fence value of this frame
-		std::uint64_t					FenceValue{ 0 };
+		std::uint64_t								FenceValue{ 0 };
 
 		// Constant Buffer for this frame
-		std::unique_ptr<UploadBuffer>	PerPassCb;
+		std::unique_ptr<UploadBuffer>				PerPassCb;
+
+		std::unique_ptr<UploadBuffer>				ObjectsCb;
+
+		std::unique_ptr<UploadBuffer>				MaterialCb;
+
+		std::unique_ptr<UploadBuffer>				LightCb;
 
 		// Command allocator for this frame
-		ComPtr<ID3D12CommandAllocator>	CommandAllocator{ nullptr };
+		ComPtr<ID3D12CommandAllocator>				CommandAllocator{ nullptr };
 
 	};
 
 	class FlyFrame
 	{
 	public:
-		FlyFrame(std::uint8_t count);
+		FlyFrame(std::uint8_t frameCount, std::uint64_t maxObjectsPerFrame);
 
 		~FlyFrame();
 
-		void				Initialize(const std::shared_ptr<D3DDeviceManager>& parentDeviceManager);
+		void				Initialize(const std::shared_ptr<D3DDeviceManager>& parentDeviceManager, std::uint32_t perPassConstantDataByteSize, std::uint32_t perObjectConstantDataByteSize);
 
 		void				Update();
+
+		void				UpdatePerPassCB(std::uint64_t cbIndex, void const* data);
+
+		void				UpdateObjectsCB(std::uint64_t cbIndex, void const* data);
 
 		FrameResource*		GetCurrentFrame();
 
@@ -76,6 +108,8 @@ namespace BINDU
 		std::uint8_t						m_frameCount{ 0 };
 
 		std::uint8_t						m_currentFrame{ 0 };
+
+		std::uint64_t						m_maxObjects{ 0 };
 
 		bool								m_initialized{ false };
 	};

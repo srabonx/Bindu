@@ -12,6 +12,7 @@
 #include "D3DPipelineStateManager.h"
 #include "FlyFrame.h"
 
+
 namespace BINDU
 {
 	//class D3DDeviceManager;
@@ -19,16 +20,23 @@ namespace BINDU
 	//class D3DSwapChain;
 	//class D3DFence;
 	class GameObject;
+	class Scene;
+
 	//class RenderTexture;
 
 	class DefaultRenderContext
 	{
 	public:
 
-		DefaultRenderContext(std::uint16_t width, std::uint16_t height, HWND hwnd);
+		DefaultRenderContext(std::uint16_t width, std::uint16_t height, HWND hwnd, std::uint64_t maxObjectsToRender);
 		~DefaultRenderContext() = default;
 
 		void		Initialize();
+
+		void		InitializeFlyFrame(std::uint32_t perPassDataByteSize, std::uint32_t objectCBByteSize) const
+		{
+			m_flyFrame->Initialize(m_deviceManager, perPassDataByteSize, objectCBByteSize);
+		}
 
 		void		BeginRender(float clearColor[4]);
 
@@ -38,34 +46,34 @@ namespace BINDU
 
 		void		BindPerPassConstant(std::uint16_t rootParamSlot) const;
 
-		void		RenderGameObject(GameObject* gameObject);
+		void		RenderScene(Scene* scene) const;
+
+		void		RenderGameObject(GameObject* gameObject) const;
 
 		void		EndRender();
 
-		void		UpdatePerPassConstants(const PerPassConstants& perPassConstants) const;
+		void		UpdateScene(double dt, Scene* scene) const;
+
+		void		UpdatePerPassConstants(const PerPassConstants& perPassConstants);
 
 		void		Resize(std::uint16_t width, std::uint16_t height);
 
 		void		Close() const;
 		
-		D3DPipelineStateManager*	GetPipelineStateManager() const;
+		D3DPipelineStateManager*					GetPipelineStateManager() const;
 
-		D3DDeviceManager*			GetDeviceManager() const;
+		std::shared_ptr<D3DDeviceManager>			GetDeviceManager() const;
 
-		D3DCommandContext*			GetCommandContext() const;
+		std::shared_ptr<D3DCommandContext>			GetCommandContext() const;
 
-		D3DFence*					GetFence() const;
+		D3DFence*									GetFence() const;
 
-		D3DSwapChain*				GetSwapChain() const;
-
-		std::shared_ptr<D3DConstantBuffer>&			GetConstantBuffer();
-
-
+		D3DSwapChain*								GetSwapChain() const;
 
 	private:
 		std::shared_ptr<D3DDeviceManager>		m_deviceManager{ nullptr };
 
-		std::unique_ptr<D3DCommandContext>		m_commandContext{ nullptr };
+		std::shared_ptr<D3DCommandContext>		m_commandContext{ nullptr };
 
 		std::unique_ptr<D3DSwapChain>			m_swapChain{ nullptr };
 
@@ -75,8 +83,6 @@ namespace BINDU
 
 		std::unique_ptr<FlyFrame>				m_flyFrame{ nullptr };
 
-		std::shared_ptr<D3DConstantBuffer>		m_constantBuffer;
-
 		D3D12_VIEWPORT							m_viewport;
 
 		D3D12_RECT								m_scissorRect;
@@ -85,6 +91,8 @@ namespace BINDU
 		std::uint16_t							m_height{ 0 };
 
 		HWND									m_hwnd;
+
+		PerPassConstants						m_perPassConstants;
 	};
 }
 
