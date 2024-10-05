@@ -112,6 +112,6 @@ add_library(Bindu STATIC
         MathHelper/MathHelper.h
         MathHelper/MathHelper.cpp
         Core/GameObject/Light.h
-        Core/GameObject/Light.cpp "Core/Scene/Scene.h" "Core/Managers/GameObjectManager.h" "Core/Managers/ConstantBufferManager.h" "Core/Managers/ConstantBufferManager.cpp" "Core/Managers/GameObjectManager.cpp" "Core/Scene/Scene.cpp" "Core/GameObject/LightData.h"   "Core/Renderer/DirectX/DDSTextureLoader.cpp" "Core/Renderer/DirectX/DDSTextureLoader.h" "Core/Resources/Texture.h" "Core/Resources/Texture.cpp" "Core/Managers/TextureManager.h" "Core/Managers/TextureManager.cpp" "Core/Managers/MaterialManager.h" "Core/Managers/MaterialManager.cpp" "Core/Managers/CbAllocation.h" "Core/Scene/RenderLayer.h" "Core/Scene/RenderLayer.cpp" "Core/Managers/ShaderManager.h")
+        Core/GameObject/Light.cpp "Core/Scene/Scene.h" "Core/Managers/GameObjectManager.h" "Core/Managers/ConstantBufferManager.h" "Core/Managers/ConstantBufferManager.cpp" "Core/Managers/GameObjectManager.cpp" "Core/Scene/Scene.cpp" "Core/GameObject/LightData.h"   "Core/Renderer/DirectX/DDSTextureLoader.cpp" "Core/Renderer/DirectX/DDSTextureLoader.h" "Core/Resources/Texture.h" "Core/Resources/Texture.cpp" "Core/Managers/TextureManager.h" "Core/Managers/TextureManager.cpp" "Core/Managers/MaterialManager.h" "Core/Managers/MaterialManager.cpp" "Core/Managers/CbAllocation.h" "Core/Scene/RenderLayer.h" "Core/Scene/RenderLayer.cpp" "Core/Managers/ShaderManager.h" "Core/Managers/ShaderManager.cpp" "Utility/Common/DynamicVoidBuffer.h" "Utility/Common/DynamicVoidBuffer.cpp")
 
 

@@ -90,6 +90,46 @@ public:
 	static const float Infinity;
 	static const float Pi;
 
+	static DirectX::XMFLOAT3 XM_CALLCONV QuaternionToEular(DirectX::FXMVECTOR quaternion)
+	{
+		DirectX::XMFLOAT4 quaternion4f = {};
+		DirectX::XMStoreFloat4(&quaternion4f, quaternion);
+		return QuaternionToEular(quaternion4f);
+	}
+
+	static DirectX::XMMATRIX CreateRotationMatrixFromQuaternion(DirectX::FXMVECTOR quaternion)
+	{
+		DirectX::XMFLOAT4 quaternion4f = {};
+		DirectX::XMStoreFloat4(&quaternion4f, quaternion);
+
+		return CreateRotationMatrixFromQuaternion(quaternion4f);
+	}
+
+	static DirectX::XMFLOAT3 QuaternionToEular(const DirectX::XMFLOAT4& quaternion)
+	{
+		float x = quaternion.x;
+		float y = quaternion.y;
+		float z = quaternion.z;
+		float w = quaternion.w;
+
+		float yaw = atan2(2.0f * (w * y + z * x), 1.0f - 2.0f * (y * y + z * z));
+		float pitch = asin(2.0f * (w * z - x * y));
+		float roll = atan2(2.0f * (w * x + y * z), 1.0f - 2.0f * (x * x + z * z));
+
+		return { roll,pitch,yaw };
+	}
+
+	static DirectX::XMMATRIX CreateRotationMatrixFromQuaternion(const DirectX::XMFLOAT4& quaternion)
+	{
+		DirectX::XMFLOAT3 eularAngles = QuaternionToEular(quaternion);
+
+		float roll = eularAngles.x;
+		float pitch = eularAngles.y;
+		float yaw = eularAngles.z;
+
+		return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+	}
+
 
 };
 

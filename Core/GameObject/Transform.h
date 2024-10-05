@@ -23,7 +23,7 @@ namespace BINDU
 
 		void XM_CALLCONV SetTranslation(FXMVECTOR translation);
 
-		void XM_CALLCONV SetTransform(CXMMATRIX transform);
+		void XM_CALLCONV SetTransform(FXMMATRIX transform);
 
 		void			 SetRotation(float x, float y, float z);
 
@@ -61,11 +61,13 @@ namespace BINDU
 
 		XMFLOAT4X4			m_transform = MathHelper::Identity4x4();
 
-		XMFLOAT3			m_rotation{0.0f,0.0f,0.0f};
+		XMFLOAT3			m_rotation{ 0.0f,0.0f,0.0f };
 		
 		XMFLOAT3			m_scale{1.0f,1.0f,1.0f};
 
 		XMFLOAT3			m_translation{0.0f,0.0f,0.0f};
+
+		bool				m_setTransform{ false };
 
 		// Indicates if this component is dirty or not
 		bool				m_isDirty{ false };

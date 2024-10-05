@@ -34,5 +34,21 @@ inline std::string WstringToString(const std::wstring& wstr)
 	return converterX.to_bytes(wstr);
 }
 
+inline std::string RelativeResourcePath(const char* filepath = nullptr, const std::string& rootFolderName = "")
+{
+	std::string ResourcePath(MAX_PATH, '\0');
+
+	GetModuleFileNameA(nullptr, const_cast<LPSTR>(ResourcePath.data()), MAX_PATH);
+
+	std::string delimeter = rootFolderName;
+
+	size_t t = ResourcePath.find(delimeter);
+	ResourcePath = ResourcePath.substr(0, t + delimeter.size() + 1);
+
+	if (filepath)
+		ResourcePath += filepath;
+
+	return ResourcePath;
+}
 
 #endif //BINDU_COMMONUTILITY_H

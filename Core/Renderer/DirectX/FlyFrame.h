@@ -78,7 +78,7 @@ namespace BINDU
 	class FlyFrame
 	{
 	public:
-		FlyFrame(std::uint8_t frameCount, std::uint64_t maxObjectsPerFrame);
+		FlyFrame(std::uint8_t frameCount, std::uint8_t passCount, std::uint64_t maxObjectsPerFrame);
 
 		~FlyFrame();
 
@@ -106,6 +106,8 @@ namespace BINDU
 		std::shared_ptr<D3DDeviceManager>	m_parentDeviceManager{ nullptr };
 
 		std::uint8_t						m_frameCount{ 0 };
+
+		std::uint8_t						m_passCount{ 0 };
 
 		std::uint8_t						m_currentFrame{ 0 };
 

@@ -20,9 +20,9 @@ namespace BINDU
 		void							Initialize(const std::shared_ptr<D3DDeviceManager>& deviceManager,
 													const std::shared_ptr<D3DCommandContext>& commandContext);
 
-		std::shared_ptr<Texture>&		LoadDDSTextureFromFile(const std::string& name, const std::string& filepath);
+		std::shared_ptr<Texture>&		LoadDDSTextureFromFile(const std::string& name, const std::string& filepath, bool isTextureArray = false);
 
-		void							LoadDDSTextureFromFile(Texture* texture);
+		void							LoadDDSTextureFromFile(Texture* texture, bool isTextureArray = false);
 
 		void							AddTexture(const std::string& name, std::shared_ptr<Texture>& texture);
 

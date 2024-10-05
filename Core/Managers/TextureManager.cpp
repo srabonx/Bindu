@@ -20,7 +20,7 @@ namespace BINDU
 		m_commandContext = commandContext;
 	}
 
-	std::shared_ptr<Texture>& TextureManager::LoadDDSTextureFromFile(const std::string& name, const std::string& filepath)
+	std::shared_ptr<Texture>& TextureManager::LoadDDSTextureFromFile(const std::string& name, const std::string& filepath, bool isTextureArray)
 	{
 		auto texture = std::make_shared<Texture>(name, filepath);
 
@@ -36,14 +36,14 @@ namespace BINDU
 			DirectX::CreateDDSTextureFromFile12(d3dDevice, cmdList.Get(), filepathwstr.c_str(), resource, m_uploadHeap)
 		); */
 
-		LoadDDSTextureFromFile(texture.get());
+		LoadDDSTextureFromFile(texture.get(), isTextureArray);
 
 		m_texturePool.emplace(name, std::move(texture));
 
 		return m_texturePool[name];
 	}
 
-	void TextureManager::LoadDDSTextureFromFile(Texture* texture)
+	void TextureManager::LoadDDSTextureFromFile(Texture* texture, bool isTextureArray)
 	{
 		auto& resource = texture->GetResource();
 
@@ -65,10 +65,24 @@ namespace BINDU
 		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 		srvDesc.Format = resource->GetDesc().Format;
-		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-		srvDesc.Texture2D.MostDetailedMip = 0;
-		srvDesc.Texture2D.MipLevels = resource->GetDesc().MipLevels;
-		srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+
+		if (!isTextureArray)
+		{
+			srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+			srvDesc.Texture2D.MostDetailedMip = 0;
+			srvDesc.Texture2D.MipLevels = resource->GetDesc().MipLevels;
+			srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+		}
+		else
+		{
+			srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2DARRAY;
+			srvDesc.Texture2DArray.MostDetailedMip = 0;
+			srvDesc.Texture2DArray.MipLevels = resource->GetDesc().MipLevels;
+			srvDesc.Texture2DArray.ResourceMinLODClamp = 0.0f;
+			srvDesc.Texture2DArray.FirstArraySlice = 0;
+			srvDesc.Texture2DArray.ArraySize = resource->GetDesc().DepthOrArraySize;
+		}
+
 
 		d3dDevice->CreateShaderResourceView(resource.Get(), &srvDesc, allocation.GetCpuHandle());
 

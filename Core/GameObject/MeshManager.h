@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include "../../Utility/Common/DynamicVoidBuffer.h"
+
 namespace BINDU
 {
 
@@ -23,10 +25,48 @@ namespace BINDU
 		std::uint64_t				BaseVertexLocation{ 0 };
 	};
 
-	template<class V, typename I>
 	class MeshManager;
 
-	template<class V, typename I>
+
+	class MeshGeometry
+	{
+		friend class MeshManager;
+
+	public:
+		MeshGeometry(std::uint32_t vertexStructByteSize, DXGI_FORMAT indexFormat);
+
+		~MeshGeometry() = default;
+
+		MeshGeometry(MeshGeometry&& rhs) noexcept;
+
+		MeshGeometry& operator = (MeshGeometry&& rhs) noexcept;
+
+		void		AddMesh(const std::string& name, const void* vertexData, std::uint32_t vertexCount, const void* indexData, std::uint32_t indexCount,
+							D3D12_PRIMITIVE_TOPOLOGY primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		MeshData	FindMesh(const std::string& name);
+
+	private:
+		std::string							m_name;
+
+		std::unique_ptr<VertexBuffer>		m_vertexBuffer{ nullptr };
+		std::unique_ptr<IndexBuffer>		m_indexBuffer{ nullptr };
+
+		std::uint64_t						m_lastStartIndexOffset{ 0 };
+		std::uint64_t						m_lastBaseVertexOffset{ 0 };
+
+		std::uint32_t						m_vertexStructByteSize{ 0 };
+		std::uint32_t						m_indexFormatByteSize{ 0 };
+
+		DynamicVoidBuffer					m_intermediateVertexData;
+
+		DynamicVoidBuffer					m_intermediateIndexData;
+
+		std::map <std::string, MeshData>	m_meshDataPool;
+	};
+
+
+	/*template<class V, typename I>
 	class MeshGeometry
 	{
 		friend class MeshManager<V,I>;
@@ -36,7 +76,11 @@ namespace BINDU
 		MeshGeometry() //: m_vertexBuffer(sizeof(V)), m_indexBuffer(DXGI_FORMAT_R16_UINT)
 		{
 			m_vertexBuffer = std::make_unique<VertexBuffer>(sizeof(V));
-			m_indexBuffer = std::make_unique<IndexBuffer>(DXGI_FORMAT_R16_UINT);
+
+			if(sizeof(I) == sizeof(std::uint32_t))
+				m_indexBuffer = std::make_unique<IndexBuffer>(DXGI_FORMAT_R32_UINT);
+			else if(sizeof(I) == sizeof(std::uint16_t))
+				m_indexBuffer = std::make_unique<IndexBuffer>(DXGI_FORMAT_R16_UINT);
 		}
 
 		void				AddMesh(const std::string& name, const std::vector<V>& vertexData, const std::vector<I>& indexData,
@@ -86,46 +130,21 @@ namespace BINDU
 		std::uint64_t		m_lastBaseVertexOffset{ 0 };
 
 		std::map <std::string, MeshData>			m_meshDataPool;
-	};
+	}; */
 
-	template<class V, typename I>
 	class MeshManager
 	{
 	public:
 		MeshManager() = default;
 		~MeshManager() = default;
 
-		void				AddGeometry(const D3DCommandContext& commandContext, const std::string& geometryName, MeshGeometry<V,I>&& geometry)
-		{
-			auto vbByteSize = geometry.m_intermediateVertexBuffer.size() * sizeof(V);
-			geometry.m_vertexBuffer->Create(commandContext, geometry.m_intermediateVertexBuffer.data(), vbByteSize);
+		void				AddGeometry(const D3DCommandContext& commandContext, const std::string& geometryName, MeshGeometry&& geometry);
 
-			auto ibByteSize = geometry.m_intermediateIndexBuffer.size() * sizeof(I);
-			geometry.m_indexBuffer->Create(commandContext, geometry.m_intermediateIndexBuffer.data(), ibByteSize);
-
-			geometry.m_name = geometryName;
-
-			geometry.m_intermediateVertexBuffer.clear();
-			geometry.m_intermediateIndexBuffer.clear();
-
-			m_meshPool.emplace(geometryName, std::move(geometry));
-		}
-
-		MeshData			GetMesh(const std::string& baseGeometryName, const std::string& meshName)
-		{
-			auto itr = m_meshPool.find(baseGeometryName);
-
-			if (itr == m_meshPool.end())
-				return MeshData();
-
-			auto& geometry = itr->second;
-
-			return geometry.Find(meshName);
-		}
+		MeshData			GetMesh(const std::string& baseGeometryName, const std::string& meshName);
 
 	private:
 
-		std::map<std::string, MeshGeometry<V,I>>			m_meshPool;
+		std::map<std::string, MeshGeometry>			m_meshGeoPool;
 
 	};
 }

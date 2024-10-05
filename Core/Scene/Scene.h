@@ -10,51 +10,34 @@ namespace BINDU
 	{
 	public:
 
-		explicit Scene(std::uint64_t maxObjects);
-		~Scene() = default;
+		explicit Scene();
+		virtual ~Scene() {};
 
-		void				Initialize();
+		virtual void		Update(double dt, const FrameResource* currFrame);
 
-		void				SetLightConstantRootParamIndex(std::uint16_t index);
+		virtual void		Render(const D3DCommandContext& commandContext, const FrameResource* currFrame);
 
-		void				SetAmbientLight(const XMFLOAT4& ambientLight);
+/*		MeshObject* AddMeshObject(const std::shared_ptr<MeshObject>& gameObject);
 
-		void				Update(double dt, const FrameResource* currFrameResource);
-
-		void				Render(const D3DCommandContext& commandContext, const FrameResource* currFrameResource);
-
-		MeshObject*			AddMeshObject(const std::shared_ptr<MeshObject>& gameObject);
-
-		void				RemoveMeshObject(MeshObject* gameObject);
+		void				RemoveMeshObject(MeshObject* gameObject); */
 
 		RenderLayer*		CreateLayer(const std::string& name, std::uint16_t index = UINT16_MAX);
 
 		RenderLayer*		GetLayer(std::uint16_t index);
 
-//		void				AddLayer(RenderLayer&& renderLayer);
+		RenderLayer*		AddLayer(std::unique_ptr<RenderLayer>&& renderLayer);
 
 		void				RemoveLayer(const std::string& name);
 
 		void				RemoveLayer(std::uint16_t index);
 
-	private:
-		LightConstants		BindLights(MeshObject* gameObject) const;
-
 
 	private:
-		
-		GameObjectManager						m_gameObjectManager;
+		std::string								m_name;
 
-		std::vector<Light*>						m_lights;
+//		std::vector<Light*>						m_lights;
 
-		std::map<std::uint16_t, RenderLayer>	m_layerPool;
-
-		std::uint64_t							m_maxObjects;
-
-		std::uint16_t							m_lightConstantRootParamIndex{ 0 };
-
-		XMFLOAT4								m_ambientLight;
-
+		std::map<std::uint16_t, std::unique_ptr<RenderLayer>>	m_layerPool;
 	};
 }
 

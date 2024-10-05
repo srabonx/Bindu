@@ -9,8 +9,10 @@
 #include <d3d12.h>
 #include "d3dx12.h"
 #include <d3dcompiler.h>
+#include <DirectXMath.h>
 #include <wrl/client.h>
 #include <fstream>
+#include <sstream>
 
 // Macro to throw DirectX HRESULT exceptions 
 #ifndef DXThrowIfFailed
@@ -218,6 +220,25 @@ namespace BINDU::D3DUtility
 		pointWrap, pointClamp,
 		linearWrap, linearClamp,
 		anisotropicWrap, anisotropicClamp };
+	}
+
+
+	inline void PrintXMVECTOR(const DirectX::XMVECTOR& vec)
+	{
+		// Convert XMVECTOR to XMFLOAT4 for easier access
+		DirectX::XMFLOAT4 float4;
+		DirectX::XMStoreFloat4(&float4, vec);
+
+		std::stringstream str;
+
+		// Print the components
+		str<< "XMVECTOR: ("
+			<< float4.x << ", "
+			<< float4.y << ", "
+			<< float4.z << ", "
+			<< float4.w << ")" << std::endl;
+
+		OutputDebugString(str.str().c_str());
 	}
 
 }

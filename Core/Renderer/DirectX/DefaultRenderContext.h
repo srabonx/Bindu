@@ -54,7 +54,7 @@ namespace BINDU
 
 		void		UpdateScene(double dt, Scene* scene) const;
 
-		void		UpdatePerPassConstants(const PerPassConstants& perPassConstants);
+		void		UpdatePerPassConstants(std::uint8_t passIndex, const PerPassConstants& perPassConstants);
 
 		void		Resize(std::uint16_t width, std::uint16_t height);
 

@@ -139,7 +139,7 @@ namespace BINDU
 
 		cmdList->IASetVertexBuffers(0,1, &vbv);
 		cmdList->IASetIndexBuffer(&ibv);
-		cmdList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		cmdList->IASetPrimitiveTopology(m_meshData.PrimitiveTopology);
 
 		if (m_texture)
 			cmdList->SetGraphicsRootDescriptorTable(m_textureRootParamSlot, m_texture->GetHeapAllocation()->GetGpuHandle());

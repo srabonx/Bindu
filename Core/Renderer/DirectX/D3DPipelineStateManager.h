@@ -16,19 +16,29 @@ namespace BINDU
 
 	struct PipelineStateDesc
 	{
+		PipelineStateDesc() = default;
+		~PipelineStateDesc() = default;
+
 		using InputElements = std::vector<D3D12_INPUT_ELEMENT_DESC>;
 
 		D3D12_CULL_MODE						CullMode{ D3D12_CULL_MODE_BACK };
 		D3D12_FILL_MODE						FillMode{ D3D12_FILL_MODE_SOLID };
+		BOOL								FrontFaceCounterClockwise{ FALSE };
 
-		D3DShader							VertexShader;
-		D3DShader							PixelShader;
+		D3DShader*							VertexShader{ nullptr };
+		D3DShader*							PixelShader{ nullptr };
+		D3DShader*							GeometryShader{ nullptr };
 
-		D3D12_RENDER_TARGET_BLEND_DESC		RTBlendDesc;
+
+		D3D12_RENDER_TARGET_BLEND_DESC		RTBlendDesc{};
+
+		D3D12_DEPTH_STENCIL_DESC			DepthStencilDesc{};
 
 		InputElements						InputElementDescs;
 
 		ID3D12RootSignature*				RootSignature{ nullptr };
+
+		D3D12_PRIMITIVE_TOPOLOGY_TYPE		PrimitiveTopologyType{ D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE };
 
 	};
 

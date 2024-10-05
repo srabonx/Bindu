@@ -12,16 +12,21 @@ namespace BINDU
 				return;
 			}
 
-			auto scaleVec = GetScale();
-			auto translationVec = GetTranslation();
+			if (!m_setTransform)
+			{
+				auto rotationVec = GetRotation();
+				auto scaleVec = GetScale();
+				auto translationVec = GetTranslation();
 
-			auto rotationMat = XMMatrixRotationX(m_rotation.x) * XMMatrixRotationY(m_rotation.y) * XMMatrixRotationZ(m_rotation.z);
-			auto scaleMat = XMMatrixScalingFromVector(scaleVec);
-			auto translationMat = XMMatrixTranslationFromVector(translationVec);
+				auto rotationMat = XMMatrixRotationRollPitchYawFromVector(rotationVec);
+				auto scaleMat = XMMatrixScalingFromVector(scaleVec);
+				auto translationMat = XMMatrixTranslationFromVector(translationVec);
 
-			auto transform = rotationMat * scaleMat * translationMat;
 
-			XMStoreFloat4x4(&m_transform, XMMatrixTranspose(transform));
+				auto transform = rotationMat * scaleMat * translationMat;//XMMatrixAffineTransformation(scaleVec, XMVectorZero(), rotationVec, translationVec);
+
+				XMStoreFloat4x4(&m_transform, XMMatrixTranspose(transform));
+			}
 
 			--m_dirtyFrameCount;
 		}
@@ -30,6 +35,7 @@ namespace BINDU
 	void XM_CALLCONV Transform::SetRotation(FXMVECTOR rotation)
 	{
 		XMStoreFloat3(&m_rotation, rotation);
+		m_setTransform = false;
 		m_isDirty = true;
 		m_dirtyFrameCount = 3;
 	}
@@ -37,6 +43,7 @@ namespace BINDU
 	void XM_CALLCONV Transform::SetScale(FXMVECTOR scale)
 	{
 		XMStoreFloat3(&m_scale, scale);
+		m_setTransform = false;
 		m_isDirty = true;
 		m_dirtyFrameCount = 3;
 	}
@@ -44,13 +51,24 @@ namespace BINDU
 	void XM_CALLCONV Transform::SetTranslation(FXMVECTOR translation)
 	{
 		XMStoreFloat3(&m_translation, translation);
+		m_setTransform = false;
 		m_isDirty = true;
 		m_dirtyFrameCount = 3;
 	}
 
-	void XM_CALLCONV Transform::SetTransform(CXMMATRIX transform)
+	void XM_CALLCONV Transform::SetTransform(FXMMATRIX transform)
 	{
+		XMVECTOR scale, rotation, translation = {};
+
+		XMMatrixDecompose(&scale, &rotation, &translation, transform);
+
+		XMStoreFloat3(&m_scale, scale);
+		XMStoreFloat3(&m_rotation, rotation);
+		XMStoreFloat3(&m_translation, translation);
+
 		XMStoreFloat4x4(&m_transform, XMMatrixTranspose(transform));
+
+		m_setTransform = true;
 		m_isDirty = true;
 		m_dirtyFrameCount = 3;
 	}
@@ -58,20 +76,23 @@ namespace BINDU
 	void Transform::SetRotation(float x, float y, float z)
 	{
 		m_rotation = {x,y,z};
+		m_setTransform = false;
 		m_isDirty = true;
 		m_dirtyFrameCount = 3;
 	}
 
 	void Transform::SetScale(float x, float y, float z)
 	{
-		m_scale = {x,y,z};
+		m_scale = { x,y,z };
+		m_setTransform = false;
 		m_isDirty = true;
 		m_dirtyFrameCount = 3;
 	}
 
 	void Transform::SetTranslation(float x, float y, float z)
 	{
-		m_translation = {x,y,z};
+		m_translation = { x,y,z };
+		m_setTransform = false;
 		m_isDirty = true;
 		m_dirtyFrameCount = 3;
 	}
@@ -79,6 +100,7 @@ namespace BINDU
 	void Transform::SetTransform(const XMFLOAT4X4& transform)
 	{
 		m_transform = transform;
+		m_setTransform = true;
 	}
 
 	XMVECTOR Transform::GetRotation() const

@@ -1,6 +1,7 @@
 #include "GameObjectManager.h"
 
 #include "../GameObject/MeshObject.h"
+#include "../GameObject/Light.h"
 
 namespace BINDU
 {
@@ -26,6 +27,12 @@ namespace BINDU
 			meshObject->SetCbAllocation(allocation);
 
 			m_meshObjectPool.emplace_back(meshObject);
+
+			if (auto lightObject = dynamic_cast<Light*>(meshObject))
+			{
+				m_lightObjectPool.emplace_back(lightObject);
+			}
+
 		}
 	}
 
@@ -33,21 +40,26 @@ namespace BINDU
 	{
 		auto guid = gameObject->GetGuid();
 
-		auto meshObject = dynamic_cast<MeshObject*>(gameObject);
 
-		if(meshObject != nullptr)
+		if(auto meshObject = dynamic_cast<MeshObject*>(gameObject))
 		{
 			m_meshObjectPool.erase(std::remove_if(m_meshObjectPool.begin(), m_meshObjectPool.end(),
-				[meshObject](MeshObject* meshObj) {return meshObject == meshObj; }), m_meshObjectPool.end());
+				[meshObject](MeshObject* meshObj) {return meshObject == meshObj; }));
+
+			if (auto lightObject = dynamic_cast<Light*>(meshObject))
+			{
+				m_lightObjectPool.erase(std::remove_if(m_lightObjectPool.begin(), m_lightObjectPool.end(),
+					[lightObject](Light* light)-> bool {return lightObject == light; }));
+			}
 		}
 
 		m_gameObjectPool.erase(std::remove_if(m_gameObjectPool.begin(), m_gameObjectPool.end(),
-			[guid](const std::shared_ptr<GameObject>& obj) {return obj->GetGuid() == guid; }), m_gameObjectPool.end());
+			[guid](const std::shared_ptr<GameObject>& obj) {return obj->GetGuid() == guid; }));
 
 		gameObject = nullptr;
 	}
 
-	void GameObjectManager::Update() const
+/*	void GameObjectManager::Update() const
 	{
 		for(auto& o : m_gameObjectPool)
 		{
@@ -62,10 +74,16 @@ namespace BINDU
 			o->Render(commandContext, constantBuffer);
 		}
 	}
+	*/
 
 	std::vector<MeshObject*>& GameObjectManager::GetMeshObjects()
 	{
 		return m_meshObjectPool;
+	}
+
+	std::vector<Light*>& GameObjectManager::GetLightObjects()
+	{
+		return m_lightObjectPool;
 	}
 
 	std::vector<std::shared_ptr<GameObject>>& GameObjectManager::GetGameObjects()

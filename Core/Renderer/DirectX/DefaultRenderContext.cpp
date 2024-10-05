@@ -16,7 +16,7 @@ namespace BINDU
 
 		m_pipelineStateManager = std::make_unique<D3DPipelineStateManager>();
 
-		m_flyFrame = std::make_unique<FlyFrame>(3, maxObjectsToRender);
+		m_flyFrame = std::make_unique<FlyFrame>(3,2, maxObjectsToRender);
 
 		m_viewport = D3D12_VIEWPORT{ 0,0,static_cast<float>(m_width),static_cast<float>(m_height), 0.0f,1.0f };
 		m_scissorRect = D3D12_RECT{ 0,0, static_cast<LONG>(m_width),static_cast<LONG>(m_height) };
@@ -102,10 +102,6 @@ namespace BINDU
 	void DefaultRenderContext::EndRender()
 	{
 
-		auto currFrameCb = m_flyFrame->GetCurrentFrame()->PerPassCb.get();
-
-		currFrameCb->CopyData(0, &m_perPassConstants);
-
 		m_commandContext->End();
 
 		m_commandContext->ExecuteCommands();
@@ -126,9 +122,13 @@ namespace BINDU
 		scene->Update(dt, m_flyFrame->GetCurrentFrame());
 	}
 
-	void DefaultRenderContext::UpdatePerPassConstants(const PerPassConstants& perPassConstants)
+	void DefaultRenderContext::UpdatePerPassConstants(std::uint8_t passIndex, const PerPassConstants& perPassConstants)
 	{
 		m_perPassConstants = perPassConstants;
+
+		auto currFrameCb = m_flyFrame->GetCurrentFrame()->PerPassCb.get();
+
+		currFrameCb->CopyData(passIndex, &m_perPassConstants);
 	}
 
 	void DefaultRenderContext::Resize(std::uint16_t width, std::uint16_t height)

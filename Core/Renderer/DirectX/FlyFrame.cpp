@@ -5,7 +5,8 @@
 
 namespace BINDU
 {
-	FlyFrame::FlyFrame(std::uint8_t frameCount, std::uint64_t maxObjectsPerFrame) : m_frameCount(frameCount), m_maxObjects(maxObjectsPerFrame)
+	FlyFrame::FlyFrame(std::uint8_t frameCount, std::uint8_t passCount, std::uint64_t maxObjectsPerFrame) :
+		m_frameCount(frameCount),m_passCount(passCount), m_maxObjects(maxObjectsPerFrame)
 	{
 		m_frames.resize(frameCount);
 	}
@@ -29,7 +30,7 @@ namespace BINDU
 					IID_PPV_ARGS(frame.CommandAllocator.ReleaseAndGetAddressOf())));
 
 			frame.PerPassCb = std::make_unique<UploadBuffer>(true);
-			frame.PerPassCb->Initialize(d3dDevice, 1, perPassConstantDataByteSize);
+			frame.PerPassCb->Initialize(d3dDevice, m_passCount, perPassConstantDataByteSize);
 
 			frame.ObjectsCb = std::make_unique<UploadBuffer>(true);
 			frame.ObjectsCb->Initialize(d3dDevice,m_maxObjects, perObjectConstantDataByteSize);
