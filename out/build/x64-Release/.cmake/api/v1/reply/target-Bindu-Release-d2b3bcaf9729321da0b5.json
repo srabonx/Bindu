@@ -81,7 +81,7 @@
 				49,
 				52,
 				54,
-				56,
+				59,
 				61,
 				63,
 				65,
@@ -89,14 +89,14 @@
 				69,
 				71,
 				73,
-				75,
+				76,
 				78,
 				80,
 				82,
 				84,
 				86,
 				88,
-				90,
+				91,
 				93,
 				95,
 				97,
@@ -104,17 +104,21 @@
 				101,
 				103,
 				105,
-				107,
+				109,
+				110,
 				111,
-				112,
 				113,
-				115,
+				116,
 				118,
 				120,
-				122,
+				123,
 				125,
 				127,
-				129
+				130,
+				132,
+				133,
+				135,
+				141
 			]
 		}
 	],
@@ -166,9 +170,9 @@
 				51,
 				53,
 				55,
+				56,
 				57,
 				58,
-				59,
 				60,
 				62,
 				64,
@@ -177,7 +181,7 @@
 				70,
 				72,
 				74,
-				76,
+				75,
 				77,
 				79,
 				81,
@@ -185,7 +189,7 @@
 				85,
 				87,
 				89,
-				91,
+				90,
 				92,
 				94,
 				96,
@@ -194,18 +198,27 @@
 				102,
 				104,
 				106,
+				107,
 				108,
-				109,
-				110,
+				112,
 				114,
-				116,
+				115,
 				117,
 				119,
 				121,
-				123,
+				122,
 				124,
 				126,
-				128
+				128,
+				129,
+				131,
+				134,
+				136,
+				137,
+				138,
+				139,
+				140,
+				142
 			]
 		},
 		{
@@ -234,7 +247,7 @@
 				49,
 				52,
 				54,
-				56,
+				59,
 				61,
 				63,
 				65,
@@ -242,14 +255,14 @@
 				69,
 				71,
 				73,
-				75,
+				76,
 				78,
 				80,
 				82,
 				84,
 				86,
 				88,
-				90,
+				91,
 				93,
 				95,
 				97,
@@ -257,17 +270,21 @@
 				101,
 				103,
 				105,
-				107,
+				109,
+				110,
 				111,
-				112,
 				113,
-				115,
+				116,
 				118,
 				120,
-				122,
+				123,
 				125,
 				127,
-				129
+				130,
+				132,
+				133,
+				135,
+				141
 			]
 		}
 	],
@@ -568,17 +585,6 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "Core/Renderer/DirectX/D3DSwapChain.cpp",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 1,
-			"path" : "Core/Renderer/DirectX/RenderTexture.h",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "Core/Renderer/DirectX/RenderTexture.cpp",
 			"sourceGroupIndex" : 1
 		},
 		{
@@ -978,6 +984,86 @@
 			"compileGroupIndex" : 0,
 			"path" : "Utility/Common/DynamicVoidBuffer.cpp",
 			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Core/Resources/DepthStencilBuffer.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Core/Resources/Resource.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "Core/Resources/Resource.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Core/Resources/RenderTexture.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "Core/Resources/DepthStencilBuffer.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "Core/Resources/RenderTexture.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Core/ECS/EntityManager.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "Core/ECS/EntityManager.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Core/ECS/IComponent.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Core/ECS/ComponentManager.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Core/ECS/Components.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Core/ECS/ISystem.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Core/ECS/SystemManager.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "Core/ECS/SystemManager.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Core/ECS/Systems.h",
+			"sourceGroupIndex" : 0
 		}
 	],
 	"type" : "STATIC_LIBRARY"

@@ -60,8 +60,6 @@ add_library(Bindu STATIC
         Core/Renderer/DirectX/D3DDeviceManager.cpp
         Core/Renderer/DirectX/D3DSwapChain.h
         Core/Renderer/DirectX/D3DSwapChain.cpp
-        Core/Renderer/DirectX/RenderTexture.h 
-        Core/Renderer/DirectX/RenderTexture.cpp
         Core/Renderer/DirectX/D3DUtillity.h
         Core/Renderer/DirectX/ComException.h
         Core/Renderer/DirectX/d3dx12.h
@@ -112,6 +110,6 @@ add_library(Bindu STATIC
         MathHelper/MathHelper.h
         MathHelper/MathHelper.cpp
         Core/GameObject/Light.h
-        Core/GameObject/Light.cpp "Core/Scene/Scene.h" "Core/Managers/GameObjectManager.h" "Core/Managers/ConstantBufferManager.h" "Core/Managers/ConstantBufferManager.cpp" "Core/Managers/GameObjectManager.cpp" "Core/Scene/Scene.cpp" "Core/GameObject/LightData.h"   "Core/Renderer/DirectX/DDSTextureLoader.cpp" "Core/Renderer/DirectX/DDSTextureLoader.h" "Core/Resources/Texture.h" "Core/Resources/Texture.cpp" "Core/Managers/TextureManager.h" "Core/Managers/TextureManager.cpp" "Core/Managers/MaterialManager.h" "Core/Managers/MaterialManager.cpp" "Core/Managers/CbAllocation.h" "Core/Scene/RenderLayer.h" "Core/Scene/RenderLayer.cpp" "Core/Managers/ShaderManager.h" "Core/Managers/ShaderManager.cpp" "Utility/Common/DynamicVoidBuffer.h" "Utility/Common/DynamicVoidBuffer.cpp")
+        Core/GameObject/Light.cpp "Core/Scene/Scene.h" "Core/Managers/GameObjectManager.h" "Core/Managers/ConstantBufferManager.h" "Core/Managers/ConstantBufferManager.cpp" "Core/Managers/GameObjectManager.cpp" "Core/Scene/Scene.cpp" "Core/GameObject/LightData.h"   "Core/Renderer/DirectX/DDSTextureLoader.cpp" "Core/Renderer/DirectX/DDSTextureLoader.h" "Core/Resources/Texture.h" "Core/Resources/Texture.cpp" "Core/Managers/TextureManager.h" "Core/Managers/TextureManager.cpp" "Core/Managers/MaterialManager.h" "Core/Managers/MaterialManager.cpp" "Core/Managers/CbAllocation.h" "Core/Scene/RenderLayer.h" "Core/Scene/RenderLayer.cpp" "Core/Managers/ShaderManager.h" "Core/Managers/ShaderManager.cpp" "Utility/Common/DynamicVoidBuffer.h" "Utility/Common/DynamicVoidBuffer.cpp" "Core/Resources/DepthStencilBuffer.h" "Core/Resources/Resource.h" "Core/Resources/Resource.cpp" "Core/Resources/RenderTexture.h" "Core/Resources/DepthStencilBuffer.cpp" "Core/Resources/RenderTexture.cpp"    "Core/ECS/EntityManager.h" "Core/ECS/EntityManager.cpp" "Core/ECS/IComponent.h" "Core/ECS/ComponentManager.h" "Core/ECS/Components.h" "Core/ECS/ISystem.h" "Core/ECS/SystemManager.h" "Core/ECS/SystemManager.cpp"  "Core/ECS/Systems.h" "Utility/Common/DynamicBitset.h" "Utility/Common/DynamicBitset.cpp")
 
 

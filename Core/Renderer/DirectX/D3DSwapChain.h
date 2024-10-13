@@ -5,6 +5,7 @@
 #include <dxgi1_4.h>
 #include <wrl/client.h>
 #include <memory>
+#include <vector>
 
 namespace BINDU
 {
@@ -45,7 +46,7 @@ namespace BINDU
 		// Parent Device Manager for this SwapChain
 		std::shared_ptr<D3DDeviceManager>	m_parentDeviceManager{ nullptr };
 
-		std::shared_ptr<RenderTexture>		m_renderTarget{ nullptr };
+		std::vector<std::shared_ptr<RenderTexture>>		m_renderTextures{ nullptr };
 
 		// Underlying DXGI Factory
 		ComPtr<IDXGIFactory4>				m_dxgiFactory{ nullptr };

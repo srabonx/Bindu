@@ -55,6 +55,31 @@ namespace BINDU
 		return pso.Get();
 	}
 
+	ID3D12PipelineState* D3DPipelineStateManager::CreateComputePipelineState(const std::string& name,
+		const ComputePipelineStateDesc& pipelineState)
+	{
+
+		auto d3dDevice = m_parentDeviceManager->GetD3DDevice();
+
+		if (!pipelineState.RootSignature)
+			THROW_EXCEPTION(3, "Invalid root signature");
+
+		D3D12_COMPUTE_PIPELINE_STATE_DESC	cpsDesc = {};
+		cpsDesc.CS = pipelineState.ComputeShader ? pipelineState.ComputeShader->GetShaderByteCode() : D3D12_SHADER_BYTECODE();
+		cpsDesc.pRootSignature = pipelineState.RootSignature;
+		cpsDesc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
+
+		ComPtr<ID3D12PipelineState>	pso{ nullptr };
+
+		DXThrowIfFailed(
+			d3dDevice->CreateComputePipelineState(&cpsDesc, IID_PPV_ARGS(pso.GetAddressOf()))
+		);
+
+		m_computePipelineStateObjects.emplace(name, std::make_pair(pipelineState, pso));
+
+		return pso.Get();
+	}
+
 	ID3D12RootSignature* D3DPipelineStateManager::CreateRootSignature(const std::string& name, const D3D12_ROOT_SIGNATURE_DESC& rootSigDesc)
 	{
 		auto d3dDevice = m_parentDeviceManager->GetD3DDevice();
@@ -73,7 +98,7 @@ namespace BINDU
 
 		DXThrowIfFailed(
 			d3dDevice->CreateRootSignature(0, rootSigBlob->GetBufferPointer(),
-				rootSigBlob->GetBufferSize(), IID_PPV_ARGS(rootSig.ReleaseAndGetAddressOf())));
+				rootSigBlob->GetBufferSize(), IID_PPV_ARGS(rootSig.GetAddressOf())));
 
 		m_rootSignatures.emplace(name, rootSig);
 
@@ -83,6 +108,11 @@ namespace BINDU
 	ID3D12PipelineState* D3DPipelineStateManager::GetPipelineState(const std::string& name) const
 	{
 		return m_pipelineStateObjects.at(name).second.Get();
+	}
+
+	ID3D12PipelineState* D3DPipelineStateManager::GetComputePipelineState(const std::string& name) const
+	{
+		return m_computePipelineStateObjects.at(name).second.Get();
 	}
 
 	ID3D12RootSignature* D3DPipelineStateManager::GetRootSignature(const std::string& name) const

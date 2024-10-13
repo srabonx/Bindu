@@ -11,10 +11,6 @@ namespace BINDU
 
 	// DescriptorHeapAllocation
 
-	DescriptorHeapAllocation::DescriptorHeapAllocation()
-	{
-	}
-
 	DescriptorHeapAllocation::DescriptorHeapAllocation(const std::shared_ptr<IDescriptorHeapAllocator>& parentAllocator,
 	                                                   const std::shared_ptr<DescriptorHeap>& pDescriptorHeap,
 	                                                   D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle,
@@ -24,17 +20,20 @@ namespace BINDU
 		m_parentAllocator(parentAllocator),
 		m_firstCpuHandle(cpuHandle),
 		m_firstGpuHandle(gpuHandle),
-		m_numOfHandles(numOfHandles), m_managerId(managerId)
+		m_numOfHandles(numOfHandles), m_managerId(managerId), m_isNull(false)
 	{
 		auto descriptorHeap = m_descriptorHeap.lock();
 		if (descriptorHeap != nullptr)
 			m_descriptorIncrementSize = descriptorHeap->IncrementSize();
 		else
 			THROW_EXCEPTION(3, "Invalid Descriptor Heap");
+
 	}
 
 	DescriptorHeapAllocation::DescriptorHeapAllocation(DescriptorHeapAllocation&& rhs) noexcept
 	{
+		Free();
+
 		std::swap(this->m_descriptorHeap, rhs.m_descriptorHeap);
 		std::swap(this->m_descriptorIncrementSize, rhs.m_descriptorIncrementSize);
 		std::swap(this->m_firstCpuHandle, rhs.m_firstCpuHandle);
@@ -42,12 +41,16 @@ namespace BINDU
 		std::swap(this->m_managerId, rhs.m_managerId);
 		std::swap(this->m_numOfHandles, rhs.m_numOfHandles);
 		std::swap(this->m_parentAllocator, rhs.m_parentAllocator);
+		std::swap(this->m_isNull, rhs.m_isNull);
+
 
 		rhs.m_parentAllocator.reset();//= nullptr;
 	}
 
 	DescriptorHeapAllocation& DescriptorHeapAllocation::operator=(DescriptorHeapAllocation&& rhs) noexcept
 	{
+		Free();
+
 		std::swap(this->m_descriptorHeap, rhs.m_descriptorHeap);
 		std::swap(this->m_descriptorIncrementSize, rhs.m_descriptorIncrementSize);
 		std::swap(this->m_firstCpuHandle, rhs.m_firstCpuHandle);
@@ -55,6 +58,7 @@ namespace BINDU
 		std::swap(this->m_managerId, rhs.m_managerId);
 		std::swap(this->m_numOfHandles, rhs.m_numOfHandles);
 		std::swap(this->m_parentAllocator, rhs.m_parentAllocator);
+		std::swap(this->m_isNull, rhs.m_isNull);
 
 		rhs.m_parentAllocator.reset();// = nullptr;
 
@@ -63,8 +67,15 @@ namespace BINDU
 
 	DescriptorHeapAllocation::~DescriptorHeapAllocation()
 	{
+		Free();
+	}
+
+	void DescriptorHeapAllocation::Free()
+	{
 		if (!IsNull() && m_parentAllocator.lock())
 		{
+			m_isNull = true;
+
 			m_parentAllocator.lock()->Free(std::move(*this));
 		}
 	}
@@ -110,7 +121,7 @@ namespace BINDU
 
 	bool DescriptorHeapAllocation::IsNull() const
 	{
-		return m_firstCpuHandle.ptr == 0;
+		return m_isNull;//m_firstCpuHandle.ptr == 0;
 	}
 
 	bool DescriptorHeapAllocation::IsShaderVisible() const

@@ -320,7 +320,7 @@ namespace BINDU
 			1, 1, m_sampleDesc.Count, m_sampleDesc.Quality, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
 
 		// TODO: Implement Vec4 implementation
-		float color[4] = { 1,0,0,1 };
+		float color[4] = { 1.0f,0.f,0.f,1.0f };
 
 		CD3DX12_CLEAR_VALUE clearVal(m_rtBuffFormat, color);
 

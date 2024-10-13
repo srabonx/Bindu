@@ -40,7 +40,7 @@ namespace BINDU
 
 		virtual void		Update(double dt, const FrameResource* currFrame);
 
-		virtual void		Render(const D3DCommandContext& commandContext, const FrameResource* currFrame);
+		virtual void		Render(D3DCommandContext& commandContext, const FrameResource* currFrame);
 
 		void				SetName(const std::string& name);
 

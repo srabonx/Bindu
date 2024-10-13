@@ -58,7 +58,7 @@ namespace BINDU {
     bool Win32InputHandler::IsKeyHeld(BND_Key bnd_key) {
         KeyState state = m_impl->m_keyboard->GetKeyState(bnd_key);
 
-        return state.isDown && state.wasDown;
+        return state.isDown;
     }
 
     bool Win32InputHandler::IsMouseBtnPressed(BND_Button bnd_button) {

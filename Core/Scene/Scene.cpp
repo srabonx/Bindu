@@ -21,7 +21,7 @@ namespace BINDU
 		}
 	}
 
-	void Scene::Render(const D3DCommandContext& commandContext, const FrameResource* currFrame)
+	void Scene::Render(D3DCommandContext& commandContext, const FrameResource* currFrame)
 	{
 		for(auto& layer : m_layerPool)
 		{

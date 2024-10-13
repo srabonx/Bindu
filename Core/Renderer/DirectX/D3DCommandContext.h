@@ -17,6 +17,7 @@ namespace BINDU
 	class RenderTexture;
 	class GameObject;
 	class D3DPipelineStateManager;
+	class DepthStencilBuffer;
 
 
 	// Primary object to submit commands to GPU
@@ -35,7 +36,7 @@ namespace BINDU
 		void		ExecuteCommands() const;
 
 		// Begin rendering on the given render texture
-		void		Begin(RenderTexture* renderTexture);
+		void		Begin(RenderTexture* renderTexture, DepthStencilBuffer* depthStencilBuffer);
 
 		// Bind Pipeline State
 		void		BindPipeline(const D3DPipelineStateManager& pipelineManager, const std::string& pipelineName, const std::string& rootSigName) const;
@@ -52,6 +53,8 @@ namespace BINDU
 
 		// Wait for GPU to complete commands up to this fence value point
 		void		WaitForGpu(const D3DFence* fence, std::uint64_t fenceValue) const;
+
+		RenderTexture*						GetCurrentlyBoundRenderTexture() const;
 
 		D3DDeviceManager*					GetDeviceManager() const;
 

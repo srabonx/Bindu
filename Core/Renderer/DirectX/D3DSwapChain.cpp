@@ -3,7 +3,7 @@
 #include "D3DDeviceManager.h"
 #include "../../../Utility/Common/CommonUtility.h"
 #include "D3DUtillity.h"
-#include "RenderTexture.h"
+#include "../../Resources/RenderTexture.h"
 
 namespace BINDU
 {
@@ -18,6 +18,8 @@ namespace BINDU
 		m_bufferCount = bufferCount;
 		m_parentDeviceManager = parentDeviceManager;
 		m_sampleDesc = { 1,0 };
+
+		m_renderTextures.resize(bufferCount);
 
 		InitDXGI();
 
@@ -39,13 +41,12 @@ namespace BINDU
 		if (m_width == width && m_height == height)
 			return;
 
-		auto rtFormat = m_renderTarget->GetRenderTargetBufferFormat();
-
-		m_renderTarget.reset();
+		for (auto& rt : m_renderTextures)
+			rt.reset();
 
 		DXThrowIfFailed(
 			m_dxgiSwapChain->ResizeBuffers(m_bufferCount, width, height,
-				rtFormat, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH));
+				m_backBufferFormat, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH));
 
 
 		CreateBackBuffers();
@@ -56,7 +57,7 @@ namespace BINDU
 
 	RenderTexture* D3DSwapChain::GetRenderTarget() const
 	{
-		return m_renderTarget.get();
+		return m_renderTextures[m_dxgiSwapChain->GetCurrentBackBufferIndex()].get();
 	}
 
 	void D3DSwapChain::InitDXGI()
@@ -119,10 +120,15 @@ namespace BINDU
 				m_dxgiSwapChain->GetBuffer(i, IID_PPV_ARGS(renderTargets[i].ReleaseAndGetAddressOf())));
 		}
 
-		m_renderTarget = std::make_shared<RenderTexture>(m_backBufferFormat, DXGI_FORMAT_D24_UNORM_S8_UINT,
-			m_bufferCount,
-			m_sampleDesc);
+		for (int i = 0; i < m_bufferCount; i++)
+		{
+			m_renderTextures[i] = std::make_shared<RenderTexture>(renderTargets[i]);
 
-		m_renderTarget->Initialize(m_parentDeviceManager, renderTargets);
+			ResourceProperties rcProp = {};
+
+			m_renderTextures[i]->Initialize(rcProp, m_parentDeviceManager);
+
+			m_renderTextures[i]->CreateRenderTargetView(m_backBufferFormat);
+		}
 	}
 }

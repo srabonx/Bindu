@@ -15,7 +15,7 @@ namespace BINDU
 
 		void Update() override;
 
-		void Render(const D3DCommandContext& commandContext,const UploadBuffer* constantBuffer) override;
+		void Render(D3DCommandContext& commandContext,const UploadBuffer* constantBuffer) override;
 
 
 		// Get Camera basis vectors

@@ -12,6 +12,7 @@ namespace BINDU
 {
 	class CpuDescriptorHeap;
 	class GpuDescriptorHeap;
+	class Resource;
 	
 	using namespace Microsoft::WRL;
 
@@ -26,6 +27,10 @@ namespace BINDU
 		void					Initialize();
 
 		void					Close();
+
+		void					CreateTex2DResource(std::uint64_t width, std::uint64_t height, DXGI_SAMPLE_DESC sampleDesc, const Resource* resource,
+													D3D12_HEAP_FLAGS heapFlags = D3D12_HEAP_FLAG_NONE,
+													D3D12_HEAP_TYPE heapType = D3D12_HEAP_TYPE_DEFAULT) const;
 
 		ID3D12Device*			GetD3DDevice() const;
 

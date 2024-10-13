@@ -127,7 +127,7 @@ namespace BINDU
 	}
 
 
-	void MeshObject::Render(const D3DCommandContext& commandContext, const UploadBuffer* constantBuffer)
+	void MeshObject::Render(D3DCommandContext& commandContext, const UploadBuffer* constantBuffer)
 	{
 
 		UpdateConstantBuffer(constantBuffer);

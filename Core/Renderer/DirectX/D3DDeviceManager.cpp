@@ -5,6 +5,8 @@
 #include "GpuDescriptorHeap.h"
 #include <dxgidebug.h>
 
+#include "../../Resources/Resource.h"
+
 namespace BINDU
 {
 	void D3DDeviceManager::Initialize()
@@ -46,6 +48,23 @@ namespace BINDU
 		DXThrowIfFailed(DXGIGetDebugInterface1(0, IID_PPV_ARGS(pdxgiDebug.ReleaseAndGetAddressOf())));
 		DXThrowIfFailed(pdxgiDebug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL));
 #endif
+	}
+
+	void D3DDeviceManager::CreateTex2DResource(std::uint64_t width, std::uint64_t height, DXGI_SAMPLE_DESC sampleDesc, 
+		const Resource* resource, D3D12_HEAP_FLAGS heapFlags, D3D12_HEAP_TYPE heapType) const
+	{
+		auto d3dResource = resource->GetResource();
+
+		CD3DX12_HEAP_PROPERTIES heapProp(heapType);
+
+		D3D12_HEAP_FLAGS l_heapFlags = heapFlags;
+
+		D3D12_RESOURCE_DESC	rsd = CD3DX12_RESOURCE_DESC::Tex2D(resource->GetFormat(), width, height, 1, 1, sampleDesc.Count,
+			sampleDesc.Quality, resource->GetFlags());
+
+		DXThrowIfFailed(
+			m_d3dDevice->CreateCommittedResource(&heapProp, l_heapFlags, &rsd, resource->GetState(),
+				nullptr, IID_PPV_ARGS(d3dResource.GetAddressOf())));
 	}
 
 	ID3D12Device* D3DDeviceManager::GetD3DDevice() const
@@ -104,6 +123,27 @@ namespace BINDU
 
 		hr = D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(m_d3dDevice.ReleaseAndGetAddressOf()));
 
+		// Check for maximum feature level support
+		D3D_FEATURE_LEVEL featureLevels[] =
+		{
+			D3D_FEATURE_LEVEL_11_0,
+			D3D_FEATURE_LEVEL_11_1,
+			D3D_FEATURE_LEVEL_12_0,
+			D3D_FEATURE_LEVEL_12_1,
+			D3D_FEATURE_LEVEL_12_2
+		};
+
+		D3D12_FEATURE_DATA_FEATURE_LEVELS	featureLevelInfo = {};
+		featureLevelInfo.NumFeatureLevels = _countof(featureLevels);
+		featureLevelInfo.pFeatureLevelsRequested = featureLevels;
+
+		DXThrowIfFailed(
+			m_d3dDevice->CheckFeatureSupport(D3D12_FEATURE_FEATURE_LEVELS, &featureLevelInfo, sizeof(featureLevelInfo)));
+
+		m_d3dDevice.Reset();
+
+		hr = D3D12CreateDevice(nullptr, featureLevelInfo.MaxSupportedFeatureLevel, IID_PPV_ARGS(m_d3dDevice.ReleaseAndGetAddressOf()));
+
 		// If device creation is not successful with the given adapter
 		if (FAILED(hr))
 		{
@@ -120,7 +160,6 @@ namespace BINDU
 			// Fallback to WARP (Windows Advanced Rasterization Platform) Adapter
 			hr = D3D12CreateDevice(warpAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(m_d3dDevice.ReleaseAndGetAddressOf()));
 		}
-
 		DXThrowIfFailed(hr);
 	}
 }

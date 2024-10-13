@@ -91,7 +91,7 @@ namespace BINDU
 
 	}
 
-	void RenderLayer::Render(const D3DCommandContext& commandContext, const FrameResource* currFrame)
+	void RenderLayer::Render(D3DCommandContext& commandContext, const FrameResource* currFrame)
 	{
 		if (m_pipelineState || m_rootSignature)
 		{

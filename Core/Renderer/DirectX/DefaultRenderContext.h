@@ -8,9 +8,10 @@
 #include "D3DConstantBuffer.h"
 #include "D3DFence.h"
 #include "D3DSwapChain.h"
-#include "RenderTexture.h"
+#include "../../Resources/RenderTexture.h"
 #include "D3DPipelineStateManager.h"
 #include "FlyFrame.h"
+#include "../../Resources/DepthStencilBuffer.h"
 
 
 namespace BINDU
@@ -38,7 +39,7 @@ namespace BINDU
 			m_flyFrame->Initialize(m_deviceManager, perPassDataByteSize, objectCBByteSize);
 		}
 
-		void		BeginRender(float clearColor[4]);
+		void		BeginRender(float clearColor[4], RenderTexture* renderTexture = nullptr);
 
 		void		BindPipeline(const std::string& pipelineName, const std::string& rootSigName) const;
 
@@ -70,6 +71,8 @@ namespace BINDU
 
 		D3DSwapChain*								GetSwapChain() const;
 
+		DepthStencilBuffer*							GetDepthStencilBuffer() const;
+
 	private:
 		std::shared_ptr<D3DDeviceManager>		m_deviceManager{ nullptr };
 
@@ -80,6 +83,8 @@ namespace BINDU
 		std::unique_ptr<D3DFence>				m_fence{ nullptr };
 
 		std::unique_ptr<D3DPipelineStateManager> m_pipelineStateManager{nullptr};
+
+		std::unique_ptr<DepthStencilBuffer>		m_depthStencilBuffer{ nullptr };
 
 		std::unique_ptr<FlyFrame>				m_flyFrame{ nullptr };
 

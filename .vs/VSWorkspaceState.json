@@ -10,13 +10,14 @@
   "ExpandedNodes": [
     "",
     "\\Core",
-    "\\Core\\Resources",
+    "\\Core\\Renderer",
+    "\\Core\\Renderer\\DirectX",
     "\\Core\\Scene",
-    "\\MathHelper",
+    "\\Temp",
+    "\\Temp\\DirectX",
     "\\Utility",
     "\\Utility\\Common",
     "\\Window"
   ],
-  "SelectedNode": "\\Core\\Scene\\Scene.cpp",
   "PreviewInSolutionExplorer": false
 }

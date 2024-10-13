@@ -54,7 +54,7 @@ namespace BINDU
 
 		virtual void	 Update() = 0;
 
-		virtual void	 Render(const D3DCommandContext& commandContext, const UploadBuffer* constantBuffer) = 0;
+		virtual void	 Render(D3DCommandContext& commandContext, const UploadBuffer* constantBuffer) = 0;
 
 		Transform*		 GetTransformComponent();
 

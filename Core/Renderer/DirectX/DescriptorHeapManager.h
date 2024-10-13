@@ -13,7 +13,7 @@ namespace BINDU
 	{
 	public:
 
-		DescriptorHeapAllocation();
+		DescriptorHeapAllocation() = default;
 
 		DescriptorHeapAllocation(const std::shared_ptr<IDescriptorHeapAllocator>& parentAllocator, const std::shared_ptr<DescriptorHeap>& pDescriptorHeap,
 		                         D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle, size_t numOfHandles, std::uint32_t managerId);
@@ -23,6 +23,8 @@ namespace BINDU
 		DescriptorHeapAllocation& operator = (DescriptorHeapAllocation&& rhs) noexcept;
 
 		~DescriptorHeapAllocation();
+
+		void						Free();
 
 		D3D12_CPU_DESCRIPTOR_HANDLE	GetCpuHandle(std::uint32_t offset = 0) const;
 
@@ -72,6 +74,8 @@ namespace BINDU
 
 		// Descriptor increment size
 		std::uint32_t						m_descriptorIncrementSize{ 0 };
+
+		bool								m_isNull{ true };
 	};
 
 

@@ -39,7 +39,7 @@ namespace BINDU
 
 		void			SetTexture(const std::shared_ptr<Texture>& texture);
 
-		virtual void	Render(const D3DCommandContext& commandContext, const UploadBuffer* constantBuffer);
+		virtual void	Render(D3DCommandContext& commandContext, const UploadBuffer* constantBuffer);
 
 		virtual void	Update();
 
