@@ -27,6 +27,8 @@ namespace BINDU
 		// Test to see whether the bit at the given index is set to 1
 		bool	Test(size_t index) const;
 
+		operator bool() const { return !m_bitBlocks.empty(); }
+
 
 	private:
 		static constexpr size_t BITS_PER_BLOCK = 64;

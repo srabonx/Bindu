@@ -10,11 +10,11 @@
   "ExpandedNodes": [
     "",
     "\\Core",
+    "\\Core\\ECS",
     "\\Core\\Renderer",
     "\\Core\\Renderer\\DirectX",
     "\\Core\\Scene",
     "\\Temp",
-    "\\Temp\\DirectX",
     "\\Utility",
     "\\Utility\\Common",
     "\\Window"

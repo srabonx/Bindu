@@ -1,33 +1,36 @@
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 
-#include "IComponent.h"
 #include <string>
 #include <iostream>
 #include <DirectXMath.h>
+#include "../../MathHelper/MathHelper.h"
 
 namespace BINDU
 {
 
 	using namespace DirectX;
 
-	struct NameComponent : public IComponent
+	struct TagComponent
 	{
 	public:
-		NameComponent() = default;
-		std::string Name = "Default";
+		std::string Tag = "Default";
+
+
+		TagComponent() = default;
+		TagComponent(const TagComponent& other) = default;
+		TagComponent(const std::string& tag) : Tag(tag) {}
 	};
 
 	// Transform component
-	struct TransformComponent : public IComponent
+	struct TransformComponent
 	{
 	public:
-		XMFLOAT3	Position;
-		XMFLOAT3	Rotation;
-		XMFLOAT3	Scale;
+		XMFLOAT4X4	Transform = MathHelper::Identity4x4();
 
-		TransformComponent()
-			: Position(0.0f, 0.0f, 0.0f), Rotation(0.0f, 0.0f, 0.0f), Scale(1.0f, 1.0f, 1.0f) {}
+		TransformComponent() = default;
+		TransformComponent(const XMFLOAT4X4& transform) : Transform(transform) {}
+		TransformComponent(const XMMATRIX& transform) { XMStoreFloat4x4(&Transform, XMMatrixTranspose(transform)); }
 	};
 
 }

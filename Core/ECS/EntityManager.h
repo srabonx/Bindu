@@ -6,8 +6,6 @@
 #include <array>
 #include "../Renderer/DirectX/VariableSizeMemoryAllocator.h"
 
-#include "IComponent.h"
-
 namespace BINDU
 {
 
