@@ -11,13 +11,14 @@
     "",
     "\\Core",
     "\\Core\\ECS",
+    "\\Core\\Managers",
     "\\Core\\Renderer",
     "\\Core\\Renderer\\DirectX",
-    "\\Core\\Scene",
-    "\\Temp",
-    "\\Utility",
-    "\\Utility\\Common",
-    "\\Window"
+    "\\Core\\Resources",
+    "\\Debug",
+    "\\Event",
+    "\\Logger"
   ],
+  "SelectedNode": "\\Core\\GameObject\\MeshObject.cpp",
   "PreviewInSolutionExplorer": false
 }

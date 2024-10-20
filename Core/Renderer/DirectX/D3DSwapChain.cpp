@@ -106,8 +106,6 @@ namespace BINDU
 				swapChain.ReleaseAndGetAddressOf()));
 
 		swapChain.As(&m_dxgiSwapChain);
-
-
 	}
 
 	void D3DSwapChain::CreateBackBuffers()

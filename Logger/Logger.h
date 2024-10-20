@@ -4,35 +4,42 @@
 #include "ILogger.h"
 #include <memory>
 
+#include "../Utility/Common/CommonUtility.h"
+#include <spdlog/spdlog.h>
+
 namespace BINDU
 {
-	
 
-	class Logger : public ILogger
+	class Logger
 	{
 	public:
+		static void Init();
 
-		static Logger* Get();
+		static Ref<spdlog::logger>& GetCoreLogger() { return s_coreLogger; }
 
-		// Inherited via ILogger
-		void Open(const std::string& filename) override;
-		std::ostream& Buffer() override;
-		void Log(LogType type, const std::string& log) override;
-		void Flush() override;
-		void Close() override;
-
-		static bool Exists();
+		static Ref<spdlog::logger>& GetClientLogger() { return s_clientLogger; }
 
 	private:
-		Logger();
-		~Logger() override;
+		static Ref<spdlog::logger>	s_coreLogger;
 
-		static Logger* m_logger;
-
-		class Impl;
-		std::unique_ptr<Impl> m_impl{ nullptr };
+		static Ref<spdlog::logger>	s_clientLogger;
 	};
 }
+
+
+// Core log macros
+#define BINDU_CORE_TRACE(...)		::BINDU::Logger::GetCoreLogger()->trace(__VA_ARGS__)
+#define BINDU_CORE_INFO(...)		::BINDU::Logger::GetCoreLogger()->info(__VA_ARGS__)
+#define BINDU_CORE_WARN(...)		::BINDU::Logger::GetCoreLogger()->warn(__VA_ARGS__)
+#define BINDU_CORE_ERROR(...)		::BINDU::Logger::GetCoreLogger()->error(__VA_ARGS__)
+#define BINDU_CORE_CRITICAL(...)	::BINDU::Logger::GetCoreLogger()->critical(__VA_ARGS__)
+
+// Client log macros
+#define BINDU_CLIENT_TRACE(...)		::BINDU::Logger::GetClientLogger()->trace(__VA_ARGS__)
+#define BINDU_CLIENT_INFO(...)		::BINDU::Logger::GetClientLogger()->info(__VA_ARGS__)
+#define BINDU_CLIENT_WARN(...)		::BINDU::Logger::GetClientLogger()->warn(__VA_ARGS__)
+#define BINDU_CLIENT_ERROR(...)		::BINDU::Logger::GetClientLogger()->error(__VA_ARGS__)
+#define BINDU_CLIENT_CRITICAL(...)	::BINDU::Logger::GetClientLogger()->critical(__VA_ARGS__)
 
 
 #endif

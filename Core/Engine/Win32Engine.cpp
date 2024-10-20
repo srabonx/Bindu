@@ -25,15 +25,13 @@ namespace BINDU {
 
     Win32Engine::Win32Engine(IBindu_App *app) : m_impl(std::make_unique<Impl>())
     {
-        // Open the log file
-        if (!Logger::Exists())
-            Logger::Get()->Open("EngineLog.log");
-
         m_impl->m_app = app;
     }
 
     void Win32Engine::Initialize(const EngineCFG& engineCfg)
     {
+        Logger::Init();
+
         m_impl->m_engineCfg = engineCfg;
         m_impl->m_app->Initialize();
     }
@@ -272,8 +270,6 @@ namespace BINDU {
 
     void Win32Engine::Close()
     {
-        Logger::Get()->Close();
-       // m_impl->m_app->Close();
     }
 
 } // BINDU

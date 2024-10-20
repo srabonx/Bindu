@@ -1,3 +1,6 @@
 C:/Users/letsd/CLionProjects/Bindu/out/build/x64-Debug/CMakeFiles/Bindu.dir
 C:/Users/letsd/CLionProjects/Bindu/out/build/x64-Debug/CMakeFiles/edit_cache.dir
 C:/Users/letsd/CLionProjects/Bindu/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
+C:/Users/letsd/CLionProjects/Bindu/out/build/x64-Debug/_deps/spdlog-build/CMakeFiles/spdlog.dir
+C:/Users/letsd/CLionProjects/Bindu/out/build/x64-Debug/_deps/spdlog-build/CMakeFiles/edit_cache.dir
+C:/Users/letsd/CLionProjects/Bindu/out/build/x64-Debug/_deps/spdlog-build/CMakeFiles/rebuild_cache.dir

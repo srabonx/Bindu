@@ -47,439 +47,536 @@ cmake_ninja_workdir = C$:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\
 #############################################
 # Order-only phony target for Bindu
 
-build cmake_object_order_depends_target_Bindu: phony || .
+build cmake_object_order_depends_target_Bindu: phony || cmake_object_order_depends_target_spdlog
 
 build CMakeFiles\Bindu.dir\ErrorHandler\EngineException.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\ErrorHandler\EngineException.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\ErrorHandler
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Event\EventManager.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Event\EventManager.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Event
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Event\EventStruct.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Event\EventStruct.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Event
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Event\EventPool.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Event\EventPool.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Event
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Window\Win32Window.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Window\Win32Window.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Window
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\Engine\Win32Engine.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Engine\Win32Engine.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Engine
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
-build CMakeFiles\Bindu.dir\Logger\ErrorLogManager.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Logger\ErrorLogManager.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Logger
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\Logger\Logger.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Logger\Logger.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Logger
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\Input\InputManager.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Input\InputManager.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Input
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\Input\Win32InputHandler.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Input\Win32InputHandler.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Input
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\Input\Keyboard.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Input\Keyboard.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Input
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\Input\Mouse.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Input\Mouse.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Input
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\Utility\Common\Timer.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Utility\Common\Timer.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Utility\Common
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\Gui\Common\imgui.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Gui\Common\imgui.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Gui\Common
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\Gui\Common\imgui_demo.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Gui\Common\imgui_demo.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Gui\Common
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\Gui\Common\imgui_draw.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Gui\Common\imgui_draw.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Gui\Common
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\Gui\Common\imgui_tables.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Gui\Common\imgui_tables.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Gui\Common
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\Gui\Common\imgui_widgets.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Gui\Common\imgui_widgets.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Gui\Common
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\Gui\DX12\imgui_impl_win32.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Gui\DX12\imgui_impl_win32.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Gui\DX12
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\Gui\DX12\imgui_impl_dx12.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Gui\DX12\imgui_impl_dx12.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Gui\DX12
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
 build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\D3DDeviceManager.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\D3DDeviceManager.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\D3DSwapChain.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\D3DSwapChain.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\CpuDescriptorHeap.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\CpuDescriptorHeap.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DescriptorHeap.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\DescriptorHeap.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DescriptorHeapManager.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\DescriptorHeapManager.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\GpuDescriptorHeap.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\GpuDescriptorHeap.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\VariableSizeGpuMemoryAllocator.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\VariableSizeGpuMemoryAllocator.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\VariableSizeMemoryAllocator.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\VariableSizeMemoryAllocator.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\D3DCommandContext.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\D3DCommandContext.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\D3DFence.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\D3DFence.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\D3DPipelineStateManager.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\D3DPipelineStateManager.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\D3DShader.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\D3DShader.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DefaultRenderContext.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\DefaultRenderContext.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\GameObject\Transform.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\GameObject\Transform.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\GameObject
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\GameObject\GameObject.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\GameObject\GameObject.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\GameObject
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\GameObject\MeshObject.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\GameObject\MeshObject.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\GameObject
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\GameObject\Buffers.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\GameObject\Buffers.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\GameObject
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\GameObject\Camera.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\GameObject\Camera.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\GameObject
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
-build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\FlyFrame.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\FlyFrame.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\D3DConstantBuffer.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\D3DConstantBuffer.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
 build CMakeFiles\Bindu.dir\Core\GameObject\MeshManager.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\GameObject\MeshManager.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\GameObject
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\GameObject\GeometryGenerator.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\GameObject\GeometryGenerator.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\GameObject
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\GameObject\Material.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\GameObject\Material.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\GameObject
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\MathHelper\MathHelper.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\MathHelper\MathHelper.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\MathHelper
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\GameObject\Light.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\GameObject\Light.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\GameObject
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
-build CMakeFiles\Bindu.dir\Core\Managers\ConstantBufferManager.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Managers\ConstantBufferManager.cpp || cmake_object_order_depends_target_Bindu
+build CMakeFiles\Bindu.dir\Core\ECS\ECSScene.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\ECS\ECSScene.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Managers
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\ECS
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Core\ECS\EntityManager.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\ECS\EntityManager.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\ECS
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Core\ECS\Entity.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\ECS\Entity.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\ECS
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\Managers\GameObjectManager.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Managers\GameObjectManager.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Managers
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
-build CMakeFiles\Bindu.dir\Core\Scene\Scene.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Scene\Scene.cpp || cmake_object_order_depends_target_Bindu
+build CMakeFiles\Bindu.dir\Core\Managers\ConstantBufferManager.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Managers\ConstantBufferManager.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Scene
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DDSTextureLoader.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\DDSTextureLoader.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\Core\Resources\Texture.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Resources\Texture.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Resources
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Managers
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\Managers\TextureManager.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Managers\TextureManager.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Managers
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\Managers\MaterialManager.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Managers\MaterialManager.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Managers
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\Core\Scene\RenderLayer.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Scene\RenderLayer.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Scene
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\Core\Managers\ShaderManager.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Managers\ShaderManager.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Managers
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\Utility\Common\DynamicVoidBuffer.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Utility\Common\DynamicVoidBuffer.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Utility\Common
-  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
-  TARGET_PDB = Bindu.pdb
-
-build CMakeFiles\Bindu.dir\Core\Resources\Resource.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Resources\Resource.cpp || cmake_object_order_depends_target_Bindu
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
-  OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Resources
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\Resources\DepthStencilBuffer.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Resources\DepthStencilBuffer.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Resources
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
 build CMakeFiles\Bindu.dir\Core\Resources\RenderTexture.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Resources\RenderTexture.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Resources
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
-build CMakeFiles\Bindu.dir\Core\ECS\EntityManager.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\ECS\EntityManager.cpp || cmake_object_order_depends_target_Bindu
+build CMakeFiles\Bindu.dir\Core\Resources\Resource.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Resources\Resource.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\ECS
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Resources
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
-build CMakeFiles\Bindu.dir\Utility\Common\DynamicBitset.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Utility\Common\DynamicBitset.cpp || cmake_object_order_depends_target_Bindu
+build CMakeFiles\Bindu.dir\Logger\Logger.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Logger\Logger.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Logger
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Input\InputManager.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Input\InputManager.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Input
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Input\Win32InputHandler.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Input\Win32InputHandler.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Input
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Input\Keyboard.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Input\Keyboard.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Input
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Input\Mouse.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Input\Mouse.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Input
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Utility\Common\Timer.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Utility\Common\Timer.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
   OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Utility\Common
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
-build CMakeFiles\Bindu.dir\Core\ECS\Entity.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\ECS\Entity.cpp || cmake_object_order_depends_target_Bindu
+build CMakeFiles\Bindu.dir\Utility\Common\DynamicVoidBuffer.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Utility\Common\DynamicVoidBuffer.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\ECS
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Utility\Common
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
-build CMakeFiles\Bindu.dir\Core\ECS\ECSScene.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\ECS\ECSScene.cpp || cmake_object_order_depends_target_Bindu
+build CMakeFiles\Bindu.dir\Utility\Common\DynamicBitset.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Utility\Common\DynamicBitset.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
   OBJECT_DIR = CMakeFiles\Bindu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\ECS
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Utility\Common
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\MathHelper\MathHelper.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\MathHelper\MathHelper.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\MathHelper
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Debug\Profiler.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Debug\Profiler.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Debug
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Core\App\Application.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\App\Application.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\App
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Core\App\AppLayer.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\App\AppLayer.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\App
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Core\App\AppLayerStack.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\App\AppLayerStack.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\App
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Core\Renderer\RendererFactory.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\RendererFactory.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DirectXRenderer.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\DirectXRenderer.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DirectXGraphicsContext.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\DirectXGraphicsContext.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DirectXCommandList.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\DirectXCommandList.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DirectXTexture.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\DirectXTexture.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DirectXRenderTexture.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\DirectXRenderTexture.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DirectXShader.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\DirectXShader.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
+  TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
+  TARGET_PDB = Bindu.pdb
+
+build CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DirectXConstantBuffer.cpp.obj: CXX_COMPILER__Bindu_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\Core\Renderer\DirectX\DirectXConstantBuffer.cpp || cmake_object_order_depends_target_Bindu
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = CMakeFiles\Bindu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bindu.dir\Core\Renderer\DirectX
   TARGET_COMPILE_PDB = CMakeFiles\Bindu.dir\Bindu.pdb
   TARGET_PDB = Bindu.pdb
 
@@ -491,7 +588,7 @@ build CMakeFiles\Bindu.dir\Core\ECS\ECSScene.cpp.obj: CXX_COMPILER__Bindu_unscan
 #############################################
 # Link the static library Bindu.lib
 
-build Bindu.lib: CXX_STATIC_LIBRARY_LINKER__Bindu_Debug CMakeFiles\Bindu.dir\ErrorHandler\EngineException.cpp.obj CMakeFiles\Bindu.dir\Event\EventManager.cpp.obj CMakeFiles\Bindu.dir\Event\EventStruct.cpp.obj CMakeFiles\Bindu.dir\Event\EventPool.cpp.obj CMakeFiles\Bindu.dir\Window\Win32Window.cpp.obj CMakeFiles\Bindu.dir\Core\Engine\Win32Engine.cpp.obj CMakeFiles\Bindu.dir\Logger\ErrorLogManager.cpp.obj CMakeFiles\Bindu.dir\Logger\Logger.cpp.obj CMakeFiles\Bindu.dir\Input\InputManager.cpp.obj CMakeFiles\Bindu.dir\Input\Win32InputHandler.cpp.obj CMakeFiles\Bindu.dir\Input\Keyboard.cpp.obj CMakeFiles\Bindu.dir\Input\Mouse.cpp.obj CMakeFiles\Bindu.dir\Utility\Common\Timer.cpp.obj CMakeFiles\Bindu.dir\Gui\Common\imgui.cpp.obj CMakeFiles\Bindu.dir\Gui\Common\imgui_demo.cpp.obj CMakeFiles\Bindu.dir\Gui\Common\imgui_draw.cpp.obj CMakeFiles\Bindu.dir\Gui\Common\imgui_tables.cpp.obj CMakeFiles\Bindu.dir\Gui\Common\imgui_widgets.cpp.obj CMakeFiles\Bindu.dir\Gui\DX12\imgui_impl_win32.cpp.obj CMakeFiles\Bindu.dir\Gui\DX12\imgui_impl_dx12.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\D3DDeviceManager.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\D3DSwapChain.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\CpuDescriptorHeap.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DescriptorHeap.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DescriptorHeapManager.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\GpuDescriptorHeap.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\VariableSizeGpuMemoryAllocator.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\VariableSizeMemoryAllocator.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\D3DCommandContext.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\D3DFence.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\D3DPipelineStateManager.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\D3DShader.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DefaultRenderContext.cpp.obj CMakeFiles\Bindu.dir\Core\GameObject\Transform.cpp.obj CMakeFiles\Bindu.dir\Core\GameObject\GameObject.cpp.obj CMakeFiles\Bindu.dir\Core\GameObject\MeshObject.cpp.obj CMakeFiles\Bindu.dir\Core\GameObject\Buffers.cpp.obj CMakeFiles\Bindu.dir\Core\GameObject\Camera.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\FlyFrame.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\D3DConstantBuffer.cpp.obj CMakeFiles\Bindu.dir\Core\GameObject\MeshManager.cpp.obj CMakeFiles\Bindu.dir\Core\GameObject\GeometryGenerator.cpp.obj CMakeFiles\Bindu.dir\Core\GameObject\Material.cpp.obj CMakeFiles\Bindu.dir\MathHelper\MathHelper.cpp.obj CMakeFiles\Bindu.dir\Core\GameObject\Light.cpp.obj CMakeFiles\Bindu.dir\Core\Managers\ConstantBufferManager.cpp.obj CMakeFiles\Bindu.dir\Core\Managers\GameObjectManager.cpp.obj CMakeFiles\Bindu.dir\Core\Scene\Scene.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DDSTextureLoader.cpp.obj CMakeFiles\Bindu.dir\Core\Resources\Texture.cpp.obj CMakeFiles\Bindu.dir\Core\Managers\TextureManager.cpp.obj CMakeFiles\Bindu.dir\Core\Managers\MaterialManager.cpp.obj CMakeFiles\Bindu.dir\Core\Scene\RenderLayer.cpp.obj CMakeFiles\Bindu.dir\Core\Managers\ShaderManager.cpp.obj CMakeFiles\Bindu.dir\Utility\Common\DynamicVoidBuffer.cpp.obj CMakeFiles\Bindu.dir\Core\Resources\Resource.cpp.obj CMakeFiles\Bindu.dir\Core\Resources\DepthStencilBuffer.cpp.obj CMakeFiles\Bindu.dir\Core\Resources\RenderTexture.cpp.obj CMakeFiles\Bindu.dir\Core\ECS\EntityManager.cpp.obj CMakeFiles\Bindu.dir\Utility\Common\DynamicBitset.cpp.obj CMakeFiles\Bindu.dir\Core\ECS\Entity.cpp.obj CMakeFiles\Bindu.dir\Core\ECS\ECSScene.cpp.obj
+build Bindu.lib: CXX_STATIC_LIBRARY_LINKER__Bindu_Debug CMakeFiles\Bindu.dir\ErrorHandler\EngineException.cpp.obj CMakeFiles\Bindu.dir\Event\EventManager.cpp.obj CMakeFiles\Bindu.dir\Event\EventStruct.cpp.obj CMakeFiles\Bindu.dir\Event\EventPool.cpp.obj CMakeFiles\Bindu.dir\Window\Win32Window.cpp.obj CMakeFiles\Bindu.dir\Core\Engine\Win32Engine.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\D3DDeviceManager.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\D3DSwapChain.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\CpuDescriptorHeap.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DescriptorHeap.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DescriptorHeapManager.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\GpuDescriptorHeap.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\VariableSizeGpuMemoryAllocator.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\VariableSizeMemoryAllocator.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\D3DCommandContext.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\D3DFence.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\D3DPipelineStateManager.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\D3DShader.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DefaultRenderContext.cpp.obj CMakeFiles\Bindu.dir\Core\GameObject\Transform.cpp.obj CMakeFiles\Bindu.dir\Core\GameObject\GameObject.cpp.obj CMakeFiles\Bindu.dir\Core\GameObject\MeshObject.cpp.obj CMakeFiles\Bindu.dir\Core\GameObject\Buffers.cpp.obj CMakeFiles\Bindu.dir\Core\GameObject\Camera.cpp.obj CMakeFiles\Bindu.dir\Core\GameObject\MeshManager.cpp.obj CMakeFiles\Bindu.dir\Core\GameObject\GeometryGenerator.cpp.obj CMakeFiles\Bindu.dir\Core\GameObject\Material.cpp.obj CMakeFiles\Bindu.dir\Core\GameObject\Light.cpp.obj CMakeFiles\Bindu.dir\Core\ECS\ECSScene.cpp.obj CMakeFiles\Bindu.dir\Core\ECS\EntityManager.cpp.obj CMakeFiles\Bindu.dir\Core\ECS\Entity.cpp.obj CMakeFiles\Bindu.dir\Core\Managers\GameObjectManager.cpp.obj CMakeFiles\Bindu.dir\Core\Managers\ConstantBufferManager.cpp.obj CMakeFiles\Bindu.dir\Core\Managers\TextureManager.cpp.obj CMakeFiles\Bindu.dir\Core\Managers\MaterialManager.cpp.obj CMakeFiles\Bindu.dir\Core\Resources\DepthStencilBuffer.cpp.obj CMakeFiles\Bindu.dir\Core\Resources\RenderTexture.cpp.obj CMakeFiles\Bindu.dir\Core\Resources\Resource.cpp.obj CMakeFiles\Bindu.dir\Logger\Logger.cpp.obj CMakeFiles\Bindu.dir\Input\InputManager.cpp.obj CMakeFiles\Bindu.dir\Input\Win32InputHandler.cpp.obj CMakeFiles\Bindu.dir\Input\Keyboard.cpp.obj CMakeFiles\Bindu.dir\Input\Mouse.cpp.obj CMakeFiles\Bindu.dir\Utility\Common\Timer.cpp.obj CMakeFiles\Bindu.dir\Utility\Common\DynamicVoidBuffer.cpp.obj CMakeFiles\Bindu.dir\Utility\Common\DynamicBitset.cpp.obj CMakeFiles\Bindu.dir\MathHelper\MathHelper.cpp.obj CMakeFiles\Bindu.dir\Debug\Profiler.cpp.obj CMakeFiles\Bindu.dir\Core\App\Application.cpp.obj CMakeFiles\Bindu.dir\Core\App\AppLayer.cpp.obj CMakeFiles\Bindu.dir\Core\App\AppLayerStack.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\RendererFactory.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DirectXRenderer.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DirectXGraphicsContext.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DirectXCommandList.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DirectXTexture.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DirectXRenderTexture.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DirectXShader.cpp.obj CMakeFiles\Bindu.dir\Core\Renderer\DirectX\DirectXConstantBuffer.cpp.obj || _deps\spdlog-build\spdlogd.lib
   LANGUAGE_COMPILE_FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -MDd -Zi
   LINK_FLAGS = /machine:x64
   OBJECT_DIR = CMakeFiles\Bindu.dir
@@ -525,9 +622,131 @@ build CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
 build rebuild_cache: phony CMakeFiles\rebuild_cache.util
 
 # =============================================================================
+# Write statements declared in CMakeLists.txt:
+# C:/Users/letsd/CLionProjects/Bindu/CMakeLists.txt
+# =============================================================================
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target spdlog
+
+
+#############################################
+# Order-only phony target for spdlog
+
+build cmake_object_order_depends_target_spdlog: phony || .
+
+build _deps\spdlog-build\CMakeFiles\spdlog.dir\src\spdlog.cpp.obj: CXX_COMPILER__spdlog_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\src\spdlog.cpp || cmake_object_order_depends_target_spdlog
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zc:__cplusplus /MP /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = _deps\spdlog-build\CMakeFiles\spdlog.dir
+  OBJECT_FILE_DIR = _deps\spdlog-build\CMakeFiles\spdlog.dir\src
+  TARGET_COMPILE_PDB = _deps\spdlog-build\CMakeFiles\spdlog.dir\spdlog.pdb
+  TARGET_PDB = _deps\spdlog-build\spdlogd.pdb
+
+build _deps\spdlog-build\CMakeFiles\spdlog.dir\src\stdout_sinks.cpp.obj: CXX_COMPILER__spdlog_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\src\stdout_sinks.cpp || cmake_object_order_depends_target_spdlog
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zc:__cplusplus /MP /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = _deps\spdlog-build\CMakeFiles\spdlog.dir
+  OBJECT_FILE_DIR = _deps\spdlog-build\CMakeFiles\spdlog.dir\src
+  TARGET_COMPILE_PDB = _deps\spdlog-build\CMakeFiles\spdlog.dir\spdlog.pdb
+  TARGET_PDB = _deps\spdlog-build\spdlogd.pdb
+
+build _deps\spdlog-build\CMakeFiles\spdlog.dir\src\color_sinks.cpp.obj: CXX_COMPILER__spdlog_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\src\color_sinks.cpp || cmake_object_order_depends_target_spdlog
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zc:__cplusplus /MP /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = _deps\spdlog-build\CMakeFiles\spdlog.dir
+  OBJECT_FILE_DIR = _deps\spdlog-build\CMakeFiles\spdlog.dir\src
+  TARGET_COMPILE_PDB = _deps\spdlog-build\CMakeFiles\spdlog.dir\spdlog.pdb
+  TARGET_PDB = _deps\spdlog-build\spdlogd.pdb
+
+build _deps\spdlog-build\CMakeFiles\spdlog.dir\src\file_sinks.cpp.obj: CXX_COMPILER__spdlog_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\src\file_sinks.cpp || cmake_object_order_depends_target_spdlog
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zc:__cplusplus /MP /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = _deps\spdlog-build\CMakeFiles\spdlog.dir
+  OBJECT_FILE_DIR = _deps\spdlog-build\CMakeFiles\spdlog.dir\src
+  TARGET_COMPILE_PDB = _deps\spdlog-build\CMakeFiles\spdlog.dir\spdlog.pdb
+  TARGET_PDB = _deps\spdlog-build\spdlogd.pdb
+
+build _deps\spdlog-build\CMakeFiles\spdlog.dir\src\async.cpp.obj: CXX_COMPILER__spdlog_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\src\async.cpp || cmake_object_order_depends_target_spdlog
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zc:__cplusplus /MP /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = _deps\spdlog-build\CMakeFiles\spdlog.dir
+  OBJECT_FILE_DIR = _deps\spdlog-build\CMakeFiles\spdlog.dir\src
+  TARGET_COMPILE_PDB = _deps\spdlog-build\CMakeFiles\spdlog.dir\spdlog.pdb
+  TARGET_PDB = _deps\spdlog-build\spdlogd.pdb
+
+build _deps\spdlog-build\CMakeFiles\spdlog.dir\src\cfg.cpp.obj: CXX_COMPILER__spdlog_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\src\cfg.cpp || cmake_object_order_depends_target_spdlog
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zc:__cplusplus /MP /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = _deps\spdlog-build\CMakeFiles\spdlog.dir
+  OBJECT_FILE_DIR = _deps\spdlog-build\CMakeFiles\spdlog.dir\src
+  TARGET_COMPILE_PDB = _deps\spdlog-build\CMakeFiles\spdlog.dir\spdlog.pdb
+  TARGET_PDB = _deps\spdlog-build\spdlogd.pdb
+
+build _deps\spdlog-build\CMakeFiles\spdlog.dir\src\bundled_fmtlib_format.cpp.obj: CXX_COMPILER__spdlog_unscanned_Debug C$:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\src\bundled_fmtlib_format.cpp || cmake_object_order_depends_target_spdlog
+  DEFINES = -DSPDLOG_COMPILED_LIB
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zc:__cplusplus /MP /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi
+  INCLUDES = -IC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-src\include
+  OBJECT_DIR = _deps\spdlog-build\CMakeFiles\spdlog.dir
+  OBJECT_FILE_DIR = _deps\spdlog-build\CMakeFiles\spdlog.dir\src
+  TARGET_COMPILE_PDB = _deps\spdlog-build\CMakeFiles\spdlog.dir\spdlog.pdb
+  TARGET_PDB = _deps\spdlog-build\spdlogd.pdb
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target spdlog
+
+
+#############################################
+# Link the static library _deps\spdlog-build\spdlogd.lib
+
+build _deps\spdlog-build\spdlogd.lib: CXX_STATIC_LIBRARY_LINKER__spdlog_Debug _deps\spdlog-build\CMakeFiles\spdlog.dir\src\spdlog.cpp.obj _deps\spdlog-build\CMakeFiles\spdlog.dir\src\stdout_sinks.cpp.obj _deps\spdlog-build\CMakeFiles\spdlog.dir\src\color_sinks.cpp.obj _deps\spdlog-build\CMakeFiles\spdlog.dir\src\file_sinks.cpp.obj _deps\spdlog-build\CMakeFiles\spdlog.dir\src\async.cpp.obj _deps\spdlog-build\CMakeFiles\spdlog.dir\src\cfg.cpp.obj _deps\spdlog-build\CMakeFiles\spdlog.dir\src\bundled_fmtlib_format.cpp.obj
+  LANGUAGE_COMPILE_FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zc:__cplusplus /MP /Ob0 /Od /RTC1 -MDd -Zi
+  LINK_FLAGS = /machine:x64
+  OBJECT_DIR = _deps\spdlog-build\CMakeFiles\spdlog.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_COMPILE_PDB = _deps\spdlog-build\CMakeFiles\spdlog.dir\spdlog.pdb
+  TARGET_FILE = _deps\spdlog-build\spdlogd.lib
+  TARGET_PDB = _deps\spdlog-build\spdlogd.pdb
+
+
+#############################################
+# Utility command for edit_cache
+
+build _deps\spdlog-build\CMakeFiles\edit_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-build && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build _deps\spdlog-build\edit_cache: phony _deps\spdlog-build\CMakeFiles\edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build _deps\spdlog-build\CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug\_deps\spdlog-build && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --regenerate-during-build -SC:\Users\letsd\CLionProjects\Bindu -BC:\Users\letsd\CLionProjects\Bindu\out\build\x64-Debug"
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build _deps\spdlog-build\rebuild_cache: phony _deps\spdlog-build\CMakeFiles\rebuild_cache.util
+
+# =============================================================================
 # Target aliases.
 
 build Bindu: phony Bindu.lib
+
+build spdlog: phony _deps\spdlog-build\spdlogd.lib
+
+build spdlogd.lib: phony _deps\spdlog-build\spdlogd.lib
 
 # =============================================================================
 # Folder targets.
@@ -537,7 +756,14 @@ build Bindu: phony Bindu.lib
 #############################################
 # Folder: C:/Users/letsd/CLionProjects/Bindu/out/build/x64-Debug
 
-build all: phony Bindu.lib
+build all: phony Bindu.lib _deps\spdlog-build\all
+
+# =============================================================================
+
+#############################################
+# Folder: C:/Users/letsd/CLionProjects/Bindu/out/build/x64-Debug/_deps/spdlog-build
+
+build _deps\spdlog-build\all: phony _deps\spdlog-build\spdlogd.lib
 
 # =============================================================================
 # Built-in targets
@@ -546,14 +772,14 @@ build all: phony Bindu.lib
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeRCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\WindowsPaths.cmake C$:\Users\letsd\CLionProjects\Bindu\CMakeLists.txt CMakeCache.txt CMakeFiles\3.29.5-msvc4\CMakeCCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeCXXCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeRCCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeRCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CheckCSourceCompiles.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CheckIncludeFile.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CheckLibraryExists.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\ExternalProject\shared_internal_commands.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FetchContent.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FetchContent\CMakeLists.cmake.in C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FindGit.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FindPackageHandleStandardArgs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FindPackageMessage.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FindThreads.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\GNUInstallDirs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Internal\CheckSourceCompiles.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\WindowsPaths.cmake C$:\Users\letsd\CLionProjects\Bindu\CMakeLists.txt CMakeCache.txt CMakeFiles\3.29.5-msvc4\CMakeCCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeCXXCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeRCCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeSystem.cmake _deps\spdlog-src\CMakeLists.txt _deps\spdlog-src\cmake\ide.cmake _deps\spdlog-src\cmake\utils.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeRCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\WindowsPaths.cmake C$:\Users\letsd\CLionProjects\Bindu\CMakeLists.txt CMakeCache.txt CMakeFiles\3.29.5-msvc4\CMakeCCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeCXXCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeRCCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeSystem.cmake: phony
+build C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeRCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CheckCSourceCompiles.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CheckIncludeFile.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CheckLibraryExists.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\ExternalProject\shared_internal_commands.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FetchContent.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FetchContent\CMakeLists.cmake.in C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FindGit.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FindPackageHandleStandardArgs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FindPackageMessage.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FindThreads.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\GNUInstallDirs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Internal\CheckSourceCompiles.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\WindowsPaths.cmake C$:\Users\letsd\CLionProjects\Bindu\CMakeLists.txt CMakeCache.txt CMakeFiles\3.29.5-msvc4\CMakeCCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeCXXCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeRCCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeSystem.cmake _deps\spdlog-src\CMakeLists.txt _deps\spdlog-src\cmake\ide.cmake _deps\spdlog-src\cmake\utils.cmake: phony
 
 
 #############################################

@@ -47,12 +47,18 @@ namespace BINDU
 			return m_parentScene->m_componentRegistry.HasComponent<Component>(m_entityId);
 		}
 
-		operator bool() const { return m_parentScene != nullptr; }
+		operator bool() const { return m_entityId != InvalidIndex; }
+		operator std::uint32_t() const { return m_entityId; }
+
+		bool operator == (const Entity& other) const { return m_entityId == other.m_entityId && m_parentScene == other.m_parentScene; }
+		bool operator != (const Entity& other) const { return !(*this == other); }
 
 		EntityId		GetId() const;
 
+
+
 	private:
-		EntityId				m_entityId{ 0 };
+		EntityId				m_entityId{ InvalidIndex };
 		ECSScene*				m_parentScene{ nullptr };
 
 	};

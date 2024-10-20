@@ -23,6 +23,8 @@ namespace BINDU {
 
         virtual void Create(uint16_t width, uint16_t height, std::string title) = 0;
 
+        virtual void Update() = 0;
+
 #if defined(WIN32) || defined(_WIN32)
         virtual HWND& GetHandle() = 0;
 #endif
@@ -37,7 +39,6 @@ namespace BINDU {
         virtual std::string GetWindowTitle() const = 0;
         virtual UINT GetHeight() const = 0;
         virtual UINT GetWidth() const = 0;
-
     };
 
 } // BINDU

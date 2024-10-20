@@ -15,10 +15,8 @@ namespace BINDU
 		entity.AddComponent<TransformComponent>();
 
 		auto& tagCompo = entity.GetComponent<TagComponent>();
-		if (name.empty())
-			tagCompo.Tag = "Entity " + std::to_string(entityId);
-		else
-			tagCompo.Tag = name;
+
+		tagCompo.Tag = name.empty() ? "Entity " + std::to_string(entityId) : name;
 
 		return entity;
 	}
@@ -37,36 +35,18 @@ namespace BINDU
 
 	void ECSScene::OnUpdate(double dt)
 	{
-		auto view = m_componentRegistry.GetView<TagComponent, TransformComponent>();
+		
+	}
 
-		for (auto itr = view.Begin(); itr != view.End(); ++itr)
-		{
-			auto tagCompo = view.GetComponent<TagComponent>((*itr));
+	void ECSScene::OnRender(D3DCommandContext& commandContext, const FrameResource* currentFrame)
+	{
+		auto view = m_componentRegistry.GetView<MeshComponent>()
+	}
 
-			OutputDebugStringA(tagCompo.Tag.c_str());
-			OutputDebugStringA("\n");
-		}
+	Entity ECSScene::GetEntity(EntityId entityId)
+	{
+		BINDU_ASSERT(m_entityManager.HasEntity(entityId), "Entity does not exist!");
 
-		for (auto itr = view.Begin(); itr != view.End(); ++itr)
-		{
-			auto [tag] = view.Get<TagComponent>((*itr));
-
-			if (!tag.Tag.empty())
-			{
-				OutputDebugStringA(tag.Tag.c_str());
-				OutputDebugStringA("\n");
-			}
-		}
-
-		for(auto itr = view.Begin(); itr != view.End(); ++itr)
-		{
-			auto [tag, transform] = view.Get<TagComponent, TransformComponent>((*itr));
-
-			if (!tag.Tag.empty())
-			{
-				OutputDebugStringA(tag.Tag.c_str());
-				OutputDebugStringA("\n");
-			}
-		}
+		return { entityId, this };
 	}
 }

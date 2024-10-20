@@ -14,6 +14,9 @@
 #include <fstream>
 #include <sstream>
 
+#include "../DataFormat.h"
+#include "../Texture.h"
+
 // Macro to throw DirectX HRESULT exceptions 
 #ifndef DXThrowIfFailed
 #define DXThrowIfFailed(x)                                              \
@@ -239,6 +242,40 @@ namespace BINDU::D3DUtility
 			<< float4.w << ")" << std::endl;
 
 		OutputDebugString(str.str().c_str());
+	}
+
+	inline DXGI_FORMAT GetDXGIFormatFromTextureFormat(const TextureFormat format)
+	{
+		switch (format)
+		{
+		case TextureFormat::TYPELESS:
+			return DXGI_FORMAT_R24G8_TYPELESS;
+		case TextureFormat::RGBA8_UNORM:
+			return DXGI_FORMAT_R8G8B8A8_UNORM;
+		case TextureFormat::BGRA8_UNORM:
+			return DXGI_FORMAT_B8G8R8A8_UNORM;
+		case TextureFormat::D24_UNORM_S8_UINT:
+			return DXGI_FORMAT_D24_UNORM_S8_UINT;
+		}
+
+		return DXGI_FORMAT_UNKNOWN;
+	}
+
+	inline DXGI_FORMAT GetDXGIFormatFromDataFormat(const DataFormat format)
+	{
+		switch(format)
+		{
+		case DataFormat::FLOAT_32:
+			return DXGI_FORMAT_R32_FLOAT;
+		case DataFormat::FLOAT2_32:
+			return DXGI_FORMAT_R32G32_FLOAT;
+		case DataFormat::FLOAT3_32:
+			return DXGI_FORMAT_R32G32B32_FLOAT;
+		case DataFormat::FLOAT4_32:
+			return DXGI_FORMAT_R32G32B32A32_FLOAT;
+		}
+
+		return DXGI_FORMAT_UNKNOWN;
 	}
 
 }

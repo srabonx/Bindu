@@ -5,6 +5,8 @@
 #include "GpuDescriptorHeap.h"
 #include <dxgidebug.h>
 
+#include "DDSTextureLoader.h"
+#include "../../../Debug/Assert.h"
 #include "../../Resources/Resource.h"
 
 namespace BINDU
@@ -50,21 +52,124 @@ namespace BINDU
 #endif
 	}
 
-	void D3DDeviceManager::CreateTex2DResource(std::uint64_t width, std::uint64_t height, DXGI_SAMPLE_DESC sampleDesc, 
-		const Resource* resource, D3D12_HEAP_FLAGS heapFlags, D3D12_HEAP_TYPE heapType) const
+	ComPtr<ID3D12Resource> D3DDeviceManager::CreateCommitedTex2D(std::uint64_t width, std::uint32_t height,
+		DXGI_FORMAT format, D3D12_HEAP_FLAGS heapFlag, const D3D12_CLEAR_VALUE* optimizedClearVal) const
 	{
-		auto d3dResource = resource->GetResource();
 
-		CD3DX12_HEAP_PROPERTIES heapProp(heapType);
+		ComPtr<ID3D12Resource> resource{ nullptr };
 
-		D3D12_HEAP_FLAGS l_heapFlags = heapFlags;
+		auto heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 
-		D3D12_RESOURCE_DESC	rsd = CD3DX12_RESOURCE_DESC::Tex2D(resource->GetFormat(), width, height, 1, 1, sampleDesc.Count,
-			sampleDesc.Quality, resource->GetFlags());
+		auto rsrcDesc = CD3DX12_RESOURCE_DESC::Tex2D(format, width, height);
 
 		DXThrowIfFailed(
-			m_d3dDevice->CreateCommittedResource(&heapProp, l_heapFlags, &rsd, resource->GetState(),
-				nullptr, IID_PPV_ARGS(d3dResource.GetAddressOf())));
+			m_d3dDevice->CreateCommittedResource(&heapProp, heapFlag, &rsrcDesc,
+				D3D12_RESOURCE_STATE_COMMON, optimizedClearVal, IID_PPV_ARGS(resource.ReleaseAndGetAddressOf())));
+
+		return resource;
+	}
+
+	ComPtr<ID3D12Resource> D3DDeviceManager::CreateCommitedBuffer(std::uint64_t width, D3D12_HEAP_TYPE heapType, D3D12_HEAP_FLAGS heapFlags, D3D12_RESOURCE_STATES initialState) const
+	{
+		ComPtr<ID3D12Resource> resource;
+
+		auto heapProp = CD3DX12_HEAP_PROPERTIES(heapType);
+
+		auto rsDesc = CD3DX12_RESOURCE_DESC::Buffer(width);
+
+		DXThrowIfFailed(
+			m_d3dDevice->CreateCommittedResource(&heapProp, heapFlags, &rsDesc, initialState,
+				nullptr, IID_PPV_ARGS(resource.ReleaseAndGetAddressOf())));
+
+		return resource;
+	}
+
+	ComPtr<ID3D12PipelineState> D3DDeviceManager::CreateGraphicsPipelineState(
+		const D3D12_GRAPHICS_PIPELINE_STATE_DESC& psd) const
+	{
+		ComPtr<ID3D12PipelineState> pipelineState{ nullptr };
+
+		DXThrowIfFailed(
+			m_d3dDevice->CreateGraphicsPipelineState(&psd, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf())));
+
+		return pipelineState;
+	}
+
+	ComPtr<ID3D12PipelineState> D3DDeviceManager::CreateComputePipelineState(
+		const D3D12_COMPUTE_PIPELINE_STATE_DESC& psd) const
+	{
+		ComPtr<ID3D12PipelineState> pipelineState{ nullptr };
+
+		DXThrowIfFailed(
+			m_d3dDevice->CreateComputePipelineState(&psd, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf())));
+
+		return pipelineState;
+	}
+
+	ComPtr<ID3D12RootSignature> D3DDeviceManager::CreateRootSignature(
+		const D3D12_ROOT_SIGNATURE_DESC& rootSigDesc) const
+	{
+		ComPtr<ID3D12RootSignature> rootSig{ nullptr };
+
+		ComPtr<ID3DBlob> rootSigBlob{ nullptr };
+		ComPtr<ID3DBlob> errorBlob{ nullptr };
+
+		DXThrowIfFailed(
+			D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, rootSigBlob.GetAddressOf(), errorBlob.GetAddressOf()));
+
+		if(errorBlob)
+		{
+			std::string errorStr = "Root Signature creation failed. Error : " + std::string(static_cast<char*>(errorBlob->GetBufferPointer()));
+			BINDU_CORE_ASSERT(false, errorStr.c_str());
+		}
+
+		DXThrowIfFailed(
+			m_d3dDevice->CreateRootSignature(0, rootSigBlob->GetBufferPointer(),
+				rootSigBlob->GetBufferSize(), IID_PPV_ARGS(rootSig.ReleaseAndGetAddressOf())));
+
+		return rootSig;
+	}
+
+	DescriptorHeapAllocation&& D3DDeviceManager::CreateDepthStencilView(
+		ID3D12Resource* depthStencilResource, const D3D12_DEPTH_STENCIL_VIEW_DESC& depthStencilDesc) const
+	{
+		auto allocation = m_dsvCpuHeap->Allocate(1);
+
+		m_d3dDevice->CreateDepthStencilView(depthStencilResource, &depthStencilDesc, allocation.GetCpuHandle());
+
+		return std::move(allocation);
+	}
+
+
+	DescriptorHeapAllocation&& D3DDeviceManager::CreateRenderTargetView(ID3D12Resource* renderTargetResource,
+		const D3D12_RENDER_TARGET_VIEW_DESC& rtvDesc) const
+	{
+		auto allocation = m_rtvCpuHeap->Allocate(1);
+
+		m_d3dDevice->CreateRenderTargetView(renderTargetResource, &rtvDesc, allocation.GetCpuHandle());
+
+		return std::move(allocation);
+	}
+
+	DescriptorHeapAllocation&& D3DDeviceManager::CreateShaderResourceView(ID3D12Resource* srvResource,
+		const D3D12_SHADER_RESOURCE_VIEW_DESC& srvDesc) const
+	{
+		auto allocation = m_cbvSrvUavGpuHeap->Allocate(1);
+
+		m_d3dDevice->CreateShaderResourceView(srvResource, &srvDesc, allocation.GetCpuHandle());
+
+		return std::move(allocation);
+	}
+
+	DirectXConstantBuffer&& D3DDeviceManager::CreateConstantBuffer(std::uint32_t elementCount) const
+	{
+		DirectXConstantBuffer buffer(elementCount);
+
+		auto width = buffer.m_elementByteSize * elementCount;
+
+		buffer.m_resource = CreateCommitedBuffer(width, D3D12_HEAP_TYPE_UPLOAD, D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_STATE_GENERIC_READ);
+
+		return std::move(buffer);
 	}
 
 	ID3D12Device* D3DDeviceManager::GetD3DDevice() const

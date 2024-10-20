@@ -16,6 +16,7 @@ namespace BINDU
     public:
         std::unique_ptr<EventPool> m_eventPool;
         std::list<IEventListener*> m_eventListeners;
+        std::list<EventCallbackFn> m_eventListenerFns;
     };
 
 
@@ -31,7 +32,7 @@ namespace BINDU
 
     }
 
-    void EventManager::PushEvent(EVENT::BND_Event event)
+    void EventManager::PushEvent(EVENT::BND_Event event) const
     {
         if(event.type != EVENT::Type::NONE)
         {
@@ -41,7 +42,7 @@ namespace BINDU
             
     }
 
-    void EventManager::DispatchEvents()
+    void EventManager::DispatchEvents() const
     {
         EVENT::BND_Event event = {};
         while(m_impl->m_eventPool->Poll(event))
@@ -50,25 +51,42 @@ namespace BINDU
             {
                 l->ProcessEvent(event);
             }
+
+            for(const auto& fn : m_impl->m_eventListenerFns)
+            {
+                fn(event);
+            }
         }
     }
 
-    void EventManager::AddListener(IEventListener *eventListener)
+    void EventManager::AddListener(IEventListener *eventListener) const
     {
         m_impl->m_eventListeners.push_back(eventListener);
     }
 
-    void EventManager::RemoveListener(IEventListener *eventListener)
+    void EventManager::RemoveListener(IEventListener *eventListener) const
     {
         m_impl->m_eventListeners.remove(eventListener);
     }
 
-    void EventManager::Clear()
+    void EventManager::BindListenerFn(const EventCallbackFn& callback) const
+    {
+        m_impl->m_eventListenerFns.emplace_back(callback);
+    }
+
+    void EventManager::RemoveListenerFn(const EventCallbackFn& callback) const
+    {
+        m_impl->m_eventListenerFns.remove(callback);
+    }
+
+    void EventManager::Clear() const
     {
         while(!m_impl->m_eventListeners.empty())
             m_impl->m_eventListeners.pop_back();
 
         m_impl->m_eventListeners.clear();
+
+        m_impl->m_eventListenerFns.clear();
 
         m_impl->m_eventPool->Clear();
     }

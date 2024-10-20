@@ -20,11 +20,11 @@ namespace BINDU {
 
         ~EventPool();
 
-        void Push(EVENT::BND_Event event);
+        void Push(EVENT::BND_Event event) const;
 
-        bool Poll(EVENT::BND_Event& event);
+        bool Poll(EVENT::BND_Event& event) const;
 
-        void Clear();
+        void Clear() const;
 
 
     private:

@@ -28,12 +28,12 @@ namespace BINDU {
 
     }
 
-    void EventPool::Push(BND_Event event)
+    void EventPool::Push(BND_Event event) const
     {
         m_impl->m_events.push(event);
     }
 
-    bool EventPool::Poll(BND_Event &event)
+    bool EventPool::Poll(BND_Event &event) const
     {
         if(m_impl->m_events.empty())
             return false;
@@ -43,7 +43,7 @@ namespace BINDU {
         return true;
     }
 
-    void EventPool::Clear()
+    void EventPool::Clear() const
     {
         while(!m_impl->m_events.empty())
             m_impl->m_events.pop();

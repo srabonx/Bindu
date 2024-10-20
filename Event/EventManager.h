@@ -5,7 +5,11 @@
 #ifndef BINDU_EVENTMANAGER_H
 #define BINDU_EVENTMANAGER_H
 
+#include <functional>
 #include <memory>
+
+
+#define BINDU_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) {return this->fn(std::forward<decltype(args)>(args)...);}
 
 namespace BINDU {
     namespace EVENT
@@ -14,6 +18,7 @@ namespace BINDU {
     }
     class IEventListener;
 
+    using EventCallbackFn = std::function<void(EVENT::BND_Event&)>;
 
     class EventManager
     {
@@ -22,15 +27,19 @@ namespace BINDU {
 
         ~EventManager();
 
-        void PushEvent(EVENT::BND_Event event);
+        void PushEvent(EVENT::BND_Event event) const;
 
-        void DispatchEvents();
+        void DispatchEvents() const;
 
-        void AddListener(IEventListener* eventListener);
+        void AddListener(IEventListener* eventListener) const;
 
-        void RemoveListener(IEventListener* eventListener);
+        void RemoveListener(IEventListener* eventListener) const;
 
-        void Clear();
+        void BindListenerFn(const EventCallbackFn& callback) const;
+
+        void RemoveListenerFn(const EventCallbackFn& callback) const;
+
+        void Clear() const;
 
     private:
         class Impl;

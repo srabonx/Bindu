@@ -3,6 +3,8 @@
 
 #include "EntityManager.h"
 #include "ComponentRegistry.h"
+#include "../Renderer/DirectX/D3DCommandContext.h"
+#include "../Renderer/DirectX/FlyFrame.h"
 
 namespace BINDU
 {
@@ -23,6 +25,10 @@ namespace BINDU
 		void	DestroyEntity(EntityId entity);
 
 		void	OnUpdate(double dt);
+
+		void	OnRender(D3DCommandContext& commandContext, const FrameResource* currentFrame);
+
+		Entity	GetEntity(EntityId entityId);
 
 	private:
 		EntityManager		m_entityManager;

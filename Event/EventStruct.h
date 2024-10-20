@@ -70,31 +70,23 @@ namespace BINDU::EVENT {
     };
 
 
-
-    // Different stats relevant to current event
-    // Can only have one at a time
-    union BND_Event_Stats
-    {
-        WindowEvent      Ev_Window;
-        KeyboardEvent    Ev_Keyboard;
-        MouseEvent       Ev_Mouse;
-        ICustomEvent*    Ev_Custom{nullptr};
-    };
-
-
-
     /* Event Structure */
     /*
      * Holds only the current event type
-     * and a relevant stat at a time
+     * and a relevant event at a time
      */
 
     struct BND_Event
     {
     public:
-        BND_Event() = default;
         Type type = Type::NONE;
-        BND_Event_Stats body;
+        union
+        {
+            WindowEvent      Ev_Window;
+            KeyboardEvent    Ev_Keyboard;
+            MouseEvent       Ev_Mouse;
+            ICustomEvent*    Ev_Custom{ nullptr };
+        };
     };
 
 } // BINDU

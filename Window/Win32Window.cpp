@@ -6,14 +6,10 @@
 
 #include "Win32Window.h"
 
-#include "../Gui/Common/imgui.h"
-
 #include "../Event/EventManager.h"
 #include "../Event/EventStruct.h"
 #include "../Utility/Common/CommonUtility.h"
 #include "../Input/Keyboard.h"
-
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 namespace BINDU {
 
@@ -98,6 +94,22 @@ namespace BINDU {
         SetWindowLongPtr(m_impl->m_hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
     }
 
+    void Win32Window::Update()
+    {
+        MSG msg{};
+
+        while (PeekMessageA(&msg, nullptr, 0, 0, PM_REMOVE))
+        {
+            if (msg.message == WM_QUIT)
+            {
+                break;
+            }
+
+            TranslateMessage(&msg);
+            DispatchMessageA(&msg);
+        }
+    }
+
     void Win32Window::RegisterEventManager(EventManager *eventManager)
     {
         m_impl->m_eventManager = eventManager;
@@ -135,7 +147,6 @@ namespace BINDU {
 
         if (window)
         {
-            ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
             window->m_impl->MessageProc( hWnd, msg, wParam, lParam);
         }
 
@@ -166,15 +177,23 @@ namespace BINDU {
                 break;
             case WM_ENTERSIZEMOVE:
                 event.type = EVENT::Type::WINDOW_ENTER_RESIZING;
+
+                event.Ev_Window.Width = m_width;
+                event.Ev_Window.Height = m_height;
+
                 break;
             case WM_EXITSIZEMOVE:
                 event.type = EVENT::Type::WINDOW_EXIT_RESIZING;
+
+                event.Ev_Window.Width = m_width;
+                event.Ev_Window.Height = m_height;
+
                 break;
             case WM_SIZE:
             {
                 event.type = EVENT::Type::WINDOW_SIZE_CHANGED;
-                event.body.Ev_Window.Width = LOWORD(lParam);
-                event.body.Ev_Window.Height = HIWORD(lParam);
+                event.Ev_Window.Width = LOWORD(lParam);
+                event.Ev_Window.Height = HIWORD(lParam);
 
                 m_width = LOWORD(lParam);
                 m_height = HIWORD(lParam);
@@ -199,9 +218,9 @@ namespace BINDU {
                 bool wasDown = (keyFlag & KF_REPEAT) == KF_REPEAT;
                 bool isDown = (keyFlag & KF_UP) != KF_UP;
 
-                event.body.Ev_Keyboard.key = static_cast<BND_Key>(vkCode);
-                event.body.Ev_Keyboard.state.wasDown = wasDown;
-                event.body.Ev_Keyboard.state.isDown = isDown;
+                event.Ev_Keyboard.key = static_cast<BND_Key>(vkCode);
+                event.Ev_Keyboard.state.wasDown = wasDown;
+                event.Ev_Keyboard.state.isDown = isDown;
                 
                 break;
             }
@@ -212,9 +231,9 @@ namespace BINDU {
                 bool wasDown = (keyFlag & KF_REPEAT) == KF_REPEAT;
                 bool isDown = (keyFlag & KF_UP) != KF_UP;
 
-                event.body.Ev_Keyboard.key = static_cast<BND_Key>(vkCode);
-                event.body.Ev_Keyboard.state.wasDown = wasDown;
-                event.body.Ev_Keyboard.state.isDown = isDown;
+                event.Ev_Keyboard.key = static_cast<BND_Key>(vkCode);
+                event.Ev_Keyboard.state.wasDown = wasDown;
+                event.Ev_Keyboard.state.isDown = isDown;
 
                 break;
             }
@@ -227,18 +246,18 @@ namespace BINDU {
 
                 event.type = EVENT::Type::MOUSE_DOWN;
 
-                event.body.Ev_Mouse.button = BND_Button::BND_NONE;
+                event.Ev_Mouse.button = BND_Button::BND_NONE;
 
                 if (wParam & MK_LBUTTON)
-                    event.body.Ev_Mouse.button = BND_Button::BND_LEFT;
+                    event.Ev_Mouse.button = BND_Button::BND_LEFT;
                 else if(wParam & MK_RBUTTON)
-                    event.body.Ev_Mouse.button = BND_Button::BND_RIGHT;
+                    event.Ev_Mouse.button = BND_Button::BND_RIGHT;
                 else if(wParam & MK_MBUTTON)
-                    event.body.Ev_Mouse.button = BND_Button::BND_MIDDLE;
+                    event.Ev_Mouse.button = BND_Button::BND_MIDDLE;
 
 
-                event.body.Ev_Mouse.position.x = GET_X_LPARAM(lParam);
-                event.body.Ev_Mouse.position.y = GET_Y_LPARAM(lParam);
+                event.Ev_Mouse.position.x = GET_X_LPARAM(lParam);
+                event.Ev_Mouse.position.y = GET_Y_LPARAM(lParam);
 
                 break;
 
@@ -250,18 +269,18 @@ namespace BINDU {
 				
                 event.type = EVENT::Type::MOUSE_UP;
 
-                event.body.Ev_Mouse.button = BND_Button::BND_NONE;
+                event.Ev_Mouse.button = BND_Button::BND_NONE;
 
                 if (msg == WM_LBUTTONUP)
-                    event.body.Ev_Mouse.button = BND_Button::BND_LEFT;
+                    event.Ev_Mouse.button = BND_Button::BND_LEFT;
                 else if (msg == WM_RBUTTONUP)
-                    event.body.Ev_Mouse.button = BND_Button::BND_RIGHT;
+                    event.Ev_Mouse.button = BND_Button::BND_RIGHT;
                 else if (msg == WM_MBUTTONUP)
-                    event.body.Ev_Mouse.button = BND_Button::BND_MIDDLE;
+                    event.Ev_Mouse.button = BND_Button::BND_MIDDLE;
 
 
-                event.body.Ev_Mouse.position.x = GET_X_LPARAM(lParam);
-                event.body.Ev_Mouse.position.y = GET_Y_LPARAM(lParam);
+                event.Ev_Mouse.position.x = GET_X_LPARAM(lParam);
+                event.Ev_Mouse.position.y = GET_Y_LPARAM(lParam);
 
                 break;
 
@@ -269,18 +288,18 @@ namespace BINDU {
 
                 event.type = EVENT::Type::MOUSE_MOVE;
 
-                event.body.Ev_Mouse.button = BND_Button::BND_NONE;
+                event.Ev_Mouse.button = BND_Button::BND_NONE;
 
                 if (wParam & MK_LBUTTON)
-                    event.body.Ev_Mouse.button = BND_Button::BND_LEFT;
+                    event.Ev_Mouse.button = BND_Button::BND_LEFT;
                 else if (wParam & MK_RBUTTON)
-                    event.body.Ev_Mouse.button = BND_Button::BND_RIGHT;
+                    event.Ev_Mouse.button = BND_Button::BND_RIGHT;
                 else if (wParam & MK_MBUTTON)
-                    event.body.Ev_Mouse.button = BND_Button::BND_MIDDLE;
+                    event.Ev_Mouse.button = BND_Button::BND_MIDDLE;
 
 
-                event.body.Ev_Mouse.position.x = GET_X_LPARAM(lParam);
-                event.body.Ev_Mouse.position.y = GET_Y_LPARAM(lParam);
+                event.Ev_Mouse.position.x = GET_X_LPARAM(lParam);
+                event.Ev_Mouse.position.y = GET_Y_LPARAM(lParam);
 
                 break;
 

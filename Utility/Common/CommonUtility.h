@@ -18,9 +18,10 @@
 #define THROW_EXCEPTION(ErrorNum, ErrorDesc) throw EngineException(ErrorNum, ErrorDesc, __FILE__, __LINE__);
 #endif
 
-#ifndef BINDU_ASSERT
-#define BINDU_ASSERT(Expr, Str) assert((Expr) && (Str));
-#endif
+#define BINDU_EXPAND_MACRO(x) x
+#define BINDU_STRINGIFY_MACRO(x) #x
+
+#define SET_BIT(x) (1 << x)
 
 // TODO: Find better methods
 inline std::wstring StringToWstring(const std::string& str)
@@ -56,6 +57,28 @@ inline std::string RelativeResourcePath(const char* filepath = nullptr, const st
 		ResourcePath += filepath;
 
 	return ResourcePath;
+}
+
+namespace BINDU
+{
+
+	template<typename T>
+	using Scoped = std::unique_ptr<T>;
+
+	template<typename T, typename... Args>
+	constexpr Scoped<T> CreateScoped(Args&&... args)
+	{
+		return std::make_unique<T>(std::forward<Args>(args)...);
+	}
+
+	template<typename T>
+	using Ref = std::shared_ptr<T>;
+
+	template<typename T, typename... Args>
+	constexpr Ref<T> CreateRef(Args&&... args)
+	{
+		return std::make_shared<T>(std::forward<Args>(args)...);
+	}
 }
 
 #endif //BINDU_COMMONUTILITY_H

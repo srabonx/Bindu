@@ -1,116 +1,36 @@
 #include "Logger.h"
-#include <sstream>
-#include <fstream>
-#include <iomanip>
 
+#include "spdlog/sinks/basic_file_sink.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
 
-BINDU::Logger* BINDU::Logger::m_logger = nullptr;
-
-
-class BINDU::Logger::Impl
+namespace BINDU
 {
-  public:
-        // Buffer for the logs
-        std::stringstream m_logBuffer;
-        // Handle to the log file
-        std::ofstream m_logFile;
-
-    public:
-        // Get the time as a string. Can be used for recording time of the log
-        const std::string getTimeString();
-        const std::string getLogTypeString(LogType type);
-};
+	Ref<spdlog::logger>	Logger::s_coreLogger;
+	Ref<spdlog::logger> Logger::s_clientLogger;
 
 
+	void Logger::Init()
+	{
+		std::vector<spdlog::sink_ptr>	logSinks;
+		logSinks.emplace_back(CreateRef<spdlog::sinks::stdout_color_sink_mt>());
+		logSinks.emplace_back(CreateRef<spdlog::sinks::basic_file_sink_mt>("Bindu.log", true));
 
-BINDU::Logger::Logger() : m_impl(std::make_unique<Impl>())
-{
-}
+		logSinks[0]->set_pattern("%^[%T] %n: %v%$");
+		logSinks[1]->set_pattern("[%T] [%1] %n: %v");
 
-BINDU::Logger::~Logger()
-{
+		s_coreLogger = CreateRef<spdlog::logger>("BINDU", std::begin(logSinks), std::end(logSinks));
+		spdlog::register_logger(s_coreLogger);
+		s_coreLogger->set_level(spdlog::level::trace);
+		s_coreLogger->flush_on(spdlog::level::trace);
 
-}
-
-
-BINDU::Logger* BINDU::Logger::Get()
-{
-    if (m_logger == nullptr)
-    {
-        m_logger = new Logger();
-        return m_logger;
-    }
-    else
-        return m_logger;
-}
-
-void BINDU::Logger::Open(const std::string& filename)
-{
-    m_impl->m_logFile.open(filename);
-
-    Log(LogType::Info, "LOG START\n\n\n");
-
-}
-
-std::ostream& BINDU::Logger::Buffer()
-{
-    return m_impl->m_logBuffer;
-}
-
-void BINDU::Logger::Log(LogType type,const std::string& log)
-{
-    m_impl->m_logBuffer << m_impl->getTimeString() + " " + m_impl->getLogTypeString(type)  << "\n" << log << "\n\n";
-    Flush();
-}
-
-void BINDU::Logger::Flush()
-{
-    m_impl->m_logFile << m_impl->m_logBuffer.str();
-    m_impl->m_logFile.flush();
-    m_impl->m_logBuffer.str("");
-}
-
-void BINDU::Logger::Close()
-{
-    m_impl->m_logFile.close();
-    delete m_logger;
-    m_logger = nullptr;
-}
-
-bool BINDU::Logger::Exists()
-{
-    // Check if an instance of it already exists or not
-    return m_logger != nullptr;
+		s_clientLogger = CreateRef<spdlog::logger>("APP", std::begin(logSinks), std::end(logSinks));
+		spdlog::register_logger(s_clientLogger);
+		s_clientLogger->set_level(spdlog::level::trace);
+		s_clientLogger->flush_on(spdlog::level::trace);
+	}
 }
 
 
-const std::string BINDU::Logger::Impl::getTimeString()
-{
-    std::stringstream timeStr;
 
-    struct tm* pTime{ nullptr };
-    time_t ctTime;
-    time(&ctTime);
-    pTime = localtime(&ctTime);
-
-    timeStr << std::setw(2) << std::setfill('0') << pTime->tm_hour << ":";
-    timeStr << std::setw(2) << std::setfill('0') << pTime->tm_min << ":";
-    timeStr << std::setw(2) << std::setfill('0') << pTime->tm_sec;
-
-    return timeStr.str();
-}
-
-const std::string BINDU::Logger::Impl::getLogTypeString(LogType type)
-{
-    switch (type)
-    {
-    case BINDU::LogType::Info: return "[INFO]";
-    case BINDU::LogType::Warning: return "[WARNING]";
-    case BINDU::LogType::Error: return "[ERROR]";
-    default:
-        break;
-    }
-    return "";
-}
 
 
