@@ -10,6 +10,8 @@
 
 namespace BINDU
 {
+	class CommandList;
+
 	class AppLayer
 	{
 		friend class AppLayerStack;
@@ -21,7 +23,7 @@ namespace BINDU
 		virtual void OnDetach() {}
 
 		virtual void OnUpdate(double dt) = 0;
-		virtual void OnRender() = 0;
+		virtual void OnRender(CommandList& commandList) = 0;
 
 		virtual void OnEvent(EVENT::BND_Event& event) = 0;
 

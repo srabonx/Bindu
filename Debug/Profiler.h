@@ -133,9 +133,8 @@ namespace BINDU
 
 }
 
-#define BINDU_PROFILE 0
+#define BINDU_PROFILE 1
 #if BINDU_PROFILE
-{
 
 		#if defined(__GNUC__) || (defined(__MWERKS__) && (__MWERKS__ >= 0x3000)) || (defined(__ICC) && (__ICC >= 600)) || defined(__ghs__)
 		#define BINDU_FUNC_SIG __PRETTY_FUNCTION__

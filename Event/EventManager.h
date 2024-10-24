@@ -6,10 +6,9 @@
 #define BINDU_EVENTMANAGER_H
 
 #include <functional>
-#include <memory>
 
+#include "EventPool.h"
 
-#define BINDU_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) {return this->fn(std::forward<decltype(args)>(args)...);}
 
 namespace BINDU {
     namespace EVENT
@@ -20,31 +19,36 @@ namespace BINDU {
 
     using EventCallbackFn = std::function<void(EVENT::BND_Event&)>;
 
+    using EventCallbackToken = std::uint32_t;
+
     class EventManager
     {
     public:
-        EventManager();
 
-        ~EventManager();
+        static void PushEvent(const EVENT::BND_Event& event);
 
-        void PushEvent(EVENT::BND_Event event) const;
+        static void DispatchEvents();
 
-        void DispatchEvents() const;
+        static void AddListener(IEventListener* eventListener) ;
 
-        void AddListener(IEventListener* eventListener) const;
+        static void RemoveListener(IEventListener* eventListener);
 
-        void RemoveListener(IEventListener* eventListener) const;
+        [[nodiscard]]static EventCallbackToken BindListenerFn(const EventCallbackFn& callback);
 
-        void BindListenerFn(const EventCallbackFn& callback) const;
+        static void RemoveListenerFn(EventCallbackToken token);
 
-        void RemoveListenerFn(const EventCallbackFn& callback) const;
-
-        void Clear() const;
+        static void Clear();
 
     private:
-        class Impl;
-        std::unique_ptr<Impl> m_impl{nullptr};
+
+        static EventPool                   m_eventPool;
+        static std::list<IEventListener*>  m_eventListeners;
+        static std::vector<std::pair<EventCallbackToken,EventCallbackFn>>  m_eventListenerFns;
+        static EventCallbackToken          m_tokens;
     };
+
+#define BINDU_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) {return this->fn(std::forward<decltype(args)>(args)...);}
+
 
 } // BINDU
 

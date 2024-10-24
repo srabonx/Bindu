@@ -1,7 +1,6 @@
-#ifndef LOGGER_H
-#define LOGGER_H
+#ifndef BINDU_LOGGER_H
+#define BINDU_LOGGER_H
 
-#include "ILogger.h"
 #include <memory>
 
 #include "../Utility/Common/CommonUtility.h"
@@ -13,7 +12,12 @@ namespace BINDU
 	class Logger
 	{
 	public:
+
+		~Logger() = default;
+
 		static void Init();
+
+		static void Close();
 
 		static Ref<spdlog::logger>& GetCoreLogger() { return s_coreLogger; }
 

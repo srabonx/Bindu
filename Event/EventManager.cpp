@@ -11,84 +11,75 @@
 namespace BINDU
 {
 
-    class EventManager::Impl
-    {
-    public:
-        std::unique_ptr<EventPool> m_eventPool;
-        std::list<IEventListener*> m_eventListeners;
-        std::list<EventCallbackFn> m_eventListenerFns;
-    };
+    EventPool                       EventManager::m_eventPool;
+    std::list<IEventListener*>      EventManager::m_eventListeners;
+    std::vector<std::pair<EventCallbackToken, EventCallbackFn>>      EventManager::m_eventListenerFns;
+    EventCallbackToken              EventManager::m_tokens;
 
 
 
-
-    EventManager::EventManager() : m_impl(std::make_unique<Impl>())
-    {
-        m_impl->m_eventPool = std::make_unique<EventPool>();
-    }
-
-    EventManager::~EventManager()
-    {
-
-    }
-
-    void EventManager::PushEvent(EVENT::BND_Event event) const
+    void EventManager::PushEvent(const EVENT::BND_Event& event)
     {
         if(event.type != EVENT::Type::NONE)
         {
-            m_impl->m_eventPool->Push(event);
+            m_eventPool.Push(event);
             DispatchEvents();
         }
             
     }
 
-    void EventManager::DispatchEvents() const
+    void EventManager::DispatchEvents()
     {
         EVENT::BND_Event event = {};
-        while(m_impl->m_eventPool->Poll(event))
+        while(m_eventPool.Poll(event))
         {
-            for(const auto& l : m_impl->m_eventListeners)
+            for(const auto& l : m_eventListeners)
             {
                 l->ProcessEvent(event);
             }
 
-            for(const auto& fn : m_impl->m_eventListenerFns)
+            for(const auto& [token,fn] : m_eventListenerFns)
             {
                 fn(event);
             }
         }
     }
 
-    void EventManager::AddListener(IEventListener *eventListener) const
+    void EventManager::AddListener(IEventListener *eventListener)
     {
-        m_impl->m_eventListeners.push_back(eventListener);
+        m_eventListeners.push_back(eventListener);
     }
 
-    void EventManager::RemoveListener(IEventListener *eventListener) const
+    void EventManager::RemoveListener(IEventListener *eventListener)
     {
-        m_impl->m_eventListeners.remove(eventListener);
+        m_eventListeners.remove(eventListener);
     }
 
-    void EventManager::BindListenerFn(const EventCallbackFn& callback) const
+    EventCallbackToken EventManager::BindListenerFn(const EventCallbackFn& callback)
     {
-        m_impl->m_eventListenerFns.emplace_back(callback);
+        auto token = m_tokens++;
+        m_eventListenerFns.emplace_back(token, callback);
+        return token;
     }
 
-    void EventManager::RemoveListenerFn(const EventCallbackFn& callback) const
+    void EventManager::RemoveListenerFn(EventCallbackToken token)
     {
-        m_impl->m_eventListenerFns.remove(callback);
+        auto it = std::find_if(m_eventListenerFns.begin(), m_eventListenerFns.end(),
+            [token](const auto& pair) {return pair.first == token; });
+        if (it != m_eventListenerFns.end())
+            m_eventListenerFns.erase(it);
     }
 
-    void EventManager::Clear() const
+    void EventManager::Clear()
     {
-        while(!m_impl->m_eventListeners.empty())
-            m_impl->m_eventListeners.pop_back();
+        while (!m_eventListeners.empty())
+            m_eventListeners.pop_back();
 
-        m_impl->m_eventListeners.clear();
+        m_eventListeners.clear();
 
-        m_impl->m_eventListenerFns.clear();
+        m_eventListenerFns.clear();
 
-        m_impl->m_eventPool->Clear();
+        m_eventPool.Clear();
     }
 
 

@@ -28,6 +28,13 @@ namespace BINDU
 		s_clientLogger->set_level(spdlog::level::trace);
 		s_clientLogger->flush_on(spdlog::level::trace);
 	}
+
+	void Logger::Close()
+	{
+		s_coreLogger.reset();
+		s_clientLogger.reset();
+		spdlog::shutdown();
+	}
 }
 
 

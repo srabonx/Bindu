@@ -12,37 +12,42 @@
 #include "../Event/IEventListener.h"
 
 namespace BINDU {
+	class IInputHandler;
 
-    // The manager class for managing inputs
+	// The manager class for managing inputs
     class InputManager final : public IEventListener
     {
     public:
-        InputManager();
-        ~InputManager() override;
+        InputManager() = default;
+        ~InputManager() override = default;
 
-        bool IsKeyPressed(BND_Key key) const;
+        static void Initialize();
 
-        bool IsKeyReleased(BND_Key key) const;
+        static bool IsKeyPressed(BND_Key key);
 
-        bool IsKeyHeld(BND_Key key) const;
+        static bool IsKeyReleased(BND_Key key);
 
-        bool IsButtonPressed(BND_Button button) const;
+        static bool IsKeyHeld(BND_Key key);
 
-        bool IsButtonReleased(BND_Button button) const;
+        static bool IsButtonPressed(BND_Button button);
 
-        bool IsButtonHeld(BND_Button button) const;
+        static bool IsButtonReleased(BND_Button button);
 
-        bool IsMouseDragged(BND_Button button) const;
+        static bool IsButtonHeld(BND_Button button);
 
-        Mouse& GetMouse() const;
+        static bool IsMouseDragged(BND_Button button);
 
-        Keyboard& GetKeyboard() const;
+        static Mouse& GetMouse();
 
-        void ProcessEvent(EVENT::BND_Event event) override;
+        static Keyboard& GetKeyboard();
+
+    	void ProcessEvent(EVENT::BND_Event event) override;
 
     private:
-        class Impl;
-        Impl* m_impl{nullptr};
+        static std::unique_ptr<IInputHandler> m_inputHandler;
+
+        static Keyboard m_keyboard;
+        static Mouse m_mouse;
     };
 
 } // BINDU

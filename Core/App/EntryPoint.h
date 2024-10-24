@@ -4,7 +4,7 @@
 #include "../../Logger/Logger.h"
 #include "../../Debug/Profiler.h"
 
-extern BINDU::Application* BINDU::CreateApplication();
+/* extern BINDU::Application* BINDU::CreateApplication();
 
 int main()
 {
@@ -32,7 +32,7 @@ int main()
 
 	BINDU_PROFILE_END_SESSION();
 
-}
+} */
 
 
 #endif

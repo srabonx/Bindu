@@ -33,96 +33,50 @@ add_library(Bindu STATIC
         Window/Win32Window.h
 
         # Core - Engine
-        Core/Engine/IEngine.h
-        Core/Engine/Win32Engine.cpp
-        Core/Engine/Win32Engine.h
         Core/App/IBindu_App.h
 
-        # Core - Renderer - DirectX
-        Core/Renderer/DirectX/D3DDeviceManager.h
-        Core/Renderer/DirectX/D3DDeviceManager.cpp
-        Core/Renderer/DirectX/D3DSwapChain.h
-        Core/Renderer/DirectX/D3DSwapChain.cpp
-        Core/Renderer/DirectX/D3DUtillity.h
-        Core/Renderer/DirectX/ComException.h
-        Core/Renderer/DirectX/d3dx12.h
-        Core/Renderer/DirectX/CpuDescriptorHeap.h
-        Core/Renderer/DirectX/CpuDescriptorHeap.cpp
-        Core/Renderer/DirectX/DescriptorHeap.h
-        Core/Renderer/DirectX/DescriptorHeap.cpp
-        Core/Renderer/DirectX/DescriptorHeapManager.h
-        Core/Renderer/DirectX/DescriptorHeapManager.cpp
-        Core/Renderer/DirectX/GpuDescriptorHeap.h 
-        Core/Renderer/DirectX/GpuDescriptorHeap.cpp
-        Core/Renderer/DirectX/VariableSizeGpuMemoryAllocator.h
-        Core/Renderer/DirectX/VariableSizeGpuMemoryAllocator.cpp
-        Core/Renderer/DirectX/VariableSizeMemoryAllocator.h
-        Core/Renderer/DirectX/VariableSizeMemoryAllocator.cpp
-        Core/Renderer/DirectX/D3DCommandContext.h 
-        Core/Renderer/DirectX/D3DCommandContext.cpp
-        Core/Renderer/DirectX/D3DFence.h
-        Core/Renderer/DirectX/D3DFence.cpp
-        Core/Renderer/DirectX/IDescriptorHeapAllocator.h
-        Core/Renderer/DirectX/D3DPipelineStateManager.h
-        Core/Renderer/DirectX/D3DPipelineStateManager.cpp
-        Core/Renderer/DirectX/D3DShader.h
-        Core/Renderer/DirectX/D3DShader.cpp
-        Core/Renderer/DirectX/DefaultRenderContext.h
-        Core/Renderer/DirectX/DefaultRenderContext.cpp
-
-        # GameObject
-        Core/GameObject/Transform.h
-        Core/GameObject/Transform.cpp
-        Core/GameObject/GameObject.h
-        Core/GameObject/GameObject.cpp
-        Core/GameObject/MeshObject.h
-        Core/GameObject/MeshObject.cpp
-        Core/GameObject/Buffers.h
-        Core/GameObject/Buffers.cpp
-        Core/GameObject/Camera.h
-        Core/GameObject/Camera.cpp 
-        Core/GameObject/MeshManager.h
-        Core/GameObject/MeshManager.cpp
-        Core/GameObject/GeometryGenerator.h
-        Core/GameObject/GeometryGenerator.cpp
-        Core/GameObject/Material.h
-        Core/GameObject/Material.cpp
-        Core/GameObject/Light.h
-        Core/GameObject/Light.cpp 
+        #Renderer - DirectX
+        Renderer/DirectX/D3DDeviceManager.h
+        Renderer/DirectX/D3DDeviceManager.cpp
+        Renderer/DirectX/D3DUtillity.h
+        Renderer/DirectX/ComException.h
+        Renderer/DirectX/d3dx12.h
+        Renderer/DirectX/CpuDescriptorHeap.h
+        Renderer/DirectX/CpuDescriptorHeap.cpp
+        Renderer/DirectX/DescriptorHeap.h
+        Renderer/DirectX/DescriptorHeap.cpp
+        Renderer/DirectX/DescriptorHeapManager.h
+        Renderer/DirectX/DescriptorHeapManager.cpp
+        Renderer/DirectX/GpuDescriptorHeap.h 
+        Renderer/DirectX/GpuDescriptorHeap.cpp
+        Renderer/DirectX/VariableSizeGpuMemoryAllocator.h
+        Renderer/DirectX/VariableSizeGpuMemoryAllocator.cpp
+        Renderer/DirectX/VariableSizeMemoryAllocator.h
+        Renderer/DirectX/VariableSizeMemoryAllocator.cpp
+        Renderer/DirectX/D3DCommandContext.h 
+        Renderer/DirectX/D3DCommandContext.cpp
+        Renderer/DirectX/DDSTextureLoader.h 
+        Renderer/DirectX/DDSTextureLoader.cpp
+        Renderer/DirectX/D3DFence.h
+        Renderer/DirectX/D3DFence.cpp
+        Renderer/DirectX/IDescriptorHeapAllocator.h
+        Renderer/DirectX/D3DPipelineStateManager.h
+        Renderer/DirectX/D3DPipelineStateManager.cpp
+        Renderer/DirectX/D3DShader.h
+        Renderer/DirectX/D3DShader.cpp
 
         # ECS
-        Core/ECS/ECSScene.h
-        Core/ECS/ECSScene.cpp
-        Core/ECS/EntityManager.h
-        Core/ECS/EntityManager.cpp
-        Core/ECS/Entity.h
-        Core/ECS/Entity.cpp
-        Core/ECS/Components.h
-        Core/ECS/SparseSet.h
-        Core/ECS/ComponentRegistry.h
-        Core/ECS/View.h
-        Core/ECS/ECSConstants.h
-
-        # Managers
-        Core/Managers/GameObjectManager.h
-        Core/Managers/GameObjectManager.cpp
-        Core/Managers/ConstantBufferManager.h
-        Core/Managers/ConstantBufferManager.cpp
-        Core/Managers/TextureManager.h
-        Core/Managers/TextureManager.cpp
-        Core/Managers/MaterialManager.h
-        Core/Managers/MaterialManager.cpp
-        Core/Managers/CbAllocation.h
-
-        # Resources
-        
-     #   Core/Resources/Texture.cpp
-        Core/Resources/DepthStencilBuffer.h
-        Core/Resources/DepthStencilBuffer.cpp
-        Core/Resources/RenderTexture.h
-        Core/Resources/RenderTexture.cpp
-        Core/Resources/Resource.h
-        Core/Resources/Resource.cpp
+        Scene/Scene.h
+        Scene/Scene.cpp
+        ECS/EntityManager.h
+        ECS/EntityManager.cpp
+        ECS/Entity.h
+        ECS/Entity.cpp
+        ECS/Components.h
+        ECS/SparseSet.h
+        ECS/ComponentRegistry.h
+        ECS/View.h
+        ECS/ECSConstants.h
 
         # Logger
         Logger/Logger.h
@@ -155,11 +109,13 @@ add_library(Bindu STATIC
         # DEBUG
         Debug/Profiler.h
         Debug/Profiler.cpp
-        "Debug/Assert.h"
+        Debug/Assert.h
         
         # APP
         Core/App/Application.h
-        Core/App/Application.cpp "Core/App/AppLayer.h" "Core/App/AppLayer.cpp" "Core/App/AppLayerStack.h" "Core/App/AppLayerStack.cpp"     "Core/Renderer/Renderer.h" "Core/Renderer/GraphicsContext.h" "Core/Renderer/RendererFactory.h" "Core/Renderer/RendererFactory.cpp" "Core/Renderer/DirectX/DirectXRenderer.h" "Core/Renderer/DirectX/DirectXRenderer.cpp" "Core/Renderer/DirectX/DirectXGraphicsContext.h" "Core/Renderer/DirectX/DirectXGraphicsContext.cpp"  "Core/Renderer/RenderCommand.h" "Core/Renderer/CommandQueue.h"  "Core/Renderer/CommandList.h" "Core/Renderer/DirectX/DirectXCommandList.h" "Core/Renderer/DirectX/DirectXCommandList.cpp" "Core/Renderer/Texture.h" "Core/Renderer/DirectX/DirectXTexture.h" "Core/Renderer/DirectX/DirectXTexture.cpp" "Core/Renderer/DirectX/DirectXRenderTexture.h" "Core/Renderer/DirectX/DirectXRenderTexture.cpp" "Core/Renderer/Shader.h" "Core/Renderer/DirectX/DirectXShader.h" "Core/Renderer/DirectX/DirectXShader.cpp" "Core/Renderer/UniformBuffer.h" "Core/Renderer/DirectX/DirectXConstantBuffer.h" "Core/Renderer/DirectX/DirectXConstantBuffer.cpp" "Core/Renderer/DataFormat.h" "Core/App/EntryPoint.h")
+        Core/App/Application.cpp "Core/App/AppLayer.h" "Core/App/AppLayer.cpp" "Core/App/AppLayerStack.h" "Core/App/AppLayerStack.cpp"     "Renderer/Renderer.h" "Renderer/GraphicsContext.h" "Renderer/RendererFactory.h" "Renderer/RendererFactory.cpp" "Renderer/DirectX/DirectXRenderer.h" "Renderer/DirectX/DirectXRenderer.cpp" "Renderer/DirectX/DirectXGraphicsContext.h" "Renderer/DirectX/DirectXGraphicsContext.cpp"  "Renderer/RenderCommand.h" "Renderer/CommandQueue.h"  "Renderer/CommandList.h" "Renderer/DirectX/DirectXCommandList.h" "Renderer/DirectX/DirectXCommandList.cpp" "Renderer/Texture.h" "Renderer/DirectX/DirectXTexture.h" "Renderer/DirectX/DirectXTexture.cpp" "Renderer/DirectX/DirectXRenderTexture.h" "Renderer/DirectX/DirectXRenderTexture.cpp" "Renderer/Shader.h" "Renderer/DirectX/DirectXShader.h" "Renderer/DirectX/DirectXShader.cpp" "Renderer/UniformBuffer.h" "Renderer/DirectX/DirectXConstantBuffer.h" "Renderer/DirectX/DirectXConstantBuffer.cpp" "Renderer/DataFormat.h" "Renderer/ResourceFactory.h" "Renderer/ResourceFactory.cpp" "Renderer/Buffer.h" "Renderer/DirectX/DirectXBuffer.h" "Renderer/DirectX/DirectXBuffer.cpp" "Geometry/MeshData.h" "Scene/SceneLayer.h" "Renderer/Camera.h" "Renderer/EditorCamera.h" "Renderer/EditorCamera.cpp" "Renderer/OrthographicCamera.h" "Renderer/OrthographicCamera.cpp")
 
 # Link spdlog to the Bindu library
-target_link_libraries(Bindu PRIVATE spdlog::spdlog)
+target_link_libraries(Bindu PRIVATE spdlog::spdlog_header_only)
+target_compile_definitions(Bindu PRIVATE SPDLOG_HEADER_ONLY)
+

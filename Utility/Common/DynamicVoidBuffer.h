@@ -27,6 +27,9 @@ namespace BINDU
 		// Returns buffer size in byte
 		size_t	GetBufferSize() const;
 
+		// Resets the buffer for refilling
+		void	Reset();
+
 		// Free the buffer memory
 		void	Free();
 

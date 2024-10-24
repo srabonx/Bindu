@@ -53,14 +53,14 @@ namespace BINDU
 		std::stringstream json;
 
 		json << std::setprecision(3) << std::fixed;
-		json << ",{";
-		json << "\"cat\":\"function\",";
-		json << "\"dur\":" << (result.ElapsedTime.count()) << ',';
-		json << "\"name\":\"" << result.Name << "\",";
-		json << "\"ph\":\"X\",";
-		json << "\"pid\":0,";
-		json << "\"ts\":" << result.StartTime.count();
-		json << "}";
+		json << ",\n{";
+		json << "\n\t\"cat\":\"function\",";
+		json << "\n\t\"dur\":" << (result.ElapsedTime.count()) << ',';
+		json << "\n\t\"name\":\"" << result.Name << "\",";
+		json << "\n\t\"ph\":\"X\",";
+		json << "\n\t\"pid\":0,";
+		json << "\n\t\"ts\":" << result.StartTime.count();
+		json << "\n}";
 
 		if(m_currentSession)
 		{

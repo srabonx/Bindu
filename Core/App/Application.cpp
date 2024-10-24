@@ -3,7 +3,8 @@
 #include "../../Debug/Profiler.h"
 #include "../../Debug//Assert.h"
 #include "../../Window/Win32Window.h"
-#include "../Renderer/RendererFactory.h"
+#include "../../Renderer/RendererFactory.h"
+#include "../../Renderer/ResourceFactory.h"
 
 
 namespace  BINDU
@@ -11,17 +12,13 @@ namespace  BINDU
 
 	Application* Application::s_instance = nullptr;
 
-	Application::Application(const AppSpecification& specification) : m_specification(specification)
+	Application::Application(AppSpecification specification) : m_specification(std::move(specification))
 	{
 		BINDU_PROFILE_FUNCTION();
 
 		BINDU_CORE_ASSERT(!s_instance, "Application already exists!");
 
 		s_instance = this;
-	}
-
-	Application::~Application()
-	{
 	}
 
 	void Application::ProcessEvent(EVENT::BND_Event event)
@@ -58,24 +55,40 @@ namespace  BINDU
 	{
 		BINDU_PROFILE_FUNCTION();
 
-		m_eventManager.BindListenerFn(BINDU_BIND_EVENT_FN(Application::ProcessEvent));
+		m_callbackToken = EventManager::BindListenerFn(BINDU_BIND_EVENT_FN(Application::ProcessEvent));
 
 		HINSTANCE hInstance = GetModuleHandle(NULL);
 
 		m_window = CreateScoped<Win32Window>(hInstance);
 		m_window->Create(m_specification.Width, m_specification.Height, m_specification.Name);
 
-		m_window->RegisterEventManager(&m_eventManager);
+		//m_window->RegisterEventManager(&m_eventManager);
 
 		// TODO: Add renderer Initialization
 		m_renderer = RendererFactory::CreateRenderer(RendererFactory::API::DirectX);
+		m_renderer->Initialize();
+		ResourceFactory::Initialize(m_renderer);
+
 		m_graphicsContext = RendererFactory::CreateGraphicsContext(m_window.get(), m_renderer);
 
+		GraphicsContextProperties prop = { 2, TextureFormat::RGBA8_UNORM, 1,0 };
+
+		m_graphicsContext->Initialize(prop);
+
+
+		m_commandList = m_graphicsContext->GetCommandList();
+
+		InputManager::Initialize();
+
+		EventManager::AddListener(&m_inputManager);
 	}
 
 	void Application::Update(double dt)
 	{
 		BINDU_PROFILE_FUNCTION();
+
+		// Prepare for new commands
+		m_graphicsContext->PrepareForCommands();
 
 		for (const auto& layer : m_layerStack)
 			layer->OnUpdate(dt);
@@ -86,13 +99,25 @@ namespace  BINDU
 		BINDU_PROFILE_FUNCTION();
 
 		for (const auto& layer : m_layerStack)
-			layer->OnRender();
+			layer->OnRender(*m_commandList);
+
+		// Execute all the commands until now
+		m_graphicsContext->ExecuteCommands();
+
+		// Present the render
+		m_graphicsContext->Present();
 	}
 
 	void Application::Close()
 	{
 		BINDU_PROFILE_FUNCTION();
-		m_eventManager.Clear();
+
+		EventManager::RemoveListenerFn(m_callbackToken);
+
+		EventManager::Clear();
+
+		m_renderer->Close();
+		m_graphicsContext->Close();
 
 		m_isRunning = false;
 	}
@@ -105,14 +130,24 @@ namespace  BINDU
 	{
 		BINDU_PROFILE_FUNCTION();
 
+		m_graphicsContext->PrepareForCommands();
+
 		m_layerStack.PushLayer(layer);
+
+		m_graphicsContext->ExecuteCommands();
+
+		
 	}
 
 	void Application::PopLayer(AppLayer* layer)
 	{
 		BINDU_PROFILE_FUNCTION();
 
+		m_graphicsContext->PrepareForCommands();
+
 		m_layerStack.PopLayer(layer);
+
+		m_graphicsContext->ExecuteCommands();
 	}
 
 	void Application::Run()
@@ -167,13 +202,23 @@ namespace  BINDU
 				m_appStats.FPS = fpsCounter;
 				m_appStats.TPS = fpsCounter;
 
-				s_instance->GetAppStat(m_appStats);
+			//	s_instance->GetAppStat(m_appStats);
 
 				fpsCounter = 0;
 
 				fpsElapsedTime = 0.0;
 				}
 		}
+	}
+
+	GraphicsContext* Application::GetGraphicsContext() const
+	{
+		return m_graphicsContext.get();
+	}
+
+	Renderer* Application::GetRenderer() const
+	{
+		return m_renderer.get();
 	}
 
 	void Application::OnMinimize()
@@ -186,10 +231,11 @@ namespace  BINDU
 		m_minimized = false;
 	}
 
-	void Application::OnResize(std::uint16_t width, std::uint16_t height)
+	void Application::OnResize(std::uint16_t width, std::uint16_t height) const
 	{
 		BINDU_PROFILE_FUNCTION();
 
+		m_graphicsContext->Resize(width, height);
 
 	}
 }

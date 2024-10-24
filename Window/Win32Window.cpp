@@ -29,8 +29,8 @@ namespace BINDU {
         //Ev_Window title
         std::string m_title;
 
-        // pointer to the Event Manager
-        EventManager* m_eventManager{nullptr};
+      /*  // pointer to the Event Manager
+        EventManager* m_eventManager{nullptr}; */
 
     public:
         static LRESULT CALLBACK WindowMessageProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -112,7 +112,7 @@ namespace BINDU {
 
     void Win32Window::RegisterEventManager(EventManager *eventManager)
     {
-        m_impl->m_eventManager = eventManager;
+       // m_impl->m_eventManager = eventManager;
     }
 
     void Win32Window::SetWindowTitle(const std::string& title)
@@ -199,8 +199,9 @@ namespace BINDU {
                 m_height = HIWORD(lParam);
 
                 // Push the WINDOW_SIZE_CHANGED Event
-                if (m_eventManager)
-                    m_eventManager->PushEvent(event);
+               // if (m_eventManager)
+                 //   m_eventManager->PushEvent(event);
+                EventManager::PushEvent(event);
 
                 if (wParam == SIZE_MAXIMIZED)
                     event.type = EVENT::Type::WINDOW_MAXIMIZED;
@@ -308,9 +309,9 @@ namespace BINDU {
                 break;
         }
 
-        if(m_eventManager)
-            m_eventManager->PushEvent(event);
-
+       // if(m_eventManager)
+         //   m_eventManager->PushEvent(event);
+        EventManager::PushEvent(event);
 
         return LRESULT();
     }

@@ -10,15 +10,14 @@
   "ExpandedNodes": [
     "",
     "\\Core",
-    "\\Core\\ECS",
-    "\\Core\\Managers",
-    "\\Core\\Renderer",
-    "\\Core\\Renderer\\DirectX",
-    "\\Core\\Resources",
-    "\\Debug",
+    "\\Core\\App",
     "\\Event",
-    "\\Logger"
+    "\\Input",
+    "\\Renderer",
+    "\\Scene",
+    "\\Utility",
+    "\\Utility\\Common",
+    "\\Window"
   ],
-  "SelectedNode": "\\Core\\GameObject\\MeshObject.cpp",
   "PreviewInSolutionExplorer": false
 }

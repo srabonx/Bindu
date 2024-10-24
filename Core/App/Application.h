@@ -5,14 +5,14 @@
 #include "IBindu_App.h"
 #include "../../Event/EventManager.h"
 #include "../../Event/EventStruct.h"
-#include "../Engine/IEngine.h"
 #include "AppLayerStack.h"
+#include "../../Input/InputManager.h"
 #include "../../Utility/Common/CommonUtility.h"
 #include "../../Window/IWindow.h"
-#include "../Renderer/GraphicsContext.h"
-#include "../Renderer/Renderer.h"
+#include "../../Renderer/GraphicsContext.h"
+#include "../../Renderer/Renderer.h"
 
-int main();
+//int main();
 
 namespace BINDU
 {
@@ -34,13 +34,15 @@ namespace BINDU
 	class Application
 	{
 	public:
-		Application(const AppSpecification& specification);
+		Application(AppSpecification specification);
 
-		virtual ~Application();
+		virtual ~Application() = default;
 
 		void	ProcessEvent(EVENT::BND_Event event);
 
-		void	Initialize();
+		virtual void	Initialize();
+
+		void	Run();
 
 		void	Update(double dt);
 
@@ -57,41 +59,45 @@ namespace BINDU
 
 		const AppSpecification& GetSpecification() const { return m_specification; }
 
+		GraphicsContext* GetGraphicsContext() const;
+		Renderer*		 GetRenderer() const;
+
 	private:
 
-		void	Run();
 
 		void	OnMinimize();
 
 		void	OnRestored();
 
-		void	OnResize(std::uint16_t width, std::uint16_t height);
+		void	OnResize(std::uint16_t width, std::uint16_t height) const;
 
 	private:
 		static Application* s_instance;
-		friend int ::main();
+		//friend int ::main();
 
 	private:
 		AppSpecification	m_specification;
 		AppStats			m_appStats;
 
-		Scoped<IWindow>	m_window{ nullptr };
+		Scoped<IWindow>		m_window{ nullptr };
 
 		Ref<Renderer>		m_renderer{ nullptr };
 		Ref<GraphicsContext>	m_graphicsContext{ nullptr };
+		Ref<CommandList>	m_commandList{ nullptr };
 
 		bool				m_isRunning{ true };
 		bool				m_minimized{ false };
 
 		AppLayerStack		m_layerStack;
 
-		EventManager		m_eventManager;
+		EventCallbackToken	m_callbackToken;
+		InputManager		m_inputManager;
 	};
 
 
 
 	// To be defined in client
-	Application* CreateApplication();
+//	Application* CreateApplication();
 
 
 }

@@ -125,41 +125,41 @@ namespace BINDU {
             case EVENT::Type::KEY_DOWN:
             case EVENT::Type::KEY_UP:
                 //KeyState state = m_impl->m_keyboard.GetKeyState(event.body.Ev_Keyboard.key);
-                m_impl->m_keyboard->SetKeyState(event.body.Ev_Keyboard.key, event.body.Ev_Keyboard.state);
+                m_impl->m_keyboard->SetKeyState(event.Ev_Keyboard.key, event.Ev_Keyboard.state);
                 break;
 
 			case EVENT::Type::MOUSE_DOWN:
             {
-                ButtonState state = m_impl->m_mouse->GetButtonState(event.body.Ev_Mouse.button);
+                ButtonState state = m_impl->m_mouse->GetButtonState(event.Ev_Mouse.button);
                 state.isDown = true;
 
-                m_impl->m_mouse->SetButtonState(event.body.Ev_Mouse.button, state);
+                m_impl->m_mouse->SetButtonState(event.Ev_Mouse.button, state);
 
-                m_impl->m_mouse->SetMousePos(event.body.Ev_Mouse.position);
+                m_impl->m_mouse->SetMousePos(event.Ev_Mouse.position);
             }
             break;
 
 			case EVENT::Type::MOUSE_UP:
             {
-                ButtonState state = m_impl->m_mouse->GetButtonState(event.body.Ev_Mouse.button);
+                ButtonState state = m_impl->m_mouse->GetButtonState(event.Ev_Mouse.button);
                 state.isDown = false;
 
-                m_impl->m_mouse->SetButtonState(event.body.Ev_Mouse.button, state);
+                m_impl->m_mouse->SetButtonState(event.Ev_Mouse.button, state);
 
-                m_impl->m_mouse->SetMousePos(event.body.Ev_Mouse.position);
+                m_impl->m_mouse->SetMousePos(event.Ev_Mouse.position);
             }
                 break;
 
 			case EVENT::Type::MOUSE_MOVE:
 
-                if (event.body.Ev_Mouse.button != BND_Button::BND_NONE)
+                if (event.Ev_Mouse.button != BND_Button::BND_NONE)
                 {
                     m_impl->m_mouse->SetMouseDragged(true);
 
-                    ButtonState state = m_impl->m_mouse->GetButtonState(event.body.Ev_Mouse.button);
+                    ButtonState state = m_impl->m_mouse->GetButtonState(event.Ev_Mouse.button);
                     state.wasDown = state.isDown;
                     state.isDown = true;
-                    m_impl->m_mouse->SetButtonState(event.body.Ev_Mouse.button, state);
+                    m_impl->m_mouse->SetButtonState(event.Ev_Mouse.button, state);
                 }
                 else
                 {
@@ -169,7 +169,7 @@ namespace BINDU {
                 }
                     
 
-                m_impl->m_mouse->SetMousePos(event.body.Ev_Mouse.position);
+                m_impl->m_mouse->SetMousePos(event.Ev_Mouse.position);
 
                 break;
 

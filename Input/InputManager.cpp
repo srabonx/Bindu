@@ -6,79 +6,69 @@
 #include "../Event/EventStruct.h"
 #include "IInputHandler.h"
 #include "Win32InputHandler.h"
+#include "../Event/EventManager.h"
 
 namespace BINDU {
 
-    class InputManager::Impl
+    std::unique_ptr<IInputHandler> InputManager::m_inputHandler = nullptr;
+    Keyboard InputManager::m_keyboard;
+    Mouse InputManager::m_mouse;
+
+
+    void InputManager::Initialize()
     {
-    public:
-        ~Impl() = default;
-
-        Keyboard m_keyboard;
-        Mouse m_mouse;
-
-        std::unique_ptr<IInputHandler> m_inputHandler{nullptr};
-    };
-
-    InputManager::InputManager() : m_impl(new Impl)
-    {
-        m_impl->m_inputHandler = std::make_unique<Win32InputHandler>(&m_impl->m_keyboard, &m_impl->m_mouse);
+        m_inputHandler = std::make_unique<Win32InputHandler>(&m_keyboard, &m_mouse);
     }
 
-    InputManager::~InputManager()
+    bool InputManager::IsKeyPressed(BND_Key key)
     {
-        delete m_impl;
+        return m_inputHandler->IsKeyPressed(key);
     }
 
-    bool InputManager::IsKeyPressed(BND_Key key) const
+    bool InputManager::IsKeyReleased(BND_Key key)
     {
-        return m_impl->m_inputHandler->IsKeyPressed(key);
+        return m_inputHandler->IsKeyReleased(key);
     }
 
-    bool InputManager::IsKeyReleased(BND_Key key) const
+    bool InputManager::IsKeyHeld(BND_Key key)
     {
-        return m_impl->m_inputHandler->IsKeyReleased(key);
+        return m_inputHandler->IsKeyHeld(key);
     }
 
-    bool InputManager::IsKeyHeld(BND_Key key) const
+    bool InputManager::IsButtonPressed(BND_Button button)
     {
-        return m_impl->m_inputHandler->IsKeyHeld(key);
+        return m_inputHandler->IsMouseBtnPressed(button);
     }
 
-    bool InputManager::IsButtonPressed(BND_Button button) const
+    bool InputManager::IsButtonReleased(BND_Button button)
     {
-        return m_impl->m_inputHandler->IsMouseBtnPressed(button);
+        return m_inputHandler->IsMouseBtnReleased(button);
     }
 
-    bool InputManager::IsButtonReleased(BND_Button button) const
+    bool InputManager::IsButtonHeld(BND_Button button)
     {
-        return m_impl->m_inputHandler->IsMouseBtnReleased(button);
+        return m_inputHandler->IsMouseBtnHeld(button);
     }
 
-    bool InputManager::IsButtonHeld(BND_Button button) const
+    bool InputManager::IsMouseDragged(BND_Button button)
     {
-        return m_impl->m_inputHandler->IsMouseBtnHeld(button);
+        return m_inputHandler->IsMouseDragStart(button);
     }
 
-    bool InputManager::IsMouseDragged(BND_Button button) const
+    Mouse& InputManager::GetMouse()
     {
-        return m_impl->m_inputHandler->IsMouseDragStart(button);
-    }
-
-    Mouse& InputManager::GetMouse() const
-    {
-        return m_impl->m_mouse;
+        return m_mouse;
     }
 
 
-    Keyboard &InputManager::GetKeyboard() const
+    Keyboard &InputManager::GetKeyboard()
     {
-        return m_impl->m_keyboard;
+        return m_keyboard;
     }
 
     void InputManager::ProcessEvent(EVENT::BND_Event event)
     {
-        m_impl->m_inputHandler->ProcessEvents(event);
+        m_inputHandler->ProcessEvents(event);
     }
 
 

@@ -70,6 +70,11 @@ namespace BINDU
 		return m_currSize;
 	}
 
+	void DynamicVoidBuffer::Reset()
+	{
+		m_currSize = 0;
+	}
+
 	void DynamicVoidBuffer::Free()
 	{
 		if (m_buffer)

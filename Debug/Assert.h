@@ -1,7 +1,7 @@
 #ifndef BINDU_ASSERT_H
 #define BINDU_ASSERT_H
 
-#include "CommonUtility.h"
+#include "../Utility/Common/CommonUtility.h"
 #include <filesystem>
 
 #define BINDU_DEBUGBREAK() __debugbreak()
