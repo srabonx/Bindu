@@ -14,6 +14,12 @@
 namespace BINDU {
 	class IInputHandler;
 
+    enum class InputAPI
+    {
+	    Win32,
+
+    };
+
 	// The manager class for managing inputs
     class InputManager final : public IEventListener
     {
@@ -21,11 +27,13 @@ namespace BINDU {
         InputManager() = default;
         ~InputManager() override = default;
 
-        static void Initialize();
+        static void Initialize(InputAPI api);
 
         static bool IsKeyPressed(BND_Key key);
 
         static bool IsKeyReleased(BND_Key key);
+
+        static bool IsKeyCombinationPressed(std::initializer_list<BND_Key> keys);
 
         static bool IsKeyHeld(BND_Key key);
 
@@ -35,7 +43,19 @@ namespace BINDU {
 
         static bool IsButtonHeld(BND_Button button);
 
-        static bool IsMouseDragged(BND_Button button);
+        static MousePos GetMousePosition();
+
+        static int  GetMouseX();
+
+        static int  GetMouseY();
+
+        static int  GetMouseDeltaX(BND_Button button);
+
+        static int  GetMouseDeltaY(BND_Button button);
+
+        static int  GetMouseWheelDelta();
+
+        static void ResetMouseDeltas();
 
         static Mouse& GetMouse();
 
@@ -48,6 +68,8 @@ namespace BINDU {
 
         static Keyboard m_keyboard;
         static Mouse m_mouse;
+
+        static InputAPI m_api;
     };
 
 } // BINDU

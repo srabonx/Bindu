@@ -4,7 +4,7 @@
 #include "DirectXGraphicsContext.h"
 #include "DirectXRenderTexture.h"
 #include "../CommandList.h"
-#include "DirectXShader.h"
+#include "DirectXGraphicsShader.h"
 
 
 namespace BINDU
@@ -32,7 +32,7 @@ namespace BINDU
 
 		bool BindShader(Shader* shader) override;
 
-		void BindTexture(int slot, Texture* texture) override;
+		void BindTexture(std::string name, Texture* texture) override;
 
 		void DrawMesh(const MeshData& meshData) override;
 
@@ -50,7 +50,7 @@ namespace BINDU
 
 		DirectXRenderTexture*		m_swapChainRt{ nullptr };
 
-		DirectXShader*				m_currBoundShader{ nullptr };
+		DirectXGraphicsShader*		m_currBoundShader{ nullptr };
 
 		D3D12_VIEWPORT				m_viewPort;
 		D3D12_RECT					m_scissorRect;

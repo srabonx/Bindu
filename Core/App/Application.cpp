@@ -78,7 +78,7 @@ namespace  BINDU
 
 		m_commandList = m_graphicsContext->GetCommandList();
 
-		InputManager::Initialize();
+		InputManager::Initialize(InputAPI::Win32);
 
 		EventManager::AddListener(&m_inputManager);
 	}
@@ -202,7 +202,7 @@ namespace  BINDU
 				m_appStats.FPS = fpsCounter;
 				m_appStats.TPS = fpsCounter;
 
-			//	s_instance->GetAppStat(m_appStats);
+				s_instance->GetAppStat(m_appStats);
 
 				fpsCounter = 0;
 

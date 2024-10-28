@@ -85,7 +85,7 @@ add_library(Bindu STATIC
         # Input
         Input/InputManager.cpp
         Input/InputManager.h
-        Input/KeysAndButtons.h
+        
         Input/IInputHandler.h
         Input/Win32InputHandler.cpp
         Input/Win32InputHandler.h
@@ -113,7 +113,7 @@ add_library(Bindu STATIC
         
         # APP
         Core/App/Application.h
-        Core/App/Application.cpp "Core/App/AppLayer.h" "Core/App/AppLayer.cpp" "Core/App/AppLayerStack.h" "Core/App/AppLayerStack.cpp"     "Renderer/Renderer.h" "Renderer/GraphicsContext.h" "Renderer/RendererFactory.h" "Renderer/RendererFactory.cpp" "Renderer/DirectX/DirectXRenderer.h" "Renderer/DirectX/DirectXRenderer.cpp" "Renderer/DirectX/DirectXGraphicsContext.h" "Renderer/DirectX/DirectXGraphicsContext.cpp"  "Renderer/RenderCommand.h" "Renderer/CommandQueue.h"  "Renderer/CommandList.h" "Renderer/DirectX/DirectXCommandList.h" "Renderer/DirectX/DirectXCommandList.cpp" "Renderer/Texture.h" "Renderer/DirectX/DirectXTexture.h" "Renderer/DirectX/DirectXTexture.cpp" "Renderer/DirectX/DirectXRenderTexture.h" "Renderer/DirectX/DirectXRenderTexture.cpp" "Renderer/Shader.h" "Renderer/DirectX/DirectXShader.h" "Renderer/DirectX/DirectXShader.cpp" "Renderer/UniformBuffer.h" "Renderer/DirectX/DirectXConstantBuffer.h" "Renderer/DirectX/DirectXConstantBuffer.cpp" "Renderer/DataFormat.h" "Renderer/ResourceFactory.h" "Renderer/ResourceFactory.cpp" "Renderer/Buffer.h" "Renderer/DirectX/DirectXBuffer.h" "Renderer/DirectX/DirectXBuffer.cpp" "Geometry/MeshData.h" "Scene/SceneLayer.h" "Renderer/Camera.h" "Renderer/EditorCamera.h" "Renderer/EditorCamera.cpp" "Renderer/OrthographicCamera.h" "Renderer/OrthographicCamera.cpp")
+        Core/App/Application.cpp "Core/App/AppLayer.h" "Core/App/AppLayer.cpp" "Core/App/AppLayerStack.h" "Core/App/AppLayerStack.cpp"     "Renderer/Renderer.h" "Renderer/GraphicsContext.h" "Renderer/RendererFactory.h" "Renderer/RendererFactory.cpp" "Renderer/DirectX/DirectXRenderer.h" "Renderer/DirectX/DirectXRenderer.cpp" "Renderer/DirectX/DirectXGraphicsContext.h" "Renderer/DirectX/DirectXGraphicsContext.cpp"  "Renderer/RenderCommand.h" "Renderer/CommandQueue.h"  "Renderer/CommandList.h" "Renderer/DirectX/DirectXCommandList.h" "Renderer/DirectX/DirectXCommandList.cpp" "Renderer/Texture.h" "Renderer/DirectX/DirectXTexture.h" "Renderer/DirectX/DirectXTexture.cpp" "Renderer/DirectX/DirectXRenderTexture.h" "Renderer/DirectX/DirectXRenderTexture.cpp" "Renderer/Shader.h" "Renderer/DirectX/DirectXGraphicsShader.h" "Renderer/DirectX/DirectXGraphicsShader.cpp" "Renderer/UniformBuffer.h" "Renderer/DirectX/DirectXConstantBuffer.h" "Renderer/DirectX/DirectXConstantBuffer.cpp" "Renderer/DataFormat.h" "Renderer/ResourceFactory.h" "Renderer/ResourceFactory.cpp" "Renderer/Buffer.h" "Renderer/DirectX/DirectXBuffer.h" "Renderer/DirectX/DirectXBuffer.cpp" "Geometry/MeshData.h" "Scene/SceneLayer.h" "Camera/Camera.h" "Camera/EditorCamera.h" "Camera/EditorCamera.cpp" "Camera/OrthographicCamera.h" "Camera/OrthographicCamera.cpp"    "Camera/PerspectiveCamera.h" "Camera/PerspectiveCamera.cpp"   "Camera/CameraController.h" "Camera/CameraController.cpp" "Camera/SceneCameraController.h" "Camera/SceneCameraController.cpp" "Camera/ICameraController.h" "Geometry/GeometryGenerator.cpp" "Geometry/GeometryGenerator.h" "Geometry/MeshManager.cpp" "Geometry/MeshManager.h" "Renderer/ShaderLibrary.h" "Renderer/ShaderLibrary.cpp")
 
 # Link spdlog to the Bindu library
 target_link_libraries(Bindu PRIVATE spdlog::spdlog_header_only)

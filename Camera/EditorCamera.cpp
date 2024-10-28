@@ -279,4 +279,8 @@ namespace BINDU
 	{
 		m_position = { x,y,z };
 	}
+
+	void EditorCamera::Resize(std::uint16_t viewportWidth, std::uint16_t viewportHeight)
+	{
+	}
 }

@@ -5,6 +5,8 @@
 #ifndef BINDU_WIN32INPUTHANDLER_H
 #define BINDU_WIN32INPUTHANDLER_H
 
+#include <initializer_list>
+
 #include "IInputHandler.h"
 
 
@@ -21,25 +23,36 @@ namespace BINDU {
 
         ~Win32InputHandler() override;
 
-        bool IsKeyPressed(BND_Key key) override;
+        bool IsKeyPressed(BND_Key key) const override;
 
-        bool IsKeyReleased(BND_Key key) override;
+        bool IsKeyReleased(BND_Key key) const override;
 
-        bool IsKeyHeld(BND_Key key) override;
+        bool IsKeyHeld(BND_Key key) const override;
 
-        bool IsMouseBtnPressed(BND_Button button) override;
+        bool IsKeyCombinationPressed(std::initializer_list<BND_Key> keys) const override;
 
-        bool IsMouseBtnReleased(BND_Button button) override;
+        bool IsMouseBtnPressed(BND_Button button) const override;
 
-        bool IsMouseBtnHeld(BND_Button button) override;
+        bool IsMouseBtnReleased(BND_Button button) const override;
+
+        bool IsMouseBtnHeld(BND_Button button) const override;
 
         void ProcessEvents(EVENT::BND_Event event) override ;
 
-        bool IsMouseDragStart(BND_Button button) override;
+        MousePos GetMousePosition() const override;
 
-        MousePos GetMousePosition() override;
+        int  GetMouseX() const override;
 
-        bool IsMouseMoved() override;
+        int  GetMouseY() const override;
+
+        int  GetMouseDeltaX(BND_Button button) const override;
+
+        int  GetMouseDeltaY(BND_Button button) const override;
+
+		int  GetMouseWheelDelta() const override;
+
+        void ResetMouseDeltas() override;
+
 
     private:
         class Impl;

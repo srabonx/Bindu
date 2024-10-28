@@ -39,10 +39,12 @@ namespace BINDU {
         BND_Z
     };
 
-    struct KeyState
+    enum class KeyState
     {
-        bool isDown{false};
-        bool wasDown{false};
+        NONE,
+        PRESSED,
+        HELD,
+        RELEASED
     };
 
     using Keys = std::array<KeyState,256>;
@@ -54,16 +56,18 @@ namespace BINDU {
         ~Keyboard() ;
 
         // Get the current state of the given key
-        KeyState GetKeyState(BND_Key key);
+        KeyState GetKeyState(BND_Key key) const;
 
         // Set the state of the given key
-        void SetKeyState(BND_Key key, const KeyState& state);
+        void SetKeyState(BND_Key key, const KeyState& state) const;
 
         // Get the current state of the keyboard
         [[nodiscard]] Keys GetKeyboardState() const;
 
         // Set the state of the keyboard
-        void SetKeyboardState(const Keys& state);
+        void SetKeyboardState(const Keys& state) const;
+
+        void Update() const;
 
     private:
         class Impl;

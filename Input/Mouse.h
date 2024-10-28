@@ -22,10 +22,18 @@ namespace BINDU
 		int y{ 0 };
 	};
 
-	struct ButtonState
+	struct MouseDelta
 	{
-		bool isDown{ false };
-		bool wasDown{ false };
+		int x{ 0 };
+		int y{ 0 };
+	};
+
+	enum class ButtonState
+	{
+		NONE,
+		PRESSED,
+		HELD,
+		RELEASED
 	};
 
 	class Mouse
@@ -33,6 +41,8 @@ namespace BINDU
 	public:
 		Mouse();
 		~Mouse();
+
+		void Update() const;
 
 		// Get the state of the given button
 		ButtonState GetButtonState(BND_Button button) const;
@@ -43,16 +53,14 @@ namespace BINDU
 		// Get the mouse position
 		MousePos GetMousePos() const;
 
+		int GetMouseX() const;
+
+		int GetMouseY() const;
+
 		// Set the mouse position
 		void SetMousePos(MousePos pos) const;
 
-		bool IsMouseDragged() const;
 
-		void SetMouseDragged(bool drag) const;
-
-		bool IsMouseMoved() const;
-
-		void SetMouseMove(bool move) const;
 
 	private:
 		class Impl;

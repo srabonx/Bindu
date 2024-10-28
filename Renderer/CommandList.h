@@ -3,6 +3,7 @@
 
 #include <DirectXMath.h>
 #include <cstdint>
+#include <string>
 
 namespace BINDU
 {
@@ -54,7 +55,7 @@ namespace BINDU
 
 		virtual bool BindShader(Shader* shader) = 0;
 
-		virtual void BindTexture(int slot, Texture* texture) = 0;
+		virtual void BindTexture(std::string name, Texture* texture) = 0;
 
 		virtual void DrawMesh(const MeshData& meshData) = 0;
 

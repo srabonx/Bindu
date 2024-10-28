@@ -35,7 +35,9 @@ namespace BINDU
 		virtual Ref<Texture> CreateRenderTexture(const Texture* depthStencilTexture,
 			const TextureSpecification& specification, bool isShaderVisible = false) = 0;
 
-		virtual Ref<Shader>	 CreateShader(const ShaderSpecification& specification) = 0;
+		virtual Ref<Shader>	 CreateGraphicsShader(const ShaderSpecification& specification) = 0;
+
+		virtual Ref<Shader>	 CreateComputeShader(const ShaderSpecification& specification) = 0;
 
 		virtual Ref<VertexBuffer>	CreateVertexBuffer(const void* initData, std::uint32_t count, std::uint32_t byteStride) = 0;
 

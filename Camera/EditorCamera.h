@@ -62,6 +62,7 @@ namespace BINDU
 
 		void		SetPosition(float x, float y, float z);
 
+		void Resize(std::uint16_t viewportWidth, std::uint16_t viewportHeight) override;
 
 	private:
 

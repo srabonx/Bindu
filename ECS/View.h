@@ -44,6 +44,11 @@ namespace BINDU
 			return m_componentRegistry->GetComponent<Component>(entity);
 		}
 
+		const std::vector<EntityId>& GetEntities() const
+		{
+			return m_entities[0];
+		}
+
 	private:
 
 		void	SetupView()

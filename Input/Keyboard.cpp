@@ -16,10 +16,9 @@ namespace BINDU {
 
     Keyboard::Keyboard() : m_impl(new Impl)
     {
-        for(auto& k : m_impl->m_keys)
+        for(auto& key : m_impl->m_keys)
         {
-            k.isDown = false;
-            k.wasDown = false;
+            key = KeyState::NONE;
         }
     }
 
@@ -29,9 +28,20 @@ namespace BINDU {
         delete m_impl;
     }
 
-    void Keyboard::SetKeyboardState(const Keys &state)
+    void Keyboard::SetKeyboardState(const Keys &state) const
     {
         m_impl->m_keys = state;
+    }
+
+    void Keyboard::Update() const
+    {
+        for(auto& state : m_impl->m_keys)
+        {
+            if (state == KeyState::PRESSED)
+                state = KeyState::HELD;
+            else if (state == KeyState::RELEASED)
+                state = KeyState::NONE;
+        }
     }
 
     Keys Keyboard::GetKeyboardState() const
@@ -39,12 +49,12 @@ namespace BINDU {
         return m_impl->m_keys;
     }
 
-    KeyState Keyboard::GetKeyState(BND_Key key)
+    KeyState Keyboard::GetKeyState(BND_Key key) const
     {
         return m_impl->m_keys[static_cast<int>(key)];
     }
 
-    void Keyboard::SetKeyState(BND_Key key, const KeyState &state)
+    void Keyboard::SetKeyState(BND_Key key, const KeyState &state) const
     {
         m_impl->m_keys[static_cast<int>(key)] = state;
     }

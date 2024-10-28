@@ -50,7 +50,7 @@ namespace BINDU
 
 		void	Close();
 
-		void	GetAppStat(AppStats stats);
+		virtual void GetAppStat(AppStats stats);
 
 		void	PushLayer(AppLayer* layer);
 		void	PopLayer(AppLayer* layer);
@@ -71,6 +71,10 @@ namespace BINDU
 
 		void	OnResize(std::uint16_t width, std::uint16_t height) const;
 
+
+	protected:
+		Scoped<IWindow>		m_window{ nullptr };
+
 	private:
 		static Application* s_instance;
 		//friend int ::main();
@@ -78,8 +82,6 @@ namespace BINDU
 	private:
 		AppSpecification	m_specification;
 		AppStats			m_appStats;
-
-		Scoped<IWindow>		m_window{ nullptr };
 
 		Ref<Renderer>		m_renderer{ nullptr };
 		Ref<GraphicsContext>	m_graphicsContext{ nullptr };

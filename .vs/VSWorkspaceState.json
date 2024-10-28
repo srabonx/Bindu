@@ -9,15 +9,16 @@
   },
   "ExpandedNodes": [
     "",
-    "\\Core",
-    "\\Core\\App",
-    "\\Event",
-    "\\Input",
     "\\Renderer",
+    "\\Renderer\\DirectX",
     "\\Scene",
+    "\\Temp",
+    "\\Temp\\New",
+    "\\Temp\\New\\GameObject",
     "\\Utility",
     "\\Utility\\Common",
     "\\Window"
   ],
+  "SelectedNode": "\\Scene\\Scene.cpp",
   "PreviewInSolutionExplorer": false
 }

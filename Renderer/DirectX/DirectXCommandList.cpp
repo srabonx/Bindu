@@ -110,7 +110,7 @@ namespace BINDU
 		if (m_currBoundShader == shader)
 			return false;
 
-		m_currBoundShader = static_cast<DirectXShader*>(shader);
+		m_currBoundShader = static_cast<DirectXGraphicsShader*>(shader);
 
 		BINDU_CORE_ASSERT(m_currBoundShader != nullptr, "Invalid Shader!");
 
@@ -120,9 +120,9 @@ namespace BINDU
 	}
 
 
-	void DirectXCommandList::BindTexture(int slot, Texture* texture)
+	void DirectXCommandList::BindTexture(std::string name, Texture* texture)
 	{
-		m_currBoundShader->BindTexture(slot, texture);
+		m_currBoundShader->BindTexture(name, texture);
 	}
 
 	void DirectXCommandList::DrawMesh(const MeshData& meshData)

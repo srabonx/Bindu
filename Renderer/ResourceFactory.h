@@ -19,7 +19,9 @@ namespace BINDU
 		static Ref<Texture> CreateRenderTexture(const Texture* depthStencilTexture,
 			const TextureSpecification& specification, bool isShaderVisible = false);
 
-		static Ref<Shader>	 CreateShader(const ShaderSpecification& specification);
+		static Ref<Shader>	 CreateGraphicsShader(const ShaderSpecification& specification);
+
+		static Ref<Shader>	 CreateComputeShader(const ShaderSpecification& specification);
 
 		static Ref<VertexBuffer>	CreateVertexBuffer(const void* initData, std::uint32_t count, std::uint32_t byteStride);
 

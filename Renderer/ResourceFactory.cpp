@@ -41,14 +41,24 @@ namespace BINDU
 		return nullptr;
 	}
 
-	Ref<Shader> ResourceFactory::CreateShader(const ShaderSpecification& specification)
+	Ref<Shader> ResourceFactory::CreateGraphicsShader(const ShaderSpecification& specification)
 	{
 		if (auto renderer = m_renderer.lock())
 		{
-			return renderer->CreateShader(specification);
+			return renderer->CreateGraphicsShader(specification);
 		}
 		return nullptr;
 	}
+
+	Ref<Shader>	 ResourceFactory::CreateComputeShader(const ShaderSpecification& specification)
+	{
+		if (auto renderer = m_renderer.lock())
+		{
+			return renderer->CreateComputeShader(specification);
+		}
+		return nullptr;
+	}
+
 
 	Ref<VertexBuffer> ResourceFactory::CreateVertexBuffer(const void* initData, std::uint32_t count,
 		std::uint32_t byteStride)

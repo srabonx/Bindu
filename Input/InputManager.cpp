@@ -14,10 +14,17 @@ namespace BINDU {
     Keyboard InputManager::m_keyboard;
     Mouse InputManager::m_mouse;
 
+    InputAPI InputManager::m_api = InputAPI::Win32;
 
-    void InputManager::Initialize()
+
+    void InputManager::Initialize(InputAPI api)
     {
-        m_inputHandler = std::make_unique<Win32InputHandler>(&m_keyboard, &m_mouse);
+	    switch (api)
+    	{
+	    case InputAPI::Win32:
+            m_inputHandler = std::make_unique<Win32InputHandler>(&m_keyboard, &m_mouse);
+		    break;
+	    }
     }
 
     bool InputManager::IsKeyPressed(BND_Key key)
@@ -28,6 +35,11 @@ namespace BINDU {
     bool InputManager::IsKeyReleased(BND_Key key)
     {
         return m_inputHandler->IsKeyReleased(key);
+    }
+
+    bool InputManager::IsKeyCombinationPressed(std::initializer_list<BND_Key> keys)
+    {
+        return m_inputHandler->IsKeyCombinationPressed(keys);
     }
 
     bool InputManager::IsKeyHeld(BND_Key key)
@@ -50,10 +62,41 @@ namespace BINDU {
         return m_inputHandler->IsMouseBtnHeld(button);
     }
 
-    bool InputManager::IsMouseDragged(BND_Button button)
+    MousePos InputManager::GetMousePosition()
     {
-        return m_inputHandler->IsMouseDragStart(button);
+        return m_inputHandler->GetMousePosition();
     }
+
+    int InputManager::GetMouseX()
+    {
+        return m_inputHandler->GetMouseX();
+    }
+
+    int InputManager::GetMouseY()
+    {
+        return m_inputHandler->GetMouseY();
+    }
+
+    int InputManager::GetMouseDeltaX(BND_Button button)
+    {
+        return m_inputHandler->GetMouseDeltaX(button);
+    }
+
+    int InputManager::GetMouseDeltaY(BND_Button button)
+    {
+        return m_inputHandler->GetMouseDeltaY(button);
+    }
+
+    int InputManager::GetMouseWheelDelta()
+    {
+        return m_inputHandler->GetMouseWheelDelta();
+    }
+
+    void InputManager::ResetMouseDeltas()
+    {
+        return m_inputHandler->ResetMouseDeltas();
+    }
+
 
     Mouse& InputManager::GetMouse()
     {

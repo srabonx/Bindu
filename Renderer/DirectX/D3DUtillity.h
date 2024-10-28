@@ -15,6 +15,7 @@
 #include <sstream>
 
 #include "../DataFormat.h"
+#include "../Shader.h"
 #include "../Texture.h"
 #include "../../Geometry/MeshData.h"
 
@@ -305,6 +306,41 @@ namespace BINDU::D3DUtility
 		}
 
 		return D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
+	}
+
+	inline D3D12_FILL_MODE	GetFillModeFromRenderMode(RenderMode mode)
+	{
+		switch (mode)
+		{
+		case RenderMode::SOLID:		return D3D12_FILL_MODE_SOLID;
+		case RenderMode::WIRE_FRAME:	return D3D12_FILL_MODE_WIREFRAME;
+		}
+
+		return D3D12_FILL_MODE_SOLID;
+	}
+
+	inline D3D12_CULL_MODE	GetD3DCullModeFromCullMode(CullMode mode)
+	{
+		switch (mode)
+		{
+		case CullMode::BACK:	return D3D12_CULL_MODE_BACK;
+		case CullMode::FRONT:	return D3D12_CULL_MODE_FRONT;
+		case CullMode::NONE:	return D3D12_CULL_MODE_NONE;
+		}
+
+		return D3D12_CULL_MODE_BACK;
+	}
+
+	inline D3D12_PRIMITIVE_TOPOLOGY_TYPE GetPrimitiveTopologyTypeFromPrimitive(Primitive primitive)
+	{
+		switch(primitive)
+		{
+		case Primitive::POINT:		return D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
+		case Primitive::LINE:		return D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+		case Primitive::TRIANGLE:	return D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		}
+
+		return D3D12_PRIMITIVE_TOPOLOGY_TYPE_UNDEFINED;
 	}
 
 }

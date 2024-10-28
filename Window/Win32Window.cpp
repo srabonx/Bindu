@@ -212,29 +212,22 @@ namespace BINDU {
 
                 break;
             }
+            case WM_SYSKEYDOWN:
             case WM_KEYDOWN: {
                 event.type = EVENT::Type::KEY_DOWN;
                 WORD vkCode = LOWORD(wParam);
-                WORD keyFlag = HIWORD(lParam);
-                bool wasDown = (keyFlag & KF_REPEAT) == KF_REPEAT;
-                bool isDown = (keyFlag & KF_UP) != KF_UP;
 
                 event.Ev_Keyboard.key = static_cast<BND_Key>(vkCode);
-                event.Ev_Keyboard.state.wasDown = wasDown;
-                event.Ev_Keyboard.state.isDown = isDown;
-                
+                event.Ev_Keyboard.pressed = true;
                 break;
             }
+            case WM_SYSKEYUP:
             case WM_KEYUP: {
                 event.type = EVENT::Type::KEY_UP;
                 WORD vkCode = LOWORD(wParam);
-                WORD keyFlag = HIWORD(lParam);
-                bool wasDown = (keyFlag & KF_REPEAT) == KF_REPEAT;
-                bool isDown = (keyFlag & KF_UP) != KF_UP;
 
                 event.Ev_Keyboard.key = static_cast<BND_Key>(vkCode);
-                event.Ev_Keyboard.state.wasDown = wasDown;
-                event.Ev_Keyboard.state.isDown = isDown;
+                event.Ev_Keyboard.pressed = false;
 
                 break;
             }
@@ -304,6 +297,25 @@ namespace BINDU {
 
                 break;
 
+            case WM_MOUSEWHEEL:
+                event.type = EVENT::Type::MOUSE_SCROLL;
+
+                event.Ev_Mouse.button = BND_Button::BND_NONE;
+
+                if (wParam & MK_LBUTTON)
+                    event.Ev_Mouse.button = BND_Button::BND_LEFT;
+                else if (wParam & MK_RBUTTON)
+                    event.Ev_Mouse.button = BND_Button::BND_RIGHT;
+                else if (wParam & MK_MBUTTON)
+                    event.Ev_Mouse.button = BND_Button::BND_MIDDLE;
+
+
+                event.Ev_Mouse.position.x = GET_X_LPARAM(lParam);
+                event.Ev_Mouse.position.y = GET_Y_LPARAM(lParam);
+
+                event.Ev_Mouse.mouseWheelDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+
+                break;
             default:
                 event.type = EVENT::Type::NONE;
                 break;

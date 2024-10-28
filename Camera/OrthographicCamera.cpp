@@ -7,12 +7,14 @@ namespace BINDU
 {
 	OrthographicCamera::OrthographicCamera(std::uint16_t width, std::uint16_t height)
 	{
-		Resize(width, height);
+		OrthographicCamera::Resize(width, height);
 	}
 
-	void OrthographicCamera::Zoom(float zoom)
+	void OrthographicCamera::Zoom(float deltaZoom)
 	{
-		m_zoom = std::max(zoom, 0.25f);
+		m_zoom = std::clamp(m_zoom + deltaZoom , 25.f, m_maxZoom);
+
+		m_zoom = m_zoom / m_maxZoom;
 
 		float viewWidth = m_zoom * m_aspectRatio;
 

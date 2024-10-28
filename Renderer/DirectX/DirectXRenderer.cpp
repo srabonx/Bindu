@@ -6,7 +6,7 @@
 #include "DDSTextureLoader.h"
 #include "DirectXBuffer.h"
 #include "DirectXRenderTexture.h"
-#include "DirectXShader.h"
+#include "DirectXGraphicsShader.h"
 #include "GpuDescriptorHeap.h"
 #include "../../Debug/Assert.h"
 #include "../../Debug/Profiler.h"
@@ -113,50 +113,69 @@ namespace BINDU
 		return CreateRenderTexture(resource, depthStencilTexture, specification, isShaderVisible);
 	}
 
-	Ref<Shader> DirectXRenderer::CreateShader(const ShaderSpecification& specification)
+	Ref<Shader> DirectXRenderer::CreateGraphicsShader(const ShaderSpecification& specification)
 	{
 
 		BINDU_CORE_ASSERT(!specification.Filepath.empty(), "Shader Filepath cannot be empty!");
 
 		BINDU_PROFILE_FUNCTION();
 
-		auto shader = CreateRef<DirectXShader>(specification,m_commandList);
+		auto shader = CreateRef<DirectXGraphicsShader>(specification,m_commandList);
 
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
 
-		std::vector<CD3DX12_ROOT_PARAMETER> slotRootParams(specification.ShaderParameters.size());
 
-		for (int i = 0; i < specification.ShaderParameters.size(); i++)
+		// Check if a root signature with similar ShaderSpecifications exists already
+		if(m_rootSigMap.count(specification.Name))
 		{
-			auto shaderParameter = specification.ShaderParameters[i];
-			switch (shaderParameter.Type)
+			shader->m_rootSig = m_rootSigMap[specification.Name];
+
+			for (int i = 0; i < specification.ShaderParameters.size(); i++)
 			{
-			case ShaderParameterType::TEXTURE:
-				CD3DX12_DESCRIPTOR_RANGE srvRange;
-				srvRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, shaderParameter.NumberOfElements, shaderParameter.BaseSlot);
-				slotRootParams[i].InitAsDescriptorTable(1, &srvRange);
-				shader->m_texSlotToRootParam[shaderParameter.BaseSlot] = i;
-				break;
+				auto shaderParameter = specification.ShaderParameters[i];
 
-			case ShaderParameterType::UNIFORM_BUFFER:
-				slotRootParams[i].InitAsConstantBufferView(shaderParameter.BaseSlot);
-				shader->m_cbSlotToRootParam[shaderParameter.BaseSlot] = i;
-				break;
-
-			case ShaderParameterType::CONSTANTS:
-				slotRootParams[i].InitAsConstants(shaderParameter.NumberOfElements, shaderParameter.BaseSlot);
-				shader->m_constantsSlotToRootParam[shaderParameter.BaseSlot] = i;
-				break;
+				shader->m_shaderParameterMap[shaderParameter.Name] = { shaderParameter.BaseSlot, i };
 			}
 		}
+		else // if not
+		{
+			// Create root signature
+			std::vector<CD3DX12_ROOT_PARAMETER> slotRootParams(specification.ShaderParameters.size());
 
-		auto staticSamplers = D3DUtility::GetStaticSamplers();
+			for (int i = 0; i < specification.ShaderParameters.size(); i++)
+			{
+				auto shaderParameter = specification.ShaderParameters[i];
+				switch (shaderParameter.Type)
+				{
+				case ShaderParameterType::TEXTURE:
+					CD3DX12_DESCRIPTOR_RANGE srvRange;
+					srvRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, shaderParameter.NumberOfElements, shaderParameter.BaseSlot);
+					slotRootParams[i].InitAsDescriptorTable(1, &srvRange);
+					break;
 
-		CD3DX12_ROOT_SIGNATURE_DESC rsd(slotRootParams.size(), slotRootParams.data(),
-			staticSamplers.size(), staticSamplers.data(), D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+				case ShaderParameterType::UNIFORM_BUFFER:
+					slotRootParams[i].InitAsConstantBufferView(shaderParameter.BaseSlot);
+					break;
 
-		shader->m_rootSig = m_deviceManager->CreateRootSignature(rsd);
+				case ShaderParameterType::CONSTANTS:
+					slotRootParams[i].InitAsConstants(shaderParameter.NumberOfElements, shaderParameter.BaseSlot);
+					break;
+				}
 
+				shader->m_shaderParameterMap[shaderParameter.Name] = { shaderParameter.BaseSlot, i };
+			}
+
+			auto staticSamplers = D3DUtility::GetStaticSamplers();
+
+			CD3DX12_ROOT_SIGNATURE_DESC rsd(slotRootParams.size(), slotRootParams.data(),
+				staticSamplers.size(), staticSamplers.data(), D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+			auto rootSig = m_deviceManager->CreateRootSignature(rsd);
+
+			m_rootSigMap[specification.Name] = rootSig;
+
+			shader->m_rootSig = rootSig;
+		}
 
 
 		if (!specification.VertexShader.empty())
@@ -186,24 +205,7 @@ namespace BINDU
 
 			psoDesc.GS = shader->m_gsByteCode;
 		}
-		if (!specification.ComputeShader.empty())
-		{
-			shader->m_csBlob = D3DUtility::CompileShader(specification.Filepath, nullptr, specification.ComputeShader, "cs_5_0");
-
-			shader->m_csByteCode.BytecodeLength = shader->m_csBlob->GetBufferSize();
-			shader->m_csByteCode.pShaderBytecode = shader->m_csBlob->GetBufferPointer();
-
-			D3D12_COMPUTE_PIPELINE_STATE_DESC computePsoDesc = {};
-
-			computePsoDesc.pRootSignature = shader->m_rootSig.Get();
-			computePsoDesc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
-			computePsoDesc.CS = shader->m_csByteCode;
-
-			shader->m_computePSO = m_deviceManager->CreateComputePipelineState(computePsoDesc);
-		}
-
-
-		
+				
 
 		std::uint32_t lastDataSize{ 0 };
 		for(auto& e : specification.ShaderInputElements)
@@ -221,11 +223,12 @@ namespace BINDU
 		psoDesc.InputLayout.pInputElementDescs = shader->m_inputElementDesc.data();
 		psoDesc.pRootSignature = shader->m_rootSig.Get();
 		psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-		psoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK; // Set culling mode
-		psoDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
+		psoDesc.RasterizerState.CullMode = D3DUtility::GetD3DCullModeFromCullMode(specification.CullMode); // Set culling mode
+		psoDesc.RasterizerState.FillMode = D3DUtility::GetFillModeFromRenderMode(specification.RenderMode);
+		psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 		psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 		psoDesc.SampleMask = UINT_MAX;
-		psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		psoDesc.PrimitiveTopologyType = D3DUtility::GetPrimitiveTopologyTypeFromPrimitive(specification.Primitive);
 		psoDesc.NumRenderTargets = 1;
 		psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM; // Render target format
 		psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT; // Depth-stencil format
@@ -233,6 +236,11 @@ namespace BINDU
 
 		shader->m_graphicsPSO = m_deviceManager->CreateGraphicsPipelineState(psoDesc);
 		return shader;
+	}
+
+	Ref<Shader> DirectXRenderer::CreateComputeShader(const ShaderSpecification& specification)
+	{
+		return nullptr;
 	}
 
 	Ref<VertexBuffer> DirectXRenderer::CreateVertexBuffer(const void* initData, std::uint32_t count,
@@ -317,4 +325,5 @@ namespace BINDU
 
 		return texture;
 	}
+
 }

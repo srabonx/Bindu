@@ -6,15 +6,10 @@
 #include "../Debug/Profiler.h"
 #include "../Renderer/ResourceFactory.h"
 #include "../Renderer/Shader.h"
+#include "../Camera/CameraController.h"
 
 namespace BINDU
 {
-	Scene::Scene(std::uint32_t entityCount)
-	{
-		m_entityDataBuffer = ResourceFactory::CreateUniformBuffer(entityCount, sizeof(EntityData));
-
-		m_sceneDataBuffer = ResourceFactory::CreateUniformBuffer(1, sizeof(SceneData));
-	}
 
 	Entity Scene::CreateEntity(const std::string& name)
 	{
@@ -47,7 +42,7 @@ namespace BINDU
 		m_componentRegistry.RemoveEntity(entity);
 	}
 
-	void Scene::OnUpdate(double dt)
+/*	void Scene::OnUpdate(double dt, CameraController* cameraController)
 	{
 		auto view = m_componentRegistry.GetView<TransformComponent>();
 
@@ -65,32 +60,38 @@ namespace BINDU
 			}
 		}
 
-		auto cameraView = m_componentRegistry.GetView<CameraComponent, TransformComponent>();
-
-		XMMATRIX cameraTransform{};
-
-		for(auto& cameraEntity : cameraView)
+		if (cameraController == nullptr)
 		{
-			auto [camCompo, transformCompo] = view.Get<CameraComponent, TransformComponent>(cameraEntity);
+			auto cameraView = m_componentRegistry.GetView<CameraComponent, TransformComponent>();
 
-			auto camera = camCompo.Camera.lock();
+			XMMATRIX cameraTransform{};
 
-			if(camera)
+			for (auto& cameraEntity : cameraView)
 			{
-				if(camCompo.Primary)
+				auto [camCompo, transformCompo] = view.Get<CameraComponent, TransformComponent>(cameraEntity);
+
+				auto camera = camCompo.Camera.lock();
+
+				if (camera)
 				{
-					m_currentPrimaryCamera = camera.get();
-					cameraTransform = transformCompo.GetTransform();
+					if (camCompo.Primary)
+					{
+						m_currentPrimaryCamera = camera.get();
+						cameraTransform = transformCompo.GetTransform();
 
-					auto view = XMMatrixInverse(nullptr, cameraTransform);
-					auto proj = camera->GetProjection();
+						auto view = XMMatrixInverse(nullptr, cameraTransform);
+						auto proj = camera->GetProjection();
 
-					auto viewProj = view * proj;
+						auto viewProj = view * proj;
 
-					XMStoreFloat4x4(&m_sceneData.ViewProjMatrix, XMMatrixTranspose(viewProj));
+						XMStoreFloat4x4(&m_sceneData.ViewProjMatrix, XMMatrixTranspose(viewProj));
+					}
 				}
 			}
-
+		}
+		else
+		{
+			
 		}
 
 		m_sceneDataBuffer->SetData(&m_sceneData, sizeof(SceneData), 0);
@@ -113,6 +114,8 @@ namespace BINDU
 					layer.second.erase(e);
 
 					m_layerBatch[layerComponent.LayerIndex].emplace(e);
+
+					continue;
 				}
 
 				auto& shaderComponent = m_componentRegistry.GetComponent<ShaderComponent>(e);
@@ -134,7 +137,55 @@ namespace BINDU
 
 			}
 		}
-	}
+	} */
+
+Entity Scene::CloneEntity(EntityId entityId)
+{
+	Entity entity = CreateEntity();
+
+
+		if (m_componentRegistry.HasComponent<TransformComponent>(entityId))
+		{
+			auto& compo = m_componentRegistry.GetComponent<TransformComponent>(entityId);
+			auto& transformCompo = entity.AddComponent<TransformComponent>(compo);
+			transformCompo.Position.x -= 4.f;
+		}
+		if (m_componentRegistry.HasComponent<LayerComponent>(entityId))
+		{
+			auto& compo = m_componentRegistry.GetComponent<LayerComponent>(entityId);
+			entity.AddComponent<LayerComponent>(compo);
+		}
+		if(m_componentRegistry.HasComponent<ShaderComponent>(entityId))
+		{
+			auto& shaderCompo = m_componentRegistry.GetComponent<ShaderComponent>(entityId);
+			entity.AddComponent<ShaderComponent>(shaderCompo);
+		}
+		if (m_componentRegistry.HasComponent<MeshComponent>(entityId))
+		{
+			auto& meshCompo = m_componentRegistry.GetComponent<MeshComponent>(entityId);
+			entity.AddComponent<MeshComponent>(meshCompo);
+		}
+		if (m_componentRegistry.HasComponent<CameraComponent>(entityId))
+		{
+			auto& compo = m_componentRegistry.GetComponent<CameraComponent>(entityId);
+			auto& camCompo = entity.AddComponent<CameraComponent>(compo);
+			camCompo.Primary = false;
+		}
+		if(m_componentRegistry.HasComponent<LightComponent>(entityId))
+		{
+			auto& compo = m_componentRegistry.GetComponent<LightComponent>(entityId);
+			auto& lightCompo = entity.AddComponent<LightComponent>(compo);
+		}
+		if (m_componentRegistry.HasComponent<MaterialComponent>(entityId))
+		{
+			auto& compo = m_componentRegistry.GetComponent<MaterialComponent>(entityId);
+			auto& matCompo = entity.AddComponent<MaterialComponent>(compo);
+			matCompo.IsDirty = true;
+		}
+		
+
+		return entity;
+}
 
 	Entity Scene::GetEntity(EntityId entityId)
 	{

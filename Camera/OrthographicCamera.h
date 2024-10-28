@@ -12,15 +12,16 @@ namespace BINDU
 
 		~OrthographicCamera() override = default;
 
-		void Zoom(float zoom);
+		void Zoom(float deltaZoom);
 
-		void Resize(std::uint16_t viewPortWidth, std::uint16_t viewPortHeight);
+		void Resize(std::uint16_t viewPortWidth, std::uint16_t viewPortHeight) override;
 
 	private:
 		void UpdateProjectionMatrix(float left, float right, float bottom, float top);
 
 	private:
-		float	m_zoom{ 0.1f };
+		float	m_maxZoom{ 100.f };
+		float	m_zoom{ 0.25f };
 		float	m_aspectRatio;
 	};
 }

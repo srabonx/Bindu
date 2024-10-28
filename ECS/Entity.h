@@ -57,7 +57,7 @@ namespace BINDU
 
 		EntityId		GetId() const;
 
-
+		Scene* GetParentScene() const { return m_parentScene; }
 
 	private:
 		EntityId				m_entityId{ InvalidIndex };

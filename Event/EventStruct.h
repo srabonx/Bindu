@@ -31,6 +31,7 @@ namespace BINDU::EVENT {
         MOUSE_DOWN,
         MOUSE_UP,
         MOUSE_MOVE,
+        MOUSE_SCROLL
 
     };
 
@@ -48,13 +49,14 @@ namespace BINDU::EVENT {
     struct KeyboardEvent
     {
         BND_Key key;
-        KeyState state;
+        bool pressed;
     };
 
     struct MouseEvent
     {
         BND_Button button;
         MousePos position;
+        int      mouseWheelDelta;
     };
 
     /* Custom Event */
